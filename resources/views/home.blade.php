@@ -11,5 +11,7 @@
     <p><i>Welcome to mixing prevention site.</i></p>
     <a href="{{ url('add') }}"><button >ADD MODEL</button></a>
     <a href="{{ url('check') }}"><button>CHECK MIXING</button></a>
+    <a href="{{ url('sections') }}"><button>SECTIONS</button></a>
+
 </body>
 </html>

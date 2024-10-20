@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\AddModel;
 use Illuminate\Http\Request;
-use App\Models\Post;
-
 
 
 class AddModelController extends Controller

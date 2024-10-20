@@ -7,6 +7,7 @@
     <title>Check Mixing</title>
 </head>
 <body>
+    <x-home-button/>
     you are in mixing page!
 </body>
 </html>

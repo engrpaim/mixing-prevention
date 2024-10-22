@@ -12,6 +12,12 @@
     <a href="{{ url('add') }}"><button >ADD MODEL</button></a>
     <a href="{{ url('check') }}"><button>CHECK MIXING</button></a>
     <a href="{{ url('sections') }}"><button>SECTIONS</button></a>
-
+    <script type="text/javaScript" src={{ asset('js/home.js') }}></script>
+    @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 </body>
 </html>
+

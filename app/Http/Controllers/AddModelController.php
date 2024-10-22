@@ -8,16 +8,13 @@ use Illuminate\Http\Request;
 
 class AddModelController extends Controller
 {
-    public function index()
-    {
-        return view('home');
-    }
+
 
     public function add(Request $request)
     {
 
         $request->validate([
-            'model_name' => 'required|string|max:255',
+            'model_name' => 'required|string|max:255|unique:add_models,model_name',
             'width' => 'required|numeric',
             'max_tolerance_width' => 'required|numeric',
             'min_tolerance_width' => 'required|numeric',
@@ -26,7 +23,9 @@ class AddModelController extends Controller
             'min_tolerance_length' => 'required|numeric',
             'thickness' => 'required|numeric',
             'max_tolerance_thickness' => 'required|numeric',
-            'min_tolerance_thickness' => 'required|numeric',
+            'min_tolerance_thickness' => 'required|numeric',],
+            [
+                'model_name.unique' => 'Model is already added',
         ]);
 
         AddModel::create([
@@ -42,6 +41,7 @@ class AddModelController extends Controller
             'min_tolerance_thickness' => $request->input('min_tolerance_thickness'),
         ]);
 
-        return redirect()->route('add.model.index')->with('success', 'Post created successfully!');
+        return redirect('/add')->with(['success'=> $request->input('model_name'),
+                                        'process'=>'Model' ,]);
     }
 }

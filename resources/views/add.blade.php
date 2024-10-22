@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" >
     <meta http-equiv="X-UA-Compatible" content="ie=edge" >
 
-    <title>Prevetion: Add</title>
+    <title>Mixing: Add</title>
 </head>
 <body>
     <x-home-button/>
@@ -51,6 +51,9 @@
                 <input type="number"  step="0.001" id="min_tolerance_thickness" name="min_tolerance_thickness" required>
             </div>
             <?php } ?>
+            <br>
+            <x-error/>
+            <x-sucess/>
             <br><br>
             <button type="button" id="add_model_btn" name="add_model_btn" onclick="addModel()" name="add" id="add">ADD MODEL</button>
             <div id="confirm_details" style="display: none;">
@@ -59,10 +62,12 @@
                 <x-submit-button type="button" onclick="confirmAdd()" style="block;" name="confirm" id="confirm">CONFIRM</x-submit-button>
                 <x-submit-button type="button" onclick="cancelAdd()" style="block;" name="cancel" id="cancel">CANCEL</x-submit-button>
             </div>
+
         </form>
     </div>
 
     <script type="text/javascript" src="{{ asset('js/add.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/allCaps.js') }}"></script>
 
 </body>
 </html>

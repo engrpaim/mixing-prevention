@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('process_models', function (Blueprint $table) {
+        Schema::create('before_material_models', function (Blueprint $table) {
             $table->Id()->autoIncrement()->uniqid()->primary();
-            $table->string('process')->unique('process');
-            $table->string('ip_adress')->default('UNKNOWN');
+            $table->string('before_material')->unique();
+            $table->string('ip_address')->default('UNKNOWN');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('process_models');
+        Schema::dropIfExists('before_material_models');
     }
 };

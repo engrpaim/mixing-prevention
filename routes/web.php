@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddModelController;
 use App\Http\Controllers\ProcessListController;
+use App\Http\Controllers\BeforeMaterialController;
+use App\Http\Controllers\AfterMaterialController;
 
 Route::get('/mixing-prevention', function () {
     return view('home');
@@ -18,9 +20,10 @@ Route::get('/check',function(){
 Route::get('/sections',function(){
     return view('sections');
 });
-Route::get('/mixing-prevention' ,[AddModelController::class, 'index'])->name('add.model.index');
+
+
 Route::post('add-model-data',[AddModelController::class,'add']);
-
-
-Route::get('/mixing-prevention' ,[ProcessListController::class, 'index'])->name('process_add.model.index');
 Route::post('add-process-data',[ProcessListController::class,'process_add']);
+Route::post('before-material-data',[BeforeMaterialController::class,'beforeMaterial']);
+Route::post('after-material-data',[AfterMaterialController::class,'afterMaterial']);
+Route::get('/sections', [AfterMaterialController::class, 'displayAll']);

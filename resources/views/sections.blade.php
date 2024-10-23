@@ -25,8 +25,12 @@
         <x-form formName="after_material_form"  formId="after_material_form" method="POST" action="after-material-data"  name="after_material" show="MATERIAL(AFTER):"  placeholder="add after material here" inputeId="after_material" inputName="after_material"
         buttonType="submit" buttonOnclick="" style="block;" btnName="btnAfter" btnId="btnAfter" btnLabel="ADD AFTER MATERIAL"/>
         <x-handler process="{{ session('process') }}" compare="After Material"/>
+        <div>
+            <x-table title="PROCESS LIST" :array="$allProcess" column="process"/>
+            <x-table title="AFTER MATERIAL" :array="$allAfterMaterial" column="after_material"/>
+            <x-table title="BEFORE MATERIAL" :array="$allBeforeMaterial" column="before_material"/>
+        </div>
 
-        <x-table title="AFTER MATERIAL" :array="$allAfterMaterial" column="after_material"/>
 
 
 

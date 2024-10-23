@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 class BeforeMaterialController extends Controller
 {
 
-
+    public function beforeMaterialAll(){
+        $allBeforeMaterial = BeforeMaterialModel::orderBy('created_at','desc')->Paginate(10);
+        return view('sections',compact('allBeforeMaterial'));
+    }
     public function beforeMaterial(Request $request){
 
         $request ->validate(

@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 
 class AfterMaterialController extends Controller
 {
-    public function displayAll(){
-        $allAfterMaterial = AfterMaterialModel::orderBy('created_at', 'desc')->get();;
-        return view('sections', compact('allAfterMaterial'));
-    }
 
+    public function afterMaterialAllData(Request $request){
+        $allAfterMaterial = AfterMaterialModel::orderBy('created_at', 'desc')->Paginate(10,['*'], 'after-material-page');
+        return view('sections',compact('allAfterMaterial'));
+    }
     public function afterMaterial(Request $request){
         $request->validate(
             ['after_material'=>['required','string','max:255','unique:after_material_models,after_material',],],

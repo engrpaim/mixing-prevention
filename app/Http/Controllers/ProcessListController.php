@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\ProcessModel;
 class ProcessListController extends Controller
 {
-    //
 
 
     public function process_add(Request $request){

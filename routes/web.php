@@ -5,6 +5,7 @@ use App\Http\Controllers\AddModelController;
 use App\Http\Controllers\ProcessListController;
 use App\Http\Controllers\BeforeMaterialController;
 use App\Http\Controllers\AfterMaterialController;
+use App\Http\Controllers\UpdateTablesController;
 
 Route::get('/mixing-prevention', function () {
     return view('home');
@@ -26,4 +27,7 @@ Route::post('add-model-data',[AddModelController::class,'add']);
 Route::post('add-process-data',[ProcessListController::class,'process_add']);
 Route::post('before-material-data',[BeforeMaterialController::class,'beforeMaterial']);
 Route::post('after-material-data',[AfterMaterialController::class,'afterMaterial']);
-Route::get('/sections', [AfterMaterialController::class, 'displayAll']);
+
+Route::get('/sections', [UpdateTablesController::class, 'allMaterials']);
+
+

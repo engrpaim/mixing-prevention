@@ -45,3 +45,4 @@ function confirmAdd(){
     document.getElementById("add-model-form").submit();
 
 }
+

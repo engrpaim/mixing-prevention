@@ -11,8 +11,7 @@ const inputFields =document.querySelectorAll('input');
 
 setTimeout(() => {
     const successMessages = document.getElementsByClassName('success-message');
-
     for (let i = 0; i < successMessages.length; i++) {
-            successMessages[i].style.display = 'none';
+            successMessages[i].style.display = 'none';   
         }
 }, 3000);

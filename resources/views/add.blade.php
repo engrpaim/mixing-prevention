@@ -5,11 +5,16 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" >
     <meta name="viewport" content="width=device-width, initial-scale=1.0" >
     <meta http-equiv="X-UA-Compatible" content="ie=edge" >
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <title>Mixing: Add</title>
 </head>
 <body>
-    <x-home-button/>
+    <div class="flex items-center justify-end h-24 max-w-full bg-gray-100 outline outline-1 outline-gray-300 md:min-w-full sm:me-48 sm:px-64" >
+        <x-nav title="Add model" route="add" isLast="" tooltip="Insert new model"/>
+        <x-nav title="Update details" route="sections" isLast="" tooltip="Update material and processes"/>
+        <x-nav title="Check mixing" route="check" isLast="" tooltip="show or check mixing models"/>
+        <x-home-button/>
+    </div>
     <h1>ADD MODEL : MIXING PREVENTION</h1><br>
     <div>
         <h3>MODEL DETAILS</h3>
@@ -55,10 +60,11 @@
             <x-error/>
             <x-sucess/>
             <br><br>
-            <button type="button" id="add_model_btn" name="add_model_btn" onclick="addModel()" name="add" id="add">ADD MODEL</button>
+
+            <x-submit-button type="button" onclick="addModel()" style="block;" name="add" id="add_model_btn">Add model</x-submit-button>
             <div id="confirm_details" style="display: none;">
                 <p>Are you sure you want to add model?</p>
-                <div id="model_summary"></div>
+                <div  id="model_summary"></div>
                 <x-submit-button type="button" onclick="confirmAdd()" style="block;" name="confirm" id="confirm">CONFIRM</x-submit-button>
                 <x-submit-button type="button" onclick="cancelAdd()" style="block;" name="cancel" id="cancel">CANCEL</x-submit-button>
             </div>

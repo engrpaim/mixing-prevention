@@ -10,10 +10,12 @@ class handler extends Component
 {
     public $process;
     public $compare;
-    public function __construct(string $process,$compare)
+    public $compareErr;
+    public function __construct(string $process,$compare, $compareErr)
     {
         $this->process = $process;
         $this->compare =$compare;
+        $this->compareErr =$compareErr;
     }
 
     /**

@@ -8,7 +8,7 @@
 <style>
     .tooltip {
         display: none;
-       
+
     }
     .button-container:hover .tooltip {
         display: block;
@@ -19,6 +19,6 @@
         font-size:0.75rem;
         padding:0.5rem;
 
-     
+
     }
 </style>

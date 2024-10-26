@@ -15,11 +15,12 @@
         <x-nav title="Check mixing" route="check" isLast="" tooltip="show or check mixing models"/>
 
     </div>
-    <div>
-    <h3>MIXING PREVENTION</h3>
-    <p><i>Welcome to mixing prevention site.</i></p>
-    <script type="text/javaScript" src={{ asset('js/home.js') }}></script>
+    <div class="h-lvh outline outline-1 outline-gray-300">
+        <h3 class="font-serif text-6xl font-extrabold">MIXING PREVENTION</h3>
+        <p  class="font-sans text-2xl"><i>Welcome to mixing prevention site.</i></p>
+        <script type="text/javaScript" src={{ asset('js/home.js') }}></script>
     </div>
+
 </body>
 </html>
 

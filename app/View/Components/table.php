@@ -10,8 +10,8 @@ class table extends Component
 {
     public $title;
     public $array;
-
     public $column;
+
     public function __construct($title,$array,$column)
     {
         $this->column = $column;

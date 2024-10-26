@@ -12,16 +12,21 @@ class AfterMaterialController extends Controller
         return view('sections',compact('allAfterMaterial'));
     }
     public function afterMaterial(Request $request){
-        $request->validate(
-            ['after_material'=>['required','string','max:255','unique:after_material_models,after_material',],],
-            ['after_material.unique' => 'After material already exist.'
-        ]);
+        try{
+            $request->validate(
+                ['after_material'=>['required','string','max:255','unique:after_material_models,after_material',],],
+                ['after_material.unique' => 'After material already exist.'
+            ]);
 
-        AfterMaterialModel::create([
-            'after_material'=>$request->input('after_material'),
-        ]);
+            AfterMaterialModel::create([
+                'after_material'=>$request->input('after_material'),
+            ]);
 
-        return redirect('/sections')->with(['success'=>$request->input('after_material'),
+            return redirect('/sections')->with(['success'=>$request->input('after_material'),
                                             'process'=>'After Material']);
+        }catch(\Exception $e){
+            return redirect('/sections')->with(['success'=>$request->input('after_material'),
+            'process'=>'after(material) already exist']);
+        }
     }
 }

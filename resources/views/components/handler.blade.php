@@ -1,9 +1,12 @@
 <div class="success-message" style="display: block;" >
     @if ($process  == $compare )
             <br />
-            <x-error/>
             <x-sucess/>
             <br />
+    @elseif ($process  == $compareErr )
+            <br/>
+            <x-error/>
+            <br/>
     @endif
 </div>
 

@@ -12,8 +12,8 @@ class AddModelController extends Controller
 
     public function add(Request $request)
     {
-
-        $request->validate([
+        try{
+            $request->validate([
             'model_name' => 'required|string|max:255|unique:add_models,model_name',
             'width' => 'required|numeric',
             'max_tolerance_width' => 'required|numeric',
@@ -26,7 +26,7 @@ class AddModelController extends Controller
             'min_tolerance_thickness' => 'required|numeric',],
             [
                 'model_name.unique' => 'Model is already added',
-        ]);
+            ]);
 
         AddModel::create([
             'model_name' => $request->input('model_name'),
@@ -43,5 +43,10 @@ class AddModelController extends Controller
 
         return redirect('/add')->with(['success'=> $request->input('model_name'),
                                         'process'=>'Model' ,]);
+        } catch (\Exception $e) {
+            return redirect('/sections')->with([
+                'success' => $request->input('add_process'),
+                'process' => 'already exist',]);
+        }
     }
 }

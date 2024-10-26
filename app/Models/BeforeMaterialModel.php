@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class BeforeMaterialModel extends Model
 {
     use HasFactory;
-    protected $fillable = ['before_material'];
+    protected $fillable = ['before_material','search'];
 }

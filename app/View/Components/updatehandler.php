@@ -6,20 +6,16 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class table extends Component
+class updatehandler extends Component
 {
-    public $title;
-    public $array;
-    public $column;
+
+    public $update;
     public $compare;
 
-    public function __construct($title,$array,$column,$compare)
+    public function __construct(string $update,$compare)
     {
-        $this->column = $column;
-        $this->title = $title;
-        $this->array = $array;
+        $this->update = $update;
         $this->compare = $compare;
-
     }
 
     /**
@@ -27,6 +23,6 @@ class table extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.table');
+        return view('components.update-handler');
     }
 }

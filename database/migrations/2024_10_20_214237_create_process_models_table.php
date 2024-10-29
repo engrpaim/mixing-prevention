@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('process_models', function (Blueprint $table) {
             $table->Id()->autoIncrement()->uniqid()->primary();
             $table->string('process')->unique('process');
-            $table->string('ip_adress')->default('UNKNOWN');
+            $table->string('ip_address')->default('UNKNOWN');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });

@@ -16,14 +16,14 @@
         <x-nav title="Check mixing" route="check" isLast="" tooltip="show or check mixing models"/>
         <x-home-button/>
     </div>
-    <div class="flex p-20">
-        <div>
-            <h2>PROCESS UPDATE</h2>
+    <div class="flex justify-center p-5">
+        <div class="mt-8">
+            <h2 class="font-bold">PROCESS UPDATE</h2>
 
             <x-form formName="add_process_form"  formId="add_process_form" method="POST" action="add-process-data"  name="add_process" show="PROCESS:"  placeholder="add process here" inputeId="add_process" inputName="add_process"
             buttonType="submit" buttonOnclick="processAdd()" style="block;" btnName="btnProcess" btnId="btnProcess" btnLabel="Add process"/>
             <x-handler process="{{ session('process') }}" compare="Process" compareErr="process already exist"/>
-            <h2>MATERIAL UPDATE</h2>
+            <h2 class="font-bold">MATERIAL UPDATE</h2>
 
             <x-form formName="before_material_form"  formId="before_material_form" method="POST" action="before-material-data"  name="before_material" show="MATERIAL(BEFORE):"  placeholder="add before material here" inputeId="before_material" inputName="before_material"
             buttonType="submit" buttonOnclick="" style="block;" btnName="btnBefore" btnId="btnBefore" btnLabel="Add before material"/>
@@ -33,13 +33,14 @@
             buttonType="submit" buttonOnclick="" style="block;" btnName="btnAfter" btnId="btnAfter" btnLabel="Add after material"/>
             <x-handler process="{{ session('process') }}" compare="After Material" compareErr="after(material) already exist"/>
         </div>
-        <div class="flex mt-9 updateTables">
-            <x-table title="PROCESS LIST" :array="$allProcess" column="process" />
-            <x-table title="AFTER MATERIAL" :array="$allAfterMaterial" column="after_material" />
-            <x-table title="BEFORE MATERIAL" :array="$allBeforeMaterial" column="before_material" />
+        <div class="flex updateTables">
+
+            <x-table title="PROCESS" :array="$allProcess" column="process" compare="Process" />
+            <x-table title="BEFORE-MATERIAL" :array="$allBeforeMaterial" column="before_material"  compare="Before"/>
+            <x-table title="AFTER-MATERIAL" :array="$allAfterMaterial" column="after_material"  compare="After"/>
+
         </div>
     </div>
-
 
 </div>
 

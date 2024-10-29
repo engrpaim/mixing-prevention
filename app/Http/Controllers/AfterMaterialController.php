@@ -6,6 +6,61 @@ use Illuminate\Http\Request;
 
 class AfterMaterialController extends Controller
 {
+    public function delete(Request $request)
+    {
+
+        $request->validate([
+            'deleteVlaue' => 'required|string|max:255',
+        ]);
+
+        $delete = $request->input('deleteVlaue');
+
+        $dataTodelete = AfterMaterialModel::where('after_material', $delete)->first();
+        if($dataTodelete){
+            $dataTodelete->delete();
+            return redirect('/sections')->with([
+                'exist' => 'Material ('.$request->input('deleteVlaue').')',
+                'error' => 'sucessfully deleted.',
+                'update' => 'After',
+            ]);
+        }
+
+
+    }
+
+    public function update(Request $request)
+    {
+        try{
+
+
+
+
+            $request->validate([
+                'currentValue' => 'required|string|max:255',
+                'updateInput' => 'required|string|max:255',
+            ]);
+
+            $currentValue = $request->input('currentValue');
+            $updateInput = $request->input('updateInput');
+
+            $dataToUpdate = AfterMaterialModel::where('after_material', $currentValue)->first();
+            if ($dataToUpdate) {
+                $dataToUpdate->after_material =  htmlspecialchars($updateInput, ENT_QUOTES, 'UTF-8');
+                $dataToUpdate->save();
+
+                return redirect('/sections')->with([
+                    'new' => $request->input('updateInput'),
+                    'current' => $request->input('currentValue'),
+                    'update' => 'After',
+                ]);
+            }
+        }catch(\Exception $e){
+            return redirect('/sections')->with([
+                'exist' => $request->input('updateInput'),
+                'update' => 'After',
+            ]);
+        }
+    }
 
     public function afterMaterialAllData(Request $request){
         $allAfterMaterial = AfterMaterialModel::orderBy('created_at', 'desc')->Paginate(10,['*'], 'after-material-page');

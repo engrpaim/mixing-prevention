@@ -10,6 +10,6 @@ class ProcessSeeder extends Seeder
     public function run()
     {
         // Create 10 random processes
-        ProcessModel::factory()->count(100)->create();
+        ProcessModel::factory()->count(15)->create();
     }
 }

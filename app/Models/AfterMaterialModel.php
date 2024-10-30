@@ -8,5 +8,5 @@ class AfterMaterialModel extends Model
 {
     use HasFactory;
     protected $table = 'after_material_models';
-    protected $fillable = ['after_material'];
+    protected $fillable = ['after_material','ip_address'];
 }

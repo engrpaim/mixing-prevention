@@ -34,7 +34,7 @@ class ProcessListController extends Controller
         try{
 
 
-
+            $clientIP = request()->ip();
 
             $request->validate([
                 'currentValue' => 'required|string|max:255',
@@ -47,6 +47,7 @@ class ProcessListController extends Controller
             $dataToUpdate = ProcessModel::where('process', $currentValue)->first();
             if ($dataToUpdate) {
                 $dataToUpdate->process =  htmlspecialchars($updateInput, ENT_QUOTES, 'UTF-8');
+                $dataToUpdate->ip_address = htmlspecialchars( $clientIP);
                 $dataToUpdate->save();
 
                 return redirect('/sections')->with([
@@ -89,7 +90,7 @@ class ProcessListController extends Controller
                 'process' => $request->input('add_process'),
                 'ip_address' => $clientIP,
             ]);
-
+            //dd($clientIP);
             return redirect('/sections')->with([
                 'success' => $request->input('add_process'),
                 'process' => 'Process',

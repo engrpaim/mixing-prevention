@@ -1,4 +1,4 @@
-<div class="h-auto p-2 m-1 rounded hover:bg-red-50 w-96 md:m-4 md:mt-1 max-h-auto max-w-96 min-w-fit min-h-fit outline outline-1 outline-gray-300">
+<div class="h-auto p-2 m-1 rounded-lg hover:bg-red-50 w-96 md:m-4 md:mt-1 max-h-auto max-w-96 min-w-fit min-h-fit outline outline-1 outline-gray-300">
 
 
 
@@ -22,10 +22,10 @@
             @if(count($array) <= 0)
                 <td class="p-2 py-10 italic text-center bg-red-100 rounded-lg w-96 outline outline-2 outline-red-500 justify-content-center">No data found</td>
             @endif
-
+    {{-- 1) TABLE DISPLAY DATA, DELETE BUTTON AND EDIT BUTTON --}}
             @foreach($array  as $data)
                 <tr >
-                     <td class="flex items-center justify-between p-3 m-1 bg-gray-100 rounded-sm hover:font-bold outline outline-gray-200 outline-1 hover:outline-2 hover:outline-yellow-300 hover:bg-yellow-50 w-96">{{ $data->{$column} }}
+                     <td class="flex items-center justify-between p-3 m-1 bg-gray-100 rounded-lg hover:font-bold outline outline-gray-200 outline-1 hover:outline-2 hover:outline-yellow-300 hover:bg-yellow-50 w-96">{{ $data->{$column} }}
                         <div class="flex flex-row">
                         <a href="{{ url(strtolower($parts ."/").'edit/'.$data->id) }}" >
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-10 hover:text-blue-500" viewBox="0 -0.5 25 25" fill="none">
@@ -44,7 +44,7 @@
             @endforeach
         </tbody>
     </table>
-
+    {{-- 2) TABLE PAGINATION --}}
     <div class="flex justify-center my-1 pagination">
         <?php
         $border = "flex items-center justify-center p-2 py-1 m-1 rounded-sm outline outline-1 outline-slate-300 hover:bg-gray-200";
@@ -96,7 +96,7 @@
 
 
     </div>
-    {{-- UPDATE FORM HANDLDER--}}
+    {{-- 3) UPDATE FORM HANDLDER--}}
     @php
         $sessionDetect = '';
 
@@ -122,8 +122,8 @@
                 $keys = array_keys($attributes);
             @endphp
 
-            <div class="flex flex-col justify-center p-2 m-2 rounded-lg outline outline-1 outline-slate-300 bg-slate-100">
-                <div >
+            <div class="flex flex-col items-center justify-center p-2 m-2 rounded-lg hover:outline-blue-600 hover:bg-gray-200 outline outline-1 outline-slate-300 bg-slate-100">
+                <div class="m-2">
                     <h2 class="flex justify-center w-80"><strong>UPDATE DETIALS</strong></h2>
 
                 </div>
@@ -131,7 +131,7 @@
 
                     <form id="updateForm" name="updateForm" class="flex flex-col items-center justify-items-center" action="{{ route($update) }}" method="POST">
                         @csrf
-                        <div class="self-start">CURRENT: <strong><input type="hidden" id="currentValue" name="currentValue" value="{{ $attributes[$keys[1]] }}" >{{ $attributes[$keys[1]] }}</strong> <br></div>
+                        <div class="self-start">CURRENT:&nbsp;&nbsp;&nbsp;&nbsp;<strong><input type="hidden" id="currentValue" name="currentValue" value="{{ $attributes[$keys[1]] }}" >{{ $attributes[$keys[1]] }}</strong> <br></div>
 
                         <div class="self-start">
                             UPDATE TO <input id="updateInput" name="updateInput" class="p-1 m-1 rounded-sm outline outline-2 hover:outline-slate-500 outline-slate-300 hover:bg-blue-100" required>
@@ -148,10 +148,9 @@
 
     @endif
 
-    {{-- DELETE FORM HANLDER --}}
+    {{-- 4) DELETE FORM HANLDER --}}
     @php
     $sessionDelete = '';
-
 
     if (session()->has('process_delete')) {
         $sessionDelete = 'process_delete';
@@ -163,6 +162,7 @@
         $sessionDelete = 'none';
     }
     @endphp
+
     @if(session($sessionDelete) && Str::contains($sessionDelete,strtolower($parts)))
         @php
             $attributes = session($sessionDelete)->getAttributes();
@@ -171,9 +171,9 @@
         @endphp
 
 
-        <div class="flex flex-col justify-center p-2 m-2 bg-yellow-100 rounded-lg outline outline-1 outline-yellow-300">
+        <div class="flex flex-col items-center justify-center p-2 m-2 bg-yellow-100 rounded-lg outline outline-1 outline-yellow-300">
             <div >
-                <h2 class="flex justify-center w-80"><strong>DELETE DETIALS</strong></h2>
+                <h2 class="flex justify-center text-center w-80"><strong>DELETE DETIALS</strong></h2>
 
             </div>
             <div class="flex flex-col p-2">
@@ -193,7 +193,7 @@
         </div>
     @endif
 
-    {{--MESSAGE HANDLER --}}
+    {{-- 5) MESSAGE HANDLER --}}
     @if(session('update') == $compare)
         <x-updatehandler update="{{ session('update') }}" compare={{ $compare }}/>
     @endif

@@ -9,5 +9,5 @@ class ProcessModel extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['process'];
+    protected $fillable = ['process','ip_address'];
 }

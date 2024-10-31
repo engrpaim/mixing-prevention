@@ -12,12 +12,16 @@ class nav extends Component
     public $route;
     public $isLast;
     public $tooltip;
-    public function __construct(string $title, $route,$isLast,$tooltip)
+    public $svg;
+    public $color;
+    public function __construct(string $title, $route,$isLast,$tooltip,$svg,$color)
     {
         $this->title = $title;
         $this->route = $route;
         $this->isLast = $isLast;
         $this->tooltip = $tooltip;
+        $this->svg =$svg;
+        $this->color =$color;
     }
 
     /**

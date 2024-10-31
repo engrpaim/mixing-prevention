@@ -6,6 +6,14 @@ use Illuminate\Http\Request;
 
 class BeforeMaterialController extends Controller
 {
+    protected $clientIP;
+
+    public function __construct()
+    {
+        $this->clientIP = request()->ip();
+    }
+    
+
     public function delete(Request $request)
     {
 
@@ -46,6 +54,7 @@ class BeforeMaterialController extends Controller
             $dataToUpdate = BeforeMaterialModel::where('before_material', $currentValue)->first();
             if ($dataToUpdate) {
                 $dataToUpdate->before_material =  htmlspecialchars($updateInput, ENT_QUOTES, 'UTF-8');
+                $dataToUpdate->ip_address = htmlspecialchars($this->clientIP );
                 $dataToUpdate->save();
 
                 return redirect('/sections')->with([
@@ -81,6 +90,7 @@ class BeforeMaterialController extends Controller
 
             BeforeMaterialModel::create([
                 'before_material' =>$request->input('before_material'),
+                'ip_address' => htmlspecialchars($this->clientIP),
             ]);
 
             return redirect('/sections')->with(['success'=>$request->input('before_material'),

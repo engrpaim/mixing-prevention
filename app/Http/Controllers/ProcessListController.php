@@ -7,6 +7,13 @@ use App\Models\ProcessModel;
 
 class ProcessListController extends Controller
 {
+    protected $clientIP;
+
+    public function __construct()
+    {
+        $this->clientIP = request()->ip();
+    }
+
     public function delete(Request $request)
     {
 
@@ -34,7 +41,7 @@ class ProcessListController extends Controller
         try{
 
 
-            $clientIP = request()->ip();
+          
 
             $request->validate([
                 'currentValue' => 'required|string|max:255',
@@ -47,11 +54,11 @@ class ProcessListController extends Controller
             $dataToUpdate = ProcessModel::where('process', $currentValue)->first();
             if ($dataToUpdate) {
                 $dataToUpdate->process =  htmlspecialchars($updateInput, ENT_QUOTES, 'UTF-8');
-                $dataToUpdate->ip_address = htmlspecialchars( $clientIP);
+                $dataToUpdate->ip_address = htmlspecialchars($this->clientIP );
                 $dataToUpdate->save();
 
                 return redirect('/sections')->with([
-                    'new' => $request->input('updateInput'),
+                    'new' => 'updated to '.$request->input('updateInput'),
                     'current' => $request->input('currentValue'),
                     'update' => 'Process',
                 ]);
@@ -68,9 +75,9 @@ class ProcessListController extends Controller
 
 
     public function process_add(Request $request){
-
+      
         try {
-            $clientIP = request()->ip();
+           
 
             $request->validate(
                 [
@@ -88,7 +95,7 @@ class ProcessListController extends Controller
 
             ProcessModel::create([
                 'process' => $request->input('add_process'),
-                'ip_address' => $clientIP,
+                'ip_address' => htmlspecialchars($this->clientIP),
             ]);
             //dd($clientIP);
             return redirect('/sections')->with([
@@ -97,7 +104,7 @@ class ProcessListController extends Controller
             ]);
         } catch (\Exception $e) {
             return redirect('/sections')->with([
-                'success' => $request->input('add_process'),
+                'success' =>  $request->input('add_process'),
                 'process' => 'process already exist',]);
         }
     }

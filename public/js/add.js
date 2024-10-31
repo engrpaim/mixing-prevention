@@ -1,8 +1,9 @@
 function addModel(){
     const form = document.getElementById('add-model-form');
     if (form.checkValidity()) {
-
+        console.log('hello');
         const modelName = document.getElementById('model_name').value;
+        /*
         const width = document.getElementById('width').value;
         const maxWidth = document.getElementById('max_tolerance_width').value;
         const minWidth = document.getElementById('min_tolerance_width').value;
@@ -23,15 +24,17 @@ function addModel(){
 
         `;
 
-        document.getElementById('model_summary').innerHTML = detailsMessage;
+        document.getElementById('model_summary').innerHTML = detailsMessage;*/
         document.getElementById('add_model_btn').style.display = 'none';
         document.getElementById('confirm_details').style.display = 'block';
 
     } else {
-
+    
         form.reportValidity();
+      
 
     }
+  
 }
 
 function cancelAdd(){

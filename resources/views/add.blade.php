@@ -9,26 +9,43 @@
     <title>Mixing: Add</title>
 </head>
 <body>
-    <div class="flex items-center justify-end h-24 max-w-full bg-gray-100 outline outline-1 outline-gray-300 md:min-w-full sm:me-48 sm:px-64" >
-        <x-nav title="Add model" route="add" isLast="" tooltip="Insert new model"/>
-        <x-nav title="Update details" route="sections" isLast="" tooltip="Update material and processes"/>
-        <x-nav title="Check mixing" route="check" isLast="" tooltip="show or check mixing models"/>
-        <x-home-button/>
-    </div>
-    <h1>ADD MODEL : MIXING PREVENTION</h1><br>
-    <div>
-        <h3>MODEL DETAILS</h3>
+    @include('components.all-nav')
+  
+
+    <div class="shadow-gray-300 shadow-md shadow-cyan-500/50 rounded-lg w-auto m-2 m-24 min-w-fit">
+      <div class="flex justify-center bg-blue-200 py-4">
+        <h1 class="font-bold">ADD: MODEL DETAILS</h1>
+      </div>
+      <div class="p-5 font-semibold text">
         <form name="add-model-form" id="add-model-form" method="POST" action="{{ url('add-model-data') }}" >
             @csrf
-            <div>
-                <label for="model_name" required>MODEL NAME:</label>
-                <input name="model_name" id="model_name" required><br><br>
-            </div>
-            <div>
+            <label for="model_name" required>MODEL NAME:</label>
+            <input class="m-2 p-3 shadow-lg outline outline-1 outline-gray-300 rounded-lg hover:bg-blue-100 hover:outline-blue-500 hover:outline-2" name="model_name" id="model_name" placeholder="add model here" required><br><br>
+          
+            <x-error/>
+            <x-sucess/>
 
+            <x-submit-button type="button" onclick="addModel()" style="block;" name="add" id="add_model_btn">Add model</x-submit-button>
+            <div id="confirm_details" style="display: none;">
+                <p>Are you sure you want to add model?</p>
+                <div  id="model_summary"></div>
+                <x-submit-button type="button" onclick="confirmAdd()" style="block;" name="confirm" id="confirm">CONFIRM</x-submit-button>
+                <x-submit-button type="button" onclick="cancelAdd()" style="block;" name="cancel" id="cancel">CANCEL</x-submit-button>
             </div>
+            <script type="text/javascript" src="{{ asset('js/add.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/allCaps.js') }}"></script>
+        </form>
+      </div>
+    </div>
+    
+
+   
+
+        
+        
+           
             <?php for($i = 0; $i < 1 ;$i++){?>
-            <h3>TOLERANCE SPECIFICATION</h3>
+            <!--h3>TOLERANCE SPECIFICATION</h3>
             <div>
                 <label for="width" required>WIDTH:</label>
                 <input type="number"  step="0.001" id="width" name="width" required>
@@ -54,26 +71,13 @@
                 <input type="number"  step="0.001" id="max_tolerance_thickness" name="max_tolerance_thickness" required>
                 <label for="min_tolerance_thickness" required>MIN:</label>
                 <input type="number"  step="0.001" id="min_tolerance_thickness" name="min_tolerance_thickness" required>
-            </div>
+            </div>!-->
             <?php } ?>
-            <br>
-            <x-error/>
-            <x-sucess/>
-            <br><br>
+           
+        
+ 
 
-            <x-submit-button type="button" onclick="addModel()" style="block;" name="add" id="add_model_btn">Add model</x-submit-button>
-            <div id="confirm_details" style="display: none;">
-                <p>Are you sure you want to add model?</p>
-                <div  id="model_summary"></div>
-                <x-submit-button type="button" onclick="confirmAdd()" style="block;" name="confirm" id="confirm">CONFIRM</x-submit-button>
-                <x-submit-button type="button" onclick="cancelAdd()" style="block;" name="cancel" id="cancel">CANCEL</x-submit-button>
-            </div>
-
-        </form>
-    </div>
-
-    <script type="text/javascript" src="{{ asset('js/add.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/allCaps.js') }}"></script>
+    
 
 </body>
 </html>

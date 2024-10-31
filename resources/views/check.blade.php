@@ -8,12 +8,7 @@
     <title>Check Mixing</title>
 </head>
 <body>
-    <div class="flex items-center justify-end h-24 max-w-full bg-gray-100 outline outline-1 outline-gray-300 md:min-w-full sm:me-48 sm:px-64" >
-        <x-nav title="Add model" route="add" isLast="" tooltip="Insert new model"/>
-        <x-nav title="Update details" route="sections" isLast="" tooltip="Update material and processes"/>
-        <x-nav title="Check mixing" route="check" isLast="" tooltip="show or check mixing models"/>
-        <x-home-button/>
-    </div>
+    @include('components.all-nav')
     you are in mixing page!
 </body>
 </html>

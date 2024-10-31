@@ -10,20 +10,18 @@ use App\Models\ProcessModel;
 use App\Models\BeforeMaterialModel;
 use App\Models\AfterMaterialModel;
 
-Route::get('/mixing-prevention', function () {
-    return view('home');
-});
+//views
 
-Route::get('/add',function(){
-    return view('add');
-});
+Route::view('/mixing-prevention', 'home');
+Route::view('/add','add');
+Route::view('/check','check');
+Route::redirect('/','/mixing-prevention');
 
-Route::get('/check',function(){
-    return view('check');
-});
+//request routes
 Route::get('/sections',function(){
     return view('sections');
 });
+Route::get('/sections', [UpdateTablesController::class, 'allMaterials']);
 
 Route::prefix('process')->group(function () {
 
@@ -87,5 +85,5 @@ foreach ($deleteRoutes as $name => $controller) {
 
 
 
-Route::get('/sections', [UpdateTablesController::class, 'allMaterials']);
+
 

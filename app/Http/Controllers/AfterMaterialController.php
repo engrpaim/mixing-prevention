@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 
 class AfterMaterialController extends Controller
 {
+    public function __construct()
+    {
+        $this->clientIP = request()->ip();
+    }
+    
+
     public function delete(Request $request)
     {
 
@@ -46,6 +52,8 @@ class AfterMaterialController extends Controller
             $dataToUpdate = AfterMaterialModel::where('after_material', $currentValue)->first();
             if ($dataToUpdate) {
                 $dataToUpdate->after_material =  htmlspecialchars($updateInput, ENT_QUOTES, 'UTF-8');
+                $dataToUpdate->ip_address = htmlspecialchars($this->clientIP );
+
                 $dataToUpdate->save();
 
                 return redirect('/sections')->with([
@@ -75,6 +83,7 @@ class AfterMaterialController extends Controller
 
             AfterMaterialModel::create([
                 'after_material'=>$request->input('after_material'),
+                'ip_address' => htmlspecialchars($this->clientIP),
             ]);
 
             return redirect('/sections')->with(['success'=>$request->input('after_material'),

@@ -1,3 +1,4 @@
+
 <div class="h-auto p-2 m-1 rounded-lg hover:bg-red-50 w-96 md:m-4 md:mt-1 max-h-auto max-w-96 min-w-fit min-h-fit outline outline-1 outline-gray-300">
 
 
@@ -16,17 +17,20 @@
 
             </tr>
         </thead>
-        <tbody >
+        <tbody  class="p-4">
 
 
             @if(count($array) <= 0)
+            <div>
                 <td class="p-2 py-10 italic text-center bg-red-100 rounded-lg w-96 outline outline-2 outline-red-500 justify-content-center">No data found</td>
+            </div>
+               
             @endif
     {{-- 1) TABLE DISPLAY DATA, DELETE BUTTON AND EDIT BUTTON --}}
             @foreach($array  as $data)
                 <tr >
-                     <td class="flex items-center justify-between p-3 m-1 bg-gray-100 rounded-lg hover:font-bold outline outline-gray-200 outline-1 hover:outline-2 hover:outline-yellow-300 hover:bg-yellow-50 w-96">{{ $data->{$column} }}
-                        <div class="flex flex-row">
+                    <td class="flex items-center justify-between p-3 m-1 bg-gray-100 rounded-lg hover:font-bold outline outline-gray-200 outline-1 hover:outline-2 hover:outline-yellow-300 hover:bg-yellow-50 w-96">{{ $data->{$column} }}
+                    <div class="flex flex-row">
                         <a href="{{ url(strtolower($parts ."/").'edit/'.$data->id) }}" >
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-10 hover:text-blue-500" viewBox="0 -0.5 25 25" fill="none">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M17.7 5.12758L19.266 6.37458C19.4172 6.51691 19.5025 6.71571 19.5013 6.92339C19.5002 7.13106 19.4128 7.32892 19.26 7.46958L18.07 8.89358L14.021 13.7226C13.9501 13.8037 13.8558 13.8607 13.751 13.8856L11.651 14.3616C11.3755 14.3754 11.1356 14.1751 11.1 13.9016V11.7436C11.1071 11.6395 11.149 11.5409 11.219 11.4636L15.193 6.97058L16.557 5.34158C16.8268 4.98786 17.3204 4.89545 17.7 5.12758Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

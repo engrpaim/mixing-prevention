@@ -41,7 +41,7 @@ class ProcessListController extends Controller
         try{
 
 
-          
+
 
             $request->validate([
                 'currentValue' => 'required|string|max:255',
@@ -75,9 +75,9 @@ class ProcessListController extends Controller
 
 
     public function process_add(Request $request){
-      
+
         try {
-           
+
 
             $request->validate(
                 [

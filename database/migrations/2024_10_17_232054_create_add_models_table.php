@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('add_models', function (Blueprint $table) {
             $table->id()->autoIncrement()->primary();
             $table->string('model_name')->unique('model_name');
-            $table->decimal('width');
-            $table->decimal('max_tolerance_width');
-            $table->decimal('min_tolerance_width');
-            $table->decimal('length');
-            $table->decimal('max_tolerance_length');
-            $table->decimal('min_tolerance_length');
-            $table->decimal('thickness');
-            $table->decimal('max_tolerance_thickness');
-            $table->decimal('min_tolerance_thickness');
+            $table->decimal('width')->default(0.00);
+            $table->decimal('max_tolerance_width')->default(0.00);
+            $table->decimal('min_tolerance_width')->default(0.00);
+            $table->decimal('length')->default(0.00);
+            $table->decimal('max_tolerance_length')->default(0.00);
+            $table->decimal('min_tolerance_length')->default(0.00);
+            $table->decimal('thickness')->default(0.00);
+            $table->decimal('max_tolerance_thickness')->default(0.00);
+            $table->decimal('min_tolerance_thickness')->default(0.00);
             $table->string('ip_address')->default('UNKNOWN');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();

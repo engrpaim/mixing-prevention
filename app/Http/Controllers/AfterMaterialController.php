@@ -6,11 +6,13 @@ use Illuminate\Http\Request;
 
 class AfterMaterialController extends Controller
 {
+    protected $clientIP;
+
     public function __construct()
     {
         $this->clientIP = request()->ip();
     }
-    
+
 
     public function delete(Request $request)
     {
@@ -93,4 +95,5 @@ class AfterMaterialController extends Controller
             'process'=>'after(material) already exist']);
         }
     }
+
 }

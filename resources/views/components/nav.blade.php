@@ -11,7 +11,7 @@
         </button>
     </a>
 
-    <span class='tooltip bg-{{$color}}-600 px-1 w-52 min-w-fit text-center'>{{ $tooltip }}</span>
+    <span class='px-1 text-center bg-gray-600 tooltip w-52 min-w-fit'>{{ $tooltip }}</span>
 </div>
 
 

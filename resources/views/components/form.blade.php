@@ -1,5 +1,5 @@
 <div class="p-2 rounded w-96 min-h-fit hover:bg-yellow-100 min-w-fit md:m-4 max-h-28 outline outline-1 outline-gray-300">
-    <form class="flex flex-col items-center p-3" name="{{ $formName }}" id="{{ $formId }}" method="{{ $method }}" action="{{ url($action) }}" >
+    <form class="flex flex-col items-center p-3 max-md:p-5" name="{{ $formName }}" id="{{ $formId }}" method="{{ $method }}" action="{{ url($action) }}" >
         @csrf
         <div>
         <label for="{{ $name }}">{{ $show }}</label>

@@ -14,7 +14,7 @@ class nav extends Component
     public $tooltip;
     public $svg;
     public $color;
-    public function __construct(string $title, $route,$isLast,$tooltip,$svg,$color)
+    public function __construct(string $title, $route,$isLast,$tooltip,$svg,$color='gray')
     {
         $this->title = $title;
         $this->route = $route;

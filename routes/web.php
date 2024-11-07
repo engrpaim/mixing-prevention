@@ -18,6 +18,7 @@ Route::view('/check','check');
 Route::redirect('/','/mixing-prevention');
 
 //request routes
+Route::get('/add', [AddModelController::class, 'selectOptionProcess']);
 Route::get('/sections',function(){
     return view('sections');
 });
@@ -58,6 +59,7 @@ Route::get('{type}/{action}/{id}', function($type,$action , $id) {
 });
 
 Route::post('add-model-data',[AddModelController::class,'add']);
+Route::post('specs-model-data',[AddModelController::class,'tables']);
 Route::post('add-process-data',[ProcessListController::class,'process_add']);
 Route::post('before-material-data',[BeforeMaterialController::class,'beforeMaterial']);
 Route::post('after-material-data',[AfterMaterialController::class,'afterMaterial']);

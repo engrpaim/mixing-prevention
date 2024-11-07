@@ -12,7 +12,7 @@ class BeforeMaterialController extends Controller
     {
         $this->clientIP = request()->ip();
     }
-    
+
 
     public function delete(Request $request)
     {

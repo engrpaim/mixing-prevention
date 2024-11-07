@@ -10,8 +10,10 @@
 </head>
 <body>
 <div >
-    @include('components.all-nav')
-    @include('components.all-tables')
+    <div class="flex flex-col items-center mx-0">
+        @include('components.all-nav')
+        @include('components.all-tables')
+    </div>
 </div>
 
 

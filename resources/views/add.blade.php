@@ -24,7 +24,7 @@
                     <div class="flex flex-row mx-2 ">
                         <div class="flex flex-row mr-10">
                             <div class="flex-col mx-5 mt-3 min-w-fit">
-                                <label for="model_name" required>MODEL NAME:</label>
+                                <label for="model_name" required>Model name:</label>
                             </div>
                             <div class="flex flex-row">
                                 <input class="p-3 mx-2 rounded-lg shadow-lg max-h-fit outline outline-1 outline-gray-300 hover:bg-blue-100 hover:outline-blue-500 hover:outline-2" name="model_name" id="model_name" placeholder="add model here" required>
@@ -42,71 +42,61 @@
 
 
 
-            <form name="specs-model-form" id="specs-model-form" method="POST" action="{{ url('specs-model-data') }}" class="flex flex-col">
+            <form name="specs-model-form" id="specs-model-form" method="POST" action="{{ url('specs-model-data') }}" class="flex flex-col ">
                 @csrf
                 <input type="hidden" name="selected_processes2" id="selected_processes2">
+                <input type="hidden" name="model_name2" id="model_name2">
 
                 <x-submit-button type="button" onclick="addSpecs()" style="block;" name="update" id="add_specs_btn">Add specs</x-submit-button>
-                @if (session('processedData'))
-                    <script> //add-model-form
-                             document.getElementById('add_specs_btn').style.display ='none';
-                             document.getElementById('add-model-form').style.display ='none';
-                    </script>
-                    <div class="flex flex-row">
-                    @foreach (session('processedData') as $data)
-                        @foreach ($data as $key => $value )
-                            @php
 
-                            //@dump($key);
-                            $processNumber= explode('_',$key);
-                            $processNumber = (int)$processNumber[1]+1;
-                            //@dump($processNumber[1]);
-                            @endphp
-
-                            <div class="flex-row p-3 m-2 rounded-lg shadow-lg w-96 h-fit min-h-fit outline-zinc-200 outline outline-1">
-                                <div class="flex flex-col items-center">
-                                    <div class="flex flex-col m-2">
-                                        <span>PROCESS {{ $processNumber }} </span>
-
-                                        </div>
-                                    <div class="flex flex-col self-start min-w-full p-2 rounded-md shadow-lg bg-violet-200">
-                                        <span>{{ $value }} </span>
-                                        </div>
-                                </div>
-                                <div>
-
-                                </div>
-                            </div>
-
-
-
-                        @endforeach
-                    @endforeach
-                    </div>
-
-                        {{-- BUTTONS --}}
-                      <div class="flex flex-col mt-10 mr-64 justify-self-start">
-
-                        <x-handler process="{{ session('process') }}" compare="Model" compareErr="model already exist"/>
-
-                        <x-submit-button type="button" onclick="addModel()" style="block;" name="add" id="add_model_btn">Add model</x-submit-button>
-
-                        <div id="confirm_details" style="display: none;">
-
-                            <p>Are you sure you want to add model?</p>
-                            <div  id="model_summary"></div>
-
-                            <x-submit-button type="button" onclick="confirmAdd()" style="block;" name="confirm" id="confirm">CONFIRM</x-submit-button>
-
-                            <x-submit-button type="button" onclick="cancelAdd()" style="block;" name="cancel" id="cancel">CANCEL</x-submit-button>
-
-                        </div>
-                    </div>
-
-                @endif
                 <script type="text/javascript" src="{{ asset('js/add.js') }}"></script>
                 <script type="text/javascript" src="{{ asset('js/processFlow.js') }}"></script>
             </form>
+            @if (session('processedData'))
+                    <script text="text/javascript" src="{{ asset('js/hide.js') }}">
+                    </script>
+                    <div>
+
+                    <form name="add-specs-form" id="add-specs-form" method="POST" action="{{ url('add-specs-data') }}" >
+                        @csrf
+                        <div class="flex flex-row justify-between mx-72">
+                            <div class="flex flex-col h-10 p-2 m-20 shadow-lg min-w-80 max-w-fit rounded-xl outline outline-1 outline-slate-200">
+                                <div  class="flex flex-row items-center justify-center">
+                                    <span ></span>Model:&nbsp;&nbsp;</span>
+                                    <span >{{ session('modelName') }}</span>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col p-2 m-10 bg-red-200 min-h-fit w-80 min-w-fit rounded-xl outline outline-2 outline-red-500">
+                                <div  class="flex flex-col items-center p-4 m-3">
+                                    <span name="message_info" id="message_info" class="text-center"><i><strong>Attention:</strong> Please verify all specification for more<br>accurate comparison</i></span>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="add_model" id="add_model" value={{ session('modelName')  }}>
+                        </div>
+                        <div class="flex flex-row items-center justify-center">
+                        @foreach (session('processedData') as $data)
+
+                            @foreach ($data as $key => $value )
+                                @php
+
+                                //@dump($key);
+                                //@dump(count(session('processedData')));
+                                $processNumber= explode('_',$key);
+                                $processNumber = (int)$processNumber[1]+1;
+                                //@dump($processNumber[1]);
+                                // color number value
+                                $colors = ["green" , "violet","red","blue"];
+                                //@dump( $colors[$processNumber-1]);
+                                @endphp
+                            <x-processplates :color="$colors[$processNumber-1]" :value="$value" :processNumber="$processNumber" />
+                            @endforeach
+                        @endforeach
+                        </div>
+                        <x-confirmseries/>
+                    </form>
+                @endif
 
         </div>
 

@@ -4,12 +4,16 @@ const hiddenInput2 = document.getElementById('selected_processes2');
 const container = document.getElementById("span-container");
 const selectCurrentValue = document.getElementById("process");
 const select = document.getElementById("process");
+const modelName = document.getElementById("model_name2");
+const currentValue = document.getElementById("model_name");
 let count =0;
-const color = ["green","violet","red","blue"];
+const color = ["green","violet","red","blue","yellow","pink"];
+//handle the visibility and validity of the first form using
 function addSpecs(){
     document.getElementById('add_specs_btn').style.display ='none';
     const form = document.getElementById('add-model-form');
     if (form.checkValidity()) {
+        document.getElementById('add_specs_btn').style.display = 'block';
         const modelName = document.getElementById('model_name').value;
         const process0 = document.getElementById('process_0').textContent;
 
@@ -18,17 +22,23 @@ function addSpecs(){
 
 
     } else {
-
-        form.reportValidity();
         document.getElementById('add_specs_btn').style.display = 'block';
+        form.reportValidity();
+
 
     }
 
 }
+currentValue.addEventListener("input",function(event){
+    const passedValue = event.target.value;
+    modelName.value = passedValue;
+    console.log(modelName);
+})
+
 select.addEventListener("change", () => {
 
 
-    if(processSpan.length < 4){
+    if(processSpan.length < 7){
         count++;
         const selectedValue = select.value;
 
@@ -43,6 +53,9 @@ select.addEventListener("change", () => {
         }
     }
 });
+
+//Create span in process flow
+
 function renderSpans() {
     console.log(processSpan.length);
     container.innerHTML = '';
@@ -97,14 +110,15 @@ function renderSpans() {
 }
 }
 
-if(hiddenInput2){
+//update the value to be passed in 2 forms hiddeninput2 is for add specs
+
+function updateHiddenInput() {
 
     console.log(hiddenInput2);
-}
-function updateHiddenInput() {
-    console.log(hiddenInput2);
+
     hiddenInput.value = processSpan.join(';');
     hiddenInput2.value = processSpan.join(';');
-}
 
+}
+//updates the view of the process flow
 renderSpans();

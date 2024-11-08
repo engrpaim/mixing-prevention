@@ -24,7 +24,9 @@ class AddModelController extends Controller
     }
 
     public function tables(Request $request){
+        //dd($request->all());
         $processedData = [];
+        $modelName = $request->input("model_name2");
         $allModel = $this->Models;
         $allProcess = $request->input('selected_processes2');
         $processArray = explode(';', $allProcess);
@@ -36,15 +38,15 @@ class AddModelController extends Controller
 
 
 
-        return redirect('/add')->with (compact('processedData','allModel'));
+        return redirect('/add')->with (compact('processedData','allModel' , 'modelName'));
     }
 
     public function add(Request $request)
     {
-        dd($request->all());
+        dD($request->all());
         try{
             $request->validate([
-            'model_name' => 'required|string|max:255|unique:add_models,model_name',
+            'model_name2' => 'required|string|max:255|unique:add_models,model_name',
             /*
             'width' => 'required|numeric',
             'max_tolerance_width' => 'required|numeric',
@@ -60,7 +62,7 @@ class AddModelController extends Controller
             ]);
 
         AddModel::create([
-            'model_name' => $request->input('model_name'),
+            'model_name2' => $request->input('model_name2'),
             /*
             'width' => $request->input('width'),
             'max_tolerance_width' => $request->input('max_tolerance_width'),
@@ -73,12 +75,12 @@ class AddModelController extends Controller
             'min_tolerance_thickness' => $request->input('min_tolerance_thickness'),*/
         ]);
 
-        return redirect('/add')->with(['success'=> $request->input('model_name'),
+        return redirect('/add')->with(['success'=> $request->input('model_name2'),
                                         'process'=>'Model' ,]);
         } catch (\Exception $e) {
 
             return redirect('/add')->with([
-                'success' => $request->input('model_name'),
+                'success' => $request->input('model_name2'),
                 'process' => 'model already exist',]);
         }
     }

@@ -1,8 +1,8 @@
 
 function addModel(){
-    const form = document.getElementById('add-model-form');
+    const form = document.getElementById('specs-model-form');
     if (form.checkValidity()) {
-        const modelName = document.getElementById('model_name').value;
+        const modelName = document.getElementById('model_name2').value;
         const process0 = document.getElementById('process_0').textContent;
        // const process1 = document.getElementById('process_1').textContent;
         /*
@@ -30,9 +30,9 @@ function addModel(){
         document.getElementById('confirm_details').style.display = 'block';
 
     } else {
-
-        form.reportValidity();
         document.getElementById('add_specs_btn').style.display = 'block';
+        form.reportValidity();
+
 
     }
 
@@ -46,7 +46,7 @@ function cancelAdd(){
 
 function confirmAdd(){
 
-    document.getElementById("add-model-form").submit();
+    document.getElementById("add-specs-form").submit();
 
 }
 

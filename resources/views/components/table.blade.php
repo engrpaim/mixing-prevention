@@ -177,7 +177,7 @@
 
         <div class="flex flex-col items-center justify-center p-2 m-2 bg-yellow-100 rounded-lg outline outline-1 outline-yellow-300">
             <div >
-                <h2 class="flex justify-center text-center w-80"><strong>DELETE DETIALS</strong></h2>
+                <h2 class="flex justify-center text-center w-80"><strong>DELETE DETAILS</strong></h2>
 
             </div>
             <div class="flex flex-col p-2">

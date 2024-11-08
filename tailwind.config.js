@@ -2,7 +2,7 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 
 /** @type {import('tailwindcss').Config} */
 
-const colors = ['yellow', 'violet', 'green','blue','red','gray','white'];
+const colors = ['yellow', 'violet', 'green','blue','red','gray','white','pink'];
 
 const safelist = [
     ...colors.flatMap(color => [
@@ -20,6 +20,7 @@ const safelist = [
         `text-${color}`,
         `hover:text-${color}-50`,
     ]),
+    'flex flex-col', 'flex flex-row',
 
 ];
 

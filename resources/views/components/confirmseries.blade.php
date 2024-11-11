@@ -1,9 +1,9 @@
 <div class="flex flex-col mt-10 mr-64 justify-self-start">
-
+    <div class="flex flex-col">
     <x-handler process="{{ session('process') }}" compare="Model" compareErr="model already exist"/>
 
     <x-submit-button type="button" onclick="addModel()" style="block;" name="add" id="add_model_btn">Add model</x-submit-button>
-
+    </div>
     <div id="confirm_details" style="display: none;">
 
         <p>Are you sure you want to add model?</p>

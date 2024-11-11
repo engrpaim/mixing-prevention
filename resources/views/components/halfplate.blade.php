@@ -1,6 +1,5 @@
-
-
-    <div class="flex flex-row">
+<div class="flex flex-col items-center justify-center p-3 m-2 shadow-lg rounded-xl w-72 h-fit outline outline-1 outline-slate-200 min-h-fit">
+    <div class="flex flex-col">
         <div class="flex flex-col items-center">
             <div class="flex flex-col m-2">
                 <span class="">Process {{ $processNumber }} </span>
@@ -11,3 +10,4 @@
             </div>
         </div>
     </div>
+</div>

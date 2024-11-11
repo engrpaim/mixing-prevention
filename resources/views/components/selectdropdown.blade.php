@@ -4,10 +4,17 @@
     </div>
     <div class="flex flex-row">
         <select name="process" id="process" placeholder="hello"  class="p-3 ml-2 rounded-lg shadow-lg max-h-fit min-w-fit outline outline-1 outline-gray-300 hover:bg-blue-100 hover:outline-blue-500 hover:outline-2" name="model_name" id="model_name" required>
-                <option   disabled selected></option>
-            @foreach ($array as $tableColumn)
-                <option value="{{ $tableColumn->$column }}">{{ $tableColumn->$column }}</option>
-            @endforeach
+            @if(count($array ) <= 0){
+                <option  value=""   disabled selected>No data found</option>
+            }
+            @else
+                @foreach ($array as $tableColumn)
+                    <option value="{{ $tableColumn->$column }}">{{ $tableColumn->$column }}</option>
+                @endforeach
+            @endif
+
+
+
         </select>
     </div>
     @if ($show == 'YES')

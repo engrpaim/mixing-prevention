@@ -12,8 +12,8 @@
     @include('components.all-nav')
 
 
-    <div class="flex flex-col self-center w-screen m-auto mt-24 rounded-lg shadow-md shadow-gray-300 min-w-fit max-w-fit">
-        <div   div class="flex justify-center py-4 bg-blue-200 min-w-fit">
+    <div class="flex flex-col self-center w-screen m-auto mt-24 rounded-lg shadow-md shadow-gray-300 min-w-fit max-w-fit min-h-auto">
+        <div   div class="flex justify-center w-full py-4 bg-blue-200 min-w-fit">
             <h1 class="font-bold">ADD: MODEL DETAILS</h1>
         </div>
         <div class="flex flex-col flex-wrap p-5 font-semibold w-96 min-w-fit">
@@ -42,7 +42,7 @@
 
 
 
-            <form name="specs-model-form" id="specs-model-form" method="POST" action="{{ url('specs-model-data') }}" class="flex flex-col ">
+            <form name="specs-model-form" id="specs-model-form" method="POST" action="{{ url('specs-model-data') }}" class="max-min-fit ">
                 @csrf
                 <input type="hidden" name="selected_processes2" id="selected_processes2">
                 <input type="hidden" name="model_name2" id="model_name2">
@@ -52,61 +52,69 @@
                 <script type="text/javascript" src="{{ asset('js/add.js') }}"></script>
                 <script type="text/javascript" src="{{ asset('js/processFlow.js') }}"></script>
             </form>
-            @if (session('processedData'))
-                    <script text="text/javascript" src="{{ asset('js/hide.js') }}">
-                    </script>
-                    <div>
 
-                    <form name="add-specs-form" id="add-specs-form" method="POST" action="{{ url('add-specs-data') }}" >
-                        @csrf
-                        <div class="flex flex-row justify-between mx-72">
-                            <div class="flex flex-col h-10 p-2 m-20 shadow-lg min-w-80 max-w-fit rounded-xl outline outline-1 outline-slate-200">
-                                <div  class="flex flex-row items-center justify-center">
-                                    <span ></span>Model:&nbsp;&nbsp;</span>
-                                    <span >{{ session('modelName') }}</span>
-                                </div>
+
+        </div>
+        @if (session('processedData'))
+        <script text="text/javascript" src="{{ asset('js/hide.js') }}">
+        </script>
+        <divs class="flex flex-col items-center justify-center ">
+
+            <form name="add-specs-form" id="add-specs-form" method="POST" action="{{ url('add-specs-data') }}" >
+                @csrf
+                <div class="flex flex-row items-center justify-center">
+                    <div class="flex flex-row justify-between mx-10">
+                        <div class="flex flex-col h-10 p-2 m-20 shadow-lg min-w-80 max-w-fit rounded-xl outline outline-1 outline-slate-200">
+                            <div  class="flex flex-row items-center justify-center">
+                                <span >Model:&nbsp;&nbsp;</span>
+                                <span >{{ session('modelName') }}</span>
+                                <input type="hidden" name="add_model" id="add_model" value={{ session('modelName')  }}/>
                             </div>
-
-                            <div class="flex flex-col p-2 m-10 bg-red-200 min-h-fit w-80 min-w-fit rounded-xl outline outline-2 outline-red-500">
-                                <div  class="flex flex-col items-center p-4 m-3">
-                                    <span name="message_info" id="message_info" class="text-center"><i><strong>Attention:</strong> Please verify all specification for more<br>accurate comparison</i></span>
-                                </div>
-                            </div>
-
-                            <input type="hidden" name="add_model" id="add_model" value={{ session('modelName')  }}>
                         </div>
-                        <div class="flex flex-row items-center justify-center">
-                        @foreach (session('processedData') as $data)
+                    </div>
 
-                            @foreach ($data as $key => $value )
-                                @php
-
-                                //@dump($key);
-                                //@dump(count(session('processedData')));
-                                $processNumber= explode('_',$key);
-                                $processNumber = (int)$processNumber[1]+1;
-                                //@dump($processNumber[1]);
-                                // color number value
-                                $colors = ["green" , "violet","red","blue"];
-                                //@dump( $colors[$processNumber-1]);
-                                @endphp
-                            <x-processplates :color="$colors[$processNumber-1]" :value="$value" :processNumber="$processNumber" />
-                            @endforeach
-                        @endforeach
+                    <div class="flex flex-row p-2 m-10 bg-red-200 min-h-fit w-80 min-w-fit rounded-xl outline outline-2 outline-red-500">
+                        <div  class="flex flex-row items-center p-4 m-3">
+                            <span name="message_info" id="message_info" class="text-center"><i><strong>Attention:</strong> Please verify all specification for more<br>accurate comparison</i></span>
                         </div>
-                        <x-confirmseries/>
-                    </form>
-                @endif
+                    </div>
+                </div>
+
+                <div class="flex flex-col">
+                    <x-specstable :fourth="3" />
+                </div>
+
+
+                <div class="flex flex-col">
+                    <x-specstable2 :fifth="3"/>
+                </div>
+
+
+
+
+
+                <div>
+                    <x-confirmseries/>
+                </div>
+
+
+
+
 
         </div>
 
+
+
+        @endif
+
+
+
+
+    </form>
     </div>
 
 
 
-    @php
-        @dump(session()->all())
-    @endphp
 
 
 

@@ -19,8 +19,9 @@ const safelist = [
         `hover:bg-${color}-600`,
         `text-${color}`,
         `hover:text-${color}-50`,
+        'flex-col',
+        'flex-row',
     ]),
-    'flex flex-col', 'flex flex-row',
 
 ];
 
@@ -42,11 +43,14 @@ export default {
             },
             width: {
 
-                'screen': '300px',
+                'screen': '100rem',
               },
 
               spacing: {
                 '1/3': '10%',
+              },
+              translate: {
+                'first': '36rem',
               }
 
         },

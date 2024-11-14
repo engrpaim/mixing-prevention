@@ -1,5 +1,5 @@
 
-<div class="flex flex-col items-center justify-center w-screen">
+<div class="flex flex-col items-center justify-center w-screen ">
    @foreach (session('processedData') as $data)
         @foreach ($data as $key => $value )
             @php

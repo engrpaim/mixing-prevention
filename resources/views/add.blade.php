@@ -11,8 +11,8 @@
 <body>
     @include('components.all-nav')
 
-    @dump(get_defined_vars())
-    <div class="flex flex-col self-center w-screen m-auto my-10 text-base rounded-lg shadow-sm mt-14 h-fit shadow-gray-300 min-w-fit max-w-fit">
+
+    <div class="flex flex-col self-center w-screen m-auto my-10 text-base rounded-lg shadow-xl mt-14 h-fit shadow-gray-300 min-w-fit max-w-fit">
         <div   div class="flex justify-center w-full py-4 m-0 bg-blue-200 min-w-fit">
             <h1 class="font-bold">ADD: MODEL DETAILS</h1>
         </div>
@@ -82,46 +82,69 @@
 
         <form name="add-specs-form" id="add-specs-form" method="POST" action="{{ url('add-specs-data') }}" >
             @csrf
-            @dump(session()->all())
-            <divs class="flex flex-row items-center justify-center">
+
+            <div class="flex flex-row items-center justify-center">
 
                 <div class="flex flex-row justify-between mx-10">
+                    @php
+                        $selectedDetails = [
+                            [
+                                'title' => 'Model:',
+                                'session' => 'modelName',
+                                'id' => 'add_model',
+                            ],
+                            [
+                                'title' => 'Finish:',
+                                'session' => 'finish',
+                                'id' => 'finish_category',
+                            ],
+                            [
+                                'title' => 'Material(After):',
+                                'session' => 'after',
+                                'id' => 'after_details',
+                            ],
+                            [
+                                'title' => 'Material(Before):',
+                                'session' => 'before',
+                                'id' => 'before_details',
+                            ],
+                        ];
+                    @endphp
+
+                    @foreach ( $selectedDetails  as $targetValues )
+
+                        @foreach (  $targetValues  as  $keyTitle => $valueDetails)
+                            @if ($keyTitle === 'title')
+                                @php
+                                    $displayTitle = $valueDetails;
+                                @endphp
+                            @elseif($keyTitle === 'session')
+                                @php
+                                    $displaySession = $valueDetails;
+                                @endphp
+                            @else
+                                @php
+                                    $displayId = $valueDetails;
+                                @endphp
+                            @endif
+                        @endforeach
+
+                        <div class="flex flex-col h-10 p-2 m-10 shadow-lg min-w-80 max-w-fit rounded-xl outline outline-1 outline-slate-200">
+                            <div  class="flex flex-row items-center justify-center">
+                                <span class="font-bold">{{ $displayTitle }}&nbsp;&nbsp;</span>
+                                <span >{{ session($displaySession) }}</span>
+                                <input type="hidden" name="{{ $displayId }}" id="{{ $displayId }}" value="{{ session($displaySession)}}"/>
+                            </div>
+                        </div>
+                    @endforeach
 
 
-                    <div class="flex flex-col h-10 p-2 m-10 shadow-lg min-w-80 max-w-fit rounded-xl outline outline-1 outline-slate-200">
-                        <div  class="flex flex-row items-center justify-center">
-                            <span class="font-bold">Model:&nbsp;&nbsp;</span>
-                            <span >{{ session('modelName') }}</span>
-                            <input type="hidden" name="add_model" id="add_model" value={{ session('modelName')  }}/>
-                        </div>
-                    </div>
-                    <div class="flex flex-col h-10 p-2 m-10 shadow-lg min-w-80 max-w-fit rounded-xl outline outline-1 outline-slate-200">
-                        <div  class="flex flex-row items-center justify-center">
-                            <span class="font-bold">Finish:&nbsp;&nbsp;</span>
-                            <span >{{ session('finish') }}</span>
-                            <input type="hidden" name="add_model" id="add_model" value={{ session('finish')  }}/>
-                        </div>
-                    </div>
-                    <div class="flex flex-col h-10 p-2 m-10 shadow-lg min-w-80 max-w-fit rounded-xl outline outline-1 outline-slate-200">
-                        <div  class="flex flex-row items-center justify-center">
-                            <span class="font-bold">Material(After):&nbsp;&nbsp;</span>
-                            <span >{{ session('before') }}</span>
-                            <input type="hidden" name="add_model" id="add_model" value={{ session('finish')  }}/>
-                        </div>
-                    </div>
-                    <div class="flex flex-col h-10 p-2 m-10 shadow-lg min-w-80 max-w-fit rounded-xl outline outline-1 outline-slate-200">
-                        <div  class="flex flex-row items-center justify-center">
-                            <span class="font-bold">Material(Before):&nbsp;&nbsp;</span>
-                            <span >{{ session('after') }}</span>
-                            <input type="hidden" name="add_model" id="add_model" value={{ session('finish')  }}/>
-                        </div>
-                    </div>
                 </div>
-            </divs>
+            </div>
 
 
 
-        <div>
+        <div class="flex flex-col items-center justify-center ">
             <x-specstable :fourth="4"/>
         </div>
         @php
@@ -132,7 +155,7 @@
         @endphp
 
         @foreach ( $newSpecsTable as $min => $max )
-            <div>
+            <div class="flex flex-col items-center justify-center ">
                 <x-specstable2 :fifth="4" :min=$min  :max=$max />
             </div>
         @endforeach
@@ -146,8 +169,10 @@
 
 
 
-        <div>
-            <x-confirmseries/>
+        <div class="flex flex-col">
+            <div class="flex items-end">
+                <x-confirmseries/>
+            </div>
         </div>
 
 
@@ -156,7 +181,7 @@
 
 
         </form>
-
+    </divs>
 
         @endif
 

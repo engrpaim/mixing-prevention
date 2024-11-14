@@ -76,7 +76,7 @@ class AddModelController extends Controller
 
     public function add(Request $request)
     {
-
+        //dd($request->all());
         try{
             $request->validate([
             'model_name2' => 'required|string|max:255|unique:add_models,model_name',

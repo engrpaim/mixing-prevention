@@ -9,7 +9,7 @@ const safelist = [
         `hover:text-${color}-600`,
         `hover:bg-${color}-200`,
         `hover:outline-${color}-600`,
-        `bg-${color}-200`,
+        `bg-${color}-50`,
         `hover:bg-${color}-700`,
         `text-${color}-50`,
         `bg-${color}-700`,

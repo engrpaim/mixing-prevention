@@ -1,4 +1,4 @@
-<div class="flex flex-col mt-10 mr-64 justify-self-start">
+<div class="flex flex-col items-end justify-self-start">
     <div class="flex flex-col">
     <x-handler process="{{ session('process') }}" compare="Model" compareErr="model already exist"/>
 

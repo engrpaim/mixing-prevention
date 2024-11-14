@@ -1,8 +1,3 @@
-<div>
-    @dump(session('processedData'))
-</div>
-
-
 <div class="flex flex-col items-center justify-center w-screen">
     @foreach (session('processedData') as $data)
          @foreach ($data as $key => $value )
@@ -18,7 +13,7 @@
 
              @endphp
 
-             @if($processNumber2 > 3)
+             @if($processNumber2 > $min && $processNumber2 < $max )
 
                  <div class="flex flex-row ">
                      <x-processplates :color="$colors2[$processNumber2-1]" :value="$value" :processNumber="$processNumber2" :fourth="$fifth" />
@@ -31,4 +26,4 @@
 
  </div>
 
- </div>
+

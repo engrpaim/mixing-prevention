@@ -1,9 +1,9 @@
-<div class="flex flex-row pr-24 mx-2 min-h-fit min-w-fit ">
+<div class="flex flex-row m-3 mx-4 min-h-fit min-w-fit">
     <div class="flex flex-col mx-2 mt-3 min-w-fit">
-        <label for="process">Select Process:</label>
+        <label for="process">{{ $label }}</label>
     </div>
     <div class="flex flex-row">
-        <select name="process" id="process" placeholder="hello"  class="p-3 ml-2 rounded-lg shadow-lg max-h-fit min-w-fit outline outline-1 outline-gray-300 hover:bg-blue-100 hover:outline-blue-500 hover:outline-2" name="model_name" id="model_name" required>
+        <select name="{{ $column }}" id="{{ $column }}" placeholder="hello"  class="p-3 ml-2 rounded-lg shadow-lg max-h-fit min-w-fit outline outline-1 outline-gray-300 hover:bg-blue-100 hover:outline-blue-500 hover:outline-2" required>
             @if(count($array ) <= 0){
                 <option  value=""   disabled selected>No data found</option>
             }

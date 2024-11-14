@@ -5,10 +5,10 @@ use App\Http\Controllers\AddModelController;
 use App\Http\Controllers\ProcessListController;
 use App\Http\Controllers\BeforeMaterialController;
 use App\Http\Controllers\AfterMaterialController;
+use App\Http\Controllers\finishController;
 use App\Http\Controllers\UpdateTablesController;
 use App\Models\ProcessModel;
-use App\Models\BeforeMaterialModel;
-use App\Models\AfterMaterialModel;
+
 
 //views
 
@@ -41,23 +41,43 @@ Route::prefix('process')->group(function () {
 
 
 Route::get('{type}/{action}/{id}', function($type,$action , $id) {
-    $modelClass = $type === 'before' ? BeforeMaterialModel::class : AfterMaterialModel::class;
-    $material = $modelClass::find($id);
-
-    if($action == "edit")
-    {
 
 
-        return redirect('sections')->with("{$type}_material_edit", $material);
+    //routes for table in section
 
+    $actionRoutes = [
+                        'before' => 'App\Models\BeforeMaterialModel',
+                        'after' => 'App\Models\AfterMaterialModel',
+                        'finish' => 'App\Models\finishModels',
+                    ];
+
+    if (array_key_exists($type, $actionRoutes)) {
+
+        $classIdentifier = $actionRoutes[$type];
+        $material = $classIdentifier::find($id);
+
+    if ($material) {
+
+        if ($action == "edit") {
+            return redirect('sections')->with("{$type}_material_edit", $material);
+
+        } elseif ($action == "delete") {
+
+            return redirect('sections')->with("{$type}_material_delete", $material);
+        } else {
+
+            return redirect('sections')->withErrors('Invalid action specified.');
+        }
+    } else {
+
+        return redirect('sections')->withErrors('Material not found.');
+                        }
+    } else {
+        return redirect('sections')->withErrors('Invalid material type specified.');
     }
-    elseif($action == "delete")
-    {
-        return redirect('sections')->with("{$type}_material_delete", $material);
-    }
-
 });
 
+Route::post('finish-data',[finishController::class,'finishAdd']);
 Route::post('add-specs-data',[AddModelController::class,'add']);
 Route::post('specs-model-data',[AddModelController::class,'tables']);
 Route::post('add-process-data',[ProcessListController::class,'process_add']);
@@ -68,6 +88,7 @@ $updateRoutes = [
     'update-process-data-form' => ProcessListController::class,
     'update-before-data-form' => BeforeMaterialController::class,
     'update-after-data-form' => AfterMaterialController::class,
+    'update-finish-data-form' => finishController::class,
 ];
 
 foreach ($updateRoutes as $name => $controller) {
@@ -79,6 +100,7 @@ $deleteRoutes = [
     'delete-process-data-form' => ProcessListController::class,
     'delete-before-data-form' => BeforeMaterialController::class,
     'delete-after-data-form' => AfterMaterialController::class,
+    'delete-finish-data-form' => finishController::class,
 ];
 
 foreach ($deleteRoutes as $name => $controller) {

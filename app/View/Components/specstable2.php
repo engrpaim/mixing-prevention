@@ -12,11 +12,16 @@ class specstable2 extends Component
      * Create a new component instance.
      */
     public $fifth;
+    public $min;
+    public $max;
 
-    public function __construct($fifth)
+    public function __construct($fifth,$min,$max)
     {
         //
         $this->fifth = $fifth;
+        $this->min = $min;
+        $this->max = $max;
+
     }
 
     /**

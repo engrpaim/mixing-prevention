@@ -12,16 +12,15 @@
 
             @endphp
 
-            @if ($processNumber == 3)
+            @if ($processNumber == 2)
 
                 <div class="flex flex-col">
                     <x-processplates :color="$colors[$processNumber-1]" :value="$value" :processNumber="$processNumber" :fourth="$fourth" />
 
-            @elseif($processNumber < 3)
+            @elseif($processNumber < 2)
 
                 <div class="flex flex-row ">
                     <x-processplates :color="$colors[$processNumber-1]" :value="$value" :processNumber="$processNumber" :fourth="$fourth" />
-
             @endif
 
         @endforeach

@@ -2,8 +2,7 @@
 function addModel(){
     const form = document.getElementById('specs-model-form');
     if (form.checkValidity()) {
-        const modelName = document.getElementById('model_name2').value;
-        const process0 = document.getElementById('process_0').textContent;
+        const finish = document.getElementById('finish').textContent;
        // const process1 = document.getElementById('process_1').textContent;
         /*
         const maxWidth = document.getElementById('max_tolerance_width').value;

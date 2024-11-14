@@ -17,14 +17,16 @@ class selectdropdown extends Component
     public $show;
     public $title;
     public $array;
+    public $label;
 
-    public function __construct($column,$show,$title,$array)
+    public function __construct($column,$show,$title,$array,$label)
     {
 
         $this->column = $column;
         $this->show = $show;
         $this->title = $title;
         $this->array = $array;
+        $this->label = $label;
     }
 
     /**

@@ -1,17 +1,25 @@
-<div class="flex items-end justify-end w-screen mt-10">
+<div class="flex items-end justify-end w-screen mt-10 ">
     <div class="flex flex-col">
     <x-handler process="{{ session('process') }}" compare="Model" compareErr="model already exist"/>
 
     <x-submit-button type="button" onclick="addModel()" style="block;" name="add" id="add_model_btn">Add model</x-submit-button>
     </div>
-    <div id="confirm_details" style="display: none;" >
+    <div id="confirm_details" style="display: none;" class="absolute inset-0 z-50 justify-center hidden bg-black bg-opacity-50">
+        <div class="fixed inset-0 flex items-center justify-center z-50">
+            <div class="flex flex-col items-center justify-center rounded-lg outline outline-1 outline-slate-200 bg-slate-200 w-96 p-6">
+                <div class="flex flex-col">
+                    <p>Are you sure you want to add model?</p>
+                </div>
+                <div class="flex flex-col">
+                    <div class="flex flex-row gap-4">
+                        <div id="model_summary"></div>
 
-        <p>Are you sure you want to add model?</p>
-        <div  id="model_summary"></div>
+                        <x-submit-button type="button" onclick="confirmAdd()" style="block;" name="confirm" id="confirm">CONFIRM</x-submit-button>
 
-        <x-submit-button type="button" onclick="confirmAdd()" style="block;" name="confirm" id="confirm">CONFIRM</x-submit-button>
-
-        <x-submit-button type="button" onclick="cancelAdd()" style="block;" name="cancel" id="cancel">CANCEL</x-submit-button>
-
+                        <x-submit-button type="button" onclick="cancelAdd()" style="block;" name="cancel" id="cancel">CANCEL</x-submit-button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

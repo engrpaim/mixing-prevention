@@ -45,7 +45,20 @@ function cancelAdd(){
 
 function confirmAdd(){
 
-    document.getElementById("add-specs-form").submit();
+
+    const form2 = document.getElementById('add-specs-form');
+    if (form2.checkValidity()) {
+
+        document.getElementById("add-specs-form").submit();
+
+    } else {
+        document.getElementById('add_specs_btn').style.display = 'block';
+        form2.reportValidity();
+
+
+    }
+   // document.getElementById("add-specs-form").submit();
 
 }
+
 

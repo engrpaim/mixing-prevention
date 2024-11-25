@@ -9,6 +9,7 @@ const safelist = [
         `hover:text-${color}-600`,
         `hover:bg-${color}-200`,
         `hover:outline-${color}-600`,
+        `hover:outline-${color}-500`,
         `bg-${color}-50`,
         `hover:bg-${color}-700`,
         `text-${color}-50`,
@@ -43,7 +44,7 @@ export default {
             },
             width: {
 
-                'screen': '100rem',
+                'screen': '110rem',
               },
 
               spacing: {

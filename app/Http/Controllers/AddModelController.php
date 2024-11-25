@@ -9,8 +9,8 @@ use App\Models\finishModels;
 use App\Models\specifications;
 use App\Models\AfterMaterialModel;
 use App\Models\BeforeMaterialModel;
-
-
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AddModelController extends Controller
 {
@@ -54,7 +54,7 @@ class AddModelController extends Controller
 
         }
 
-
+        //dd($processIncluded );
 
         $modelName = $request->input("model_name2");
         $finish = $request->input("finish_selected");
@@ -71,51 +71,158 @@ class AddModelController extends Controller
 
 
 
-        return redirect('/add')->with (compact('processedData','allModel' , 'modelName','finish','processIncluded','after','before'));
+        return redirect('/add')->with (compact('processedData','allModel' , 'modelName','finish','processIncluded','after','before','allProcess'));
     }
 
     public function add(Request $request)
     {
-        //dd($request->all());
+
+     //dd($request->all());
+
         try{
-            $request->validate([
-            'model_name2' => 'required|string|max:255|unique:add_models,model_name',
-            /*
-            'width' => 'required|numeric',
-            'max_tolerance_width' => 'required|numeric',
-            'min_tolerance_width' => 'required|numeric',
-            'length' => 'required|numeric',
-            'max_tolerance_length' => 'required|numeric',
-            'min_tolerance_length' => 'required|numeric',
-            'thickness' => 'required|numeric',
-            'max_tolerance_thickness' => 'required|numeric',
-            'min_tolerance_thickness' => 'required|numeric',*/],
+            $totalProcessChecker = [];
+            $totalNumberPerSpecs = [];
+            $perProcessCounter = 0;
+            $specsCompareCount = '';
+            $countDimensionProcesses = 0;
+            $processesDimension = explode(";",$request->input('selected_processes3'));
+            $maxDimension = count($processesDimension) - 1;
+            $currentTable  = '';
+            $processCurrentCount  = 0;
+
+            $specsValidation = [];
+            $dataToSaved = [];
+            //Dynamic adding off the specs per table
+            $dataToSaved = [
+
+                'model' => $request->input('add_model'),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+
+            ];
+
+            //Static and dynamic validation for adding model and adding specs in table
+            $rulesValidation =
             [
-                'model_name.unique' => 'Model is already added',
+                [
+                    'add_model' => 'required|string|max:255|unique:add_models,model',
+                    'finish_category' => 'required|string|max:255',
+                    'after_details' => 'required|string|max:255',
+                    'before_details' => 'required|string|max:255',],
+                [
+                    'add_model.unique' => 'Model is already added',
+                ]
+            ];
+
+            $allRequest = $request->all();
+            //count the number of specs min max
+            foreach($allRequest as $key => $value){
+                $tableSpecs = explode('+',$key);
+                if(str_contains($tableSpecs[0], '%')){
+
+                    if($specsCompareCount == '' ){
+                        $perProcessCounter += 1;
+                        $specsCompareCount = $tableSpecs[0];
+                    }elseif($specsCompareCount != $tableSpecs[0]){
+                        array_push($totalProcessChecker,$tableSpecs[0]);
+                        $totalNumberPerSpecs [$tableSpecs[0]] = $perProcessCounter;
+                        dump( $totalNumberPerSpecs);
+                        $perProcessCounter = 1;
+                        $specsCompareCount = $tableSpecs[0];
+                    }else{
+                        $perProcessCounter += 1;
+                    }
+                }
+
+
+            }
+
+            //Dynamic data of specifications
+            foreach($allRequest as $key => $value){
+                if(str_contains($key, '%')){
+
+                    $columnName = explode('+',$key);
+
+
+                  if($currentTable != $columnName[0] && $currentTable != ''){
+                        //if new process save to unmigrated database
+                        dump($totalNumberPerSpecs[$columnName[0]]);
+                        $countDimensionProcesses += 1;
+                        $rulesValidation[0] = array_merge($rulesValidation[0],$specsValidation);
+                        $request->validate($rulesValidation);
+
+                        try{
+                           DB::table($currentTable)->insert($dataToSaved);
+                           $dataToSaved= [];
+                           $dataToSaved = [
+
+                            'model' => $request->input('add_model'),
+                            'created_at' => Carbon::now(),
+                            'updated_at' => Carbon::now(),
+
+                            ];
+                            $specsValidation[$key] = "required|numeric";
+                            $dataToSaved [$columnName[1]] = $request->input($key);
+                        }catch(\Exception $e){
+                            dd($e);
+                        }
+                        $currentTable = $columnName[0];
+                        dump('New table: '.$currentTable);
+
+                    }else{
+
+                        if( $currentTable == ''){
+                            dump("max: ".$maxDimension);
+                            $countDimensionProcesses += 1;
+                            $currentTable = $columnName[0];
+                        }
+                        $processCurrentCount += 1;
+                        $specsValidation[$key] = "required|numeric";
+                        $dataToSaved [$columnName[1]] = $request->input($key);
+                        echo $key."----->".$columnName[1]."---value--->".$value."<br/>";
+
+                    }
+                }
+            }
+            //Add the last process
+            if($maxDimension == $countDimensionProcesses){
+                dump('Process count dimension: '. $countDimensionProcesses);
+                dump('max: ' . $maxDimension);
+                dump($dataToSaved);
+                dump($perProcessCounter , $processCurrentCount);
+
+                $rulesValidation[0] = array_merge($rulesValidation[0],$specsValidation);
+                $request->validate($rulesValidation);
+
+                try{
+                   DB::table($currentTable)->insert($dataToSaved);
+                }catch(\Exception $e){
+                    dd($e);
+                }
+                $currentTable = $columnName[0];
+                dump('New table: '.$currentTable);
+            }
+          // dd('stop');
+
+
+
+
+            AddModel::create([
+                'model' => $request->input('add_model'),
+                'before' => $request->input('before_details'),
+                'after' => $request->input('after_details'),
+                'finish' => $request->input('finish_category'),
+                'process_flow' => $request->input('selected_processes3'),
             ]);
 
-        AddModel::create([
-            'model_name2' => $request->input('model_name2'),
-            /*
-            'width' => $request->input('width'),
-            'max_tolerance_width' => $request->input('max_tolerance_width'),
-            'min_tolerance_width' => $request->input('min_tolerance_width'),
-            'length' => $request->input('length'),
-            'max_tolerance_length' => $request->input('max_tolerance_length'),
-            'min_tolerance_length' => $request->input('min_tolerance_length'),
-            'thickness' => $request->input('thickness'),
-            'max_tolerance_thickness' => $request->input('max_tolerance_thickness'),
-            'min_tolerance_thickness' => $request->input('min_tolerance_thickness'),
-            */
-        ]);
 
-        return redirect('/add')->with(['success'=> $request->input('model_name2'),
+            return redirect('/add')->with(['success'=> $request->input('add_model'),
                                         'process'=>'Model' ,]);
-        } catch (\Exception $e) {
-
-            return redirect('/add')->with([
-                'success' => $request->input('model_name2'),
-                'process' => 'model already exist',]);
+            } catch (\Exception $e) {
+                dd($e);
+                return redirect('/add')->with([
+                    'success' => $request->input('model_name2'),
+                    'process' => 'model already exist',]);
+            }
         }
-    }
 }

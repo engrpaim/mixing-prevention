@@ -8,6 +8,7 @@ use App\Http\Controllers\AfterMaterialController;
 use App\Http\Controllers\finishController;
 use App\Http\Controllers\UpdateTablesController;
 use App\Models\ProcessModel;
+use App\Models\specifications;
 
 
 //views
@@ -16,7 +17,7 @@ Route::view('/mixing-prevention', 'home');
 Route::view('/add','add');
 Route::view('/check','check');
 Route::redirect('/','/mixing-prevention');
-
+Route::view('/flow','flow');
 //request routes
 Route::get('/add', [AddModelController::class, 'selectOptionProcess']);
 Route::get('/sections',function(){
@@ -33,7 +34,21 @@ Route::prefix('process')->group(function () {
 
     Route::get('delete/{id}', function($id){
         $process = ProcessModel::find($id);
-        return redirect('sections')->with('process_delete',$process);
+        return redirect('sections')->with(
+            'process_delete',$process);
+    });
+
+    Route::get('flow/{id}', function($id){
+
+        $process = ProcessModel::find($id);
+
+        $processFlow = specifications::where('specification',$process["process"])->first();
+        $processTitle = $process["process"];
+        $processFlows = $processFlow["processes"];
+        dump($processTitle);
+        dump($processFlow["processes"]);
+        //return $process["process"];
+        return view('flow',['process'=>$processTitle],['flow'=>$processFlows]);
     });
 
     Route::post('add', [ProcessListController::class, 'process_add']);

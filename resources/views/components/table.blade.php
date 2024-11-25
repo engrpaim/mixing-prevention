@@ -1,5 +1,5 @@
 
-<div class="mx-2  h-auto min-h-96 rounded-lg ml-2 hover:bg-red-50 w-72 md:mt-1 max-h-auto max-w-72 min-w-80 outline outline-1 outline-gray-300 m-0.5">
+<div class="flex flex-col mx-2  h-auto min-h-96 rounded-lg ml-2 hover:bg-red-50 w-72 md:mt-1 max-h-auto max-w-72 min-w-80 outline outline-1 outline-gray-300 m-0.5">
 
 
 
@@ -42,6 +42,13 @@
                                 <path d="M6 7V18C6 19.1046 6.89543 20 8 20H16C17.1046 20 18 19.1046 18 18V7M6 7H5M6 7H8M18 7H19M18 7H16M10 11V16M14 11V16M8 7V5C8 3.89543 8.89543 3 10 3H14C15.1046 3 16 3.89543 16 5V7M8 7H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </a>
+                        @if ($title == 'PROCESS')
+                            <a href="{{ url(strtolower($parts ."/").'flow/'.$data->id) }}">
+                                <svg xmlns="http://www.w3.org/2000/svg"  class=" hover:text-cyan-500" height="42px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+                                    <path d="M600-120v-120H440v-400h-80v120H80v-320h280v120h240v-120h280v320H600v-120h-80v320h80v-120h280v320H600ZM160-760v160-160Zm520 400v160-160Zm0-400v160-160Zm0 160h120v-160H680v160Zm0 400h120v-160H680v160ZM160-600h120v-160H160v160Z" fill="currentColor"/>
+                                </svg>
+                            </a>
+                        @endif
                     </div>
                     </td>
                 </tr>

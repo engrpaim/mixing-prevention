@@ -1,5 +1,6 @@
 
 <div class="relative flex flex-col items-center">
+
     <div class="flex flex-row self-start mt-2 ">
         <h1 class="font-bold">MANAGE INFORMATION</h1>
     </div>
@@ -71,7 +72,7 @@
     @endphp
 
     @foreach ($forms as $form)
-     <div class="flex flex-col">
+        <div class="flex flex-col">
             <x-form formName="{{ $form['formName'] }}" formId="{{ $form['formName'] }}" method="POST" action="{{ $form['action'] }}"
                 name="{{ strtolower($form['formName']) }}" show="{{ $form['show'] }}" placeholder="{{ $form['placeholder'] }}"
                 inputeId="{{ $form['inputId'] }}" inputName="{{ $form['inputName'] }}" buttonType="submit"
@@ -79,7 +80,7 @@
                 btnId="{{ $form['btnName'] }}" btnLabel="{{ $form['btnLabel'] }}"/>
 
             <x-handler process="{{ session('process') }}" compare="{{ $form['compare'] }}" compareErr="{{ $form['compareErr'] }}"/>
-     </div>
+        </div>
     @endforeach
 
 
@@ -98,14 +99,50 @@
             <h3 ><i>&nbsp;UPDATE/DELETE DATA</i></h3>
         </div>
     </div>
-    <div class="flex items-center justify-center max-sm:relative md:absolute mt-80 sm:flex-row updateTables max-md:flex-col max-md:items-center minw-w-fit">
+    <div class="flex flex-col items-center justify-center max-sm:relative md:absolute mt-80 sm:flex-row updateTables max-md:flex-col max-md:items-center minw-w-fit">
 
         <div class="flex my-4">
-        <x-table title="PROCESS" :array="$allProcess" column="process" compare="Process" />
-        <x-table title="BEFORE-MATERIAL" :array="$allBeforeMaterial" column="before_material"  compare="Before"/>
-        <x-table title="AFTER-MATERIAL" :array="$allAfterMaterial" column="after_material"  compare="After"/>
-        <x-table title="FINISH" :array="$allFinish" column="finish"  compare="Finish"/>
+            @php
+                $allTablesComponents =[
+                    [
+                        'title' => 'PROCESS',
+                        'array' => $allProcess,
+                        'column' => 'process',
+                        'compare' => 'Process',
+                    ],
+                    [
+                        'title' => 'BEFORE-MATERIAL',
+                        'array' => $allBeforeMaterial,
+                        'column' => 'before_material',
+                        'compare' => 'Before',
+                    ],
+                    [
+                        'title' => 'AFTER-MATERIAL',
+                        'array' => $allAfterMaterial,
+                        'column' => 'after_material',
+                        'compare' => 'After',
+                    ],
+                    [
+                        'title' => 'FINISH',
+                        'array' => $allFinish,
+                        'column' => 'finish',
+                        'compare' => 'Finish',
+                    ],
+
+                ];
+            @endphp
+
+            @foreach ($allTablesComponents as $tablesData)
+                <x-table title="{{ $tablesData['title'] }}" :array="$tablesData['array']" column="{{ $tablesData['column']  }}" compare="{{ $tablesData['compare']  }}" />
+            @endforeach
+
+
         </div>
+
+
+
+
+
     </div>
 
 </div>

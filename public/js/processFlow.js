@@ -167,16 +167,11 @@ function updateHiddenInput() {
     hiddenInput.value = processSpan.join(';');
     hiddenInput2.value = processSpan.join(';');
 
+
 }
 //updates the view of the process flow
 renderSpans();
 
 
-const inputs = document.querySelectorAll('input');
 
-// Loop through and log them or do something with the selected inputs
-inputs.forEach((input) => {
-    console.log(input);
-    // Example action: select all inputs
-    input.checked = true;  // If you want to check all checkboxes
-});
+

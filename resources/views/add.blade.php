@@ -35,17 +35,34 @@
                         </div>
                         </div>
                         <div class="flex flex-row items-center justify-center">
-                        <div class="{{ $hoverSelect }}">
-                            <x-selectdropdown label="Material(Before):" column="before_material" show="NO" title="" :array="$allBefore" />
-                        </div>
-
-                        <div class="{{ $hoverSelect }}">
-                            <x-selectdropdown label="Material(After):" column="after_material" show="NO" title="" :array="$allMaterial" />
-                        </div>
-
-                        <div class="{{ $hoverSelect }}">
-                            <x-selectdropdown label="Finish:" column="finish" show="NO" title="" :array="$allFinish" />
-                        </div>
+                            @php
+                            $dropDownData = [
+                                [
+                                    'label' => 'Material(Before):',
+                                    'column' => 'before_material',
+                                    'array' => $allBefore],
+                                [
+                                    'label' => 'Material(After):',
+                                    'column' => 'after_material',
+                                    'array' => $allMaterial],
+                                [
+                                    'label' => 'Finish:',
+                                    'column' => 'finish',
+                                    'array' => $allFinish
+                                ],
+                            ];
+                            @endphp
+                            @foreach ($dropDownData as $dropdown)
+                                <div class="{{ $hoverSelect }}">
+                                    <x-selectdropdown
+                                        label="{{ $dropdown['label'] }}"
+                                        column="{{ $dropdown['column'] }}"
+                                        show="NO"
+                                        title=""
+                                        :array="$dropdown['array']"
+                                    />
+                                </div>
+                            @endforeach
                         </div>
 
                     </div>
@@ -61,11 +78,35 @@
 
             <form name="specs-model-form" id="specs-model-form" method="POST" action="{{ url('specs-model-data') }}" class="max-min-fit ">
                 @csrf
-                <input type="hidden" name="selected_processes2" id="selected_processes2">
-                <input type="hidden" name="model_name2" id="model_name2">
-                <input type="hidden" name="finish_selected" id="finish_selected">
-                <input type="hidden" name="before_selected" id="before_selected">
-                <input type="hidden" name="after_selected" id="after_selected">
+                @php
+                    $inputForadd = [
+                        [
+                            'type' => 'hidden',
+                            'name' => 'selected_processes2'
+                        ],
+                        [
+                            'type' => 'hidden',
+                            'name' => 'model_name2'
+                        ],
+                        [
+                            'type' => 'hidden',
+                            'name' => 'finish_selected'
+                        ],
+                        [
+                            'type' => 'hidden',
+                            'name' => 'before_selected'
+                        ],
+                        [
+                            'type' => 'hidden',
+                            'name' => 'after_selected'
+                        ],
+                    ];
+                @endphp
+                @foreach ( $inputForadd as $inputData )
+                    <input type="{{ $inputData['type'] }}" name="{{ $inputData['name'] }}" id="{{ $inputData['name'] }}">
+                @endforeach
+
+
 
                 <x-submit-button type="button" onclick="addSpecs()" style="block;" name="update" id="add_specs_btn">Add specs</x-submit-button>
 
@@ -78,11 +119,26 @@
         @if (session('processedData'))
         <script text="text/javascript" src="{{ asset('js/hide.js') }}">
         </script>
-        <divs class="flex flex-col items-center justify-center p-10 mb-10 ">
+        <div class="flex flex-col items-center justify-center p-10 mb-10 ">
 
         <form name="add-specs-form" id="add-specs-form" method="POST" action="{{ url('add-specs-data') }}" >
             @csrf
+            @php
+                $allProcessesData = '';
+            @endphp
+            @foreach ( session('processedData') as $combine )
+                @foreach ( $combine as $combineKey => $combineValue )
 
+                        @php
+                            $allProcessesData = $allProcessesData . $combineValue . ";";
+                        @endphp
+
+                @endforeach
+
+            @endforeach
+            @dump( $allProcessesData)
+
+            <input type="hidden" name="selected_processes3" id="selected_processes3" value="{{ $allProcessesData }}" >
             <div class="flex flex-row items-center justify-center">
 
                 <div class="flex flex-row justify-between mx-10">
@@ -112,28 +168,11 @@
                     @endphp
 
                     @foreach ( $selectedDetails  as $targetValues )
-
-                        @foreach (  $targetValues  as  $keyTitle => $valueDetails)
-                            @if ($keyTitle === 'title')
-                                @php
-                                    $displayTitle = $valueDetails;
-                                @endphp
-                            @elseif($keyTitle === 'session')
-                                @php
-                                    $displaySession = $valueDetails;
-                                @endphp
-                            @else
-                                @php
-                                    $displayId = $valueDetails;
-                                @endphp
-                            @endif
-                        @endforeach
-
                         <div class="flex flex-col h-10 p-2 m-10 shadow-lg min-w-80 max-w-fit rounded-xl outline outline-1 outline-slate-200">
                             <div  class="flex flex-row items-center justify-center">
-                                <span class="font-bold">{{ $displayTitle }}&nbsp;&nbsp;</span>
-                                <span >{{ session($displaySession) }}</span>
-                                <input type="hidden" name="{{ $displayId }}" id="{{ $displayId }}" value="{{ session($displaySession)}}"/>
+                                <span class="font-bold">{{ $targetValues['title'] }}&nbsp;&nbsp;</span>
+                                <span >{{ session($targetValues['session']) }}</span>
+                                <input type="hidden" name="{{ $targetValues['id']  }}" id="{{ $targetValues['id'] }}" value="{{ session($targetValues['session'] )}}"/>
                             </div>
                         </div>
                     @endforeach
@@ -160,28 +199,14 @@
             </div>
         @endforeach
 
-
-
-
-
-
-
-
-
-
         <div class="flex flex-col">
             <div class="flex items-end">
                 <x-confirmseries/>
             </div>
         </div>
-
-
-
-
-
-
         </form>
-    </divs>
+
+    </div>
 
         @endif
 
@@ -206,3 +231,4 @@
 
 
 
+@dump(session()->all())

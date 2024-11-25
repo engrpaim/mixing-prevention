@@ -13,17 +13,11 @@ return new class extends Migration
     {
         Schema::create('add_models', function (Blueprint $table) {
             $table->id()->autoIncrement()->primary();
-            $table->string('model_name')->unique('model_name');
-            $table->decimal('width')->default(0.00);
-            $table->decimal('max_tolerance_width')->default(0.00);
-            $table->decimal('min_tolerance_width')->default(0.00);
-            $table->decimal('length')->default(0.00);
-            $table->decimal('max_tolerance_length')->default(0.00);
-            $table->decimal('min_tolerance_length')->default(0.00);
-            $table->decimal('thickness')->default(0.00);
-            $table->decimal('max_tolerance_thickness')->default(0.00);
-            $table->decimal('min_tolerance_thickness')->default(0.00);
-            $table->string('ip_address')->default('UNKNOWN');
+            $table->string('model')->unique('model_name');
+            $table->string('before');
+            $table->string('after');
+            $table->string('finish');
+            $table->string('process_flow');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });

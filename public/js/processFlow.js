@@ -174,4 +174,22 @@ renderSpans();
 
 
 
+function confirmAdd(){
 
+
+    const form2 = document.getElementById('add-specs-form');
+    if (form2.checkValidity()) {
+
+        document.getElementById("add-specs-form").submit();
+
+    } else {
+        document.getElementById('confirm_details').style.display = 'none';
+        document.getElementById('add_model_btn').style.display = 'block';
+        form2.reportValidity();
+        console.log('herllo');
+
+
+    }
+   // document.getElementById("add-specs-form").submit();
+
+}

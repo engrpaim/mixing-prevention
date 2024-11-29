@@ -136,7 +136,7 @@
                 @endforeach
 
             @endforeach
-            @dump( $allProcessesData)
+            {{--@dump( $allProcessesData)--}}
 
             <input type="hidden" name="selected_processes3" id="selected_processes3" value="{{ $allProcessesData }}" >
             <div class="flex flex-row items-center justify-center">
@@ -211,6 +211,10 @@
         @endif
 
 
+        <x-handler process="{{ session('process') }}" compare="Model" compareErr="model already exist"/>
+
+
+
 
 
 
@@ -231,4 +235,4 @@
 
 
 
-@dump(session()->all())
+{{--@dump(session()->all())--}}

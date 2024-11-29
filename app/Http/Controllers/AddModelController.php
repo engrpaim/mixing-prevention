@@ -126,7 +126,7 @@ class AddModelController extends Controller
                     }elseif($specsCompareCount != $tableSpecs[0]){
                         array_push($totalProcessChecker,$tableSpecs[0]);
                         $totalNumberPerSpecs [$tableSpecs[0]] = $perProcessCounter;
-                        dump( $totalNumberPerSpecs);
+                        //dump( $totalNumberPerSpecs);
                         $perProcessCounter = 1;
                         $specsCompareCount = $tableSpecs[0];
                     }else{
@@ -146,7 +146,7 @@ class AddModelController extends Controller
 
                   if($currentTable != $columnName[0] && $currentTable != ''){
                         //if new process save to unmigrated database
-                        dump($totalNumberPerSpecs[$columnName[0]]);
+                        //dump($totalNumberPerSpecs[$columnName[0]]);
                         $countDimensionProcesses += 1;
                         $rulesValidation[0] = array_merge($rulesValidation[0],$specsValidation);
                         $request->validate($rulesValidation);
@@ -164,32 +164,34 @@ class AddModelController extends Controller
                             $specsValidation[$key] = "required|numeric";
                             $dataToSaved [$columnName[1]] = $request->input($key);
                         }catch(\Exception $e){
-                            dd($e);
+                            return redirect('/add')->with([
+                                'success' => $request->input('add_model'),
+                                'process' => 'model already exist in '.$currentTable,]);
                         }
                         $currentTable = $columnName[0];
-                        dump('New table: '.$currentTable);
+                        //dump('New table: '.$currentTable);
 
                     }else{
 
                         if( $currentTable == ''){
-                            dump("max: ".$maxDimension);
+                            //dump("max: ".$maxDimension);
                             $countDimensionProcesses += 1;
                             $currentTable = $columnName[0];
                         }
                         $processCurrentCount += 1;
                         $specsValidation[$key] = "required|numeric";
                         $dataToSaved [$columnName[1]] = $request->input($key);
-                        echo $key."----->".$columnName[1]."---value--->".$value."<br/>";
+                        //echo $key."----->".$columnName[1]."---value--->".$value."<br/>";
 
                     }
                 }
             }
             //Add the last process
             if($maxDimension == $countDimensionProcesses){
-                dump('Process count dimension: '. $countDimensionProcesses);
-                dump('max: ' . $maxDimension);
-                dump($dataToSaved);
-                dump($perProcessCounter , $processCurrentCount);
+                // dump('Process count dimension: '. $countDimensionProcesses);
+                // dump('max: ' . $maxDimension);
+                // dump($dataToSaved);
+                // dump($perProcessCounter , $processCurrentCount);
 
                 $rulesValidation[0] = array_merge($rulesValidation[0],$specsValidation);
                 $request->validate($rulesValidation);
@@ -197,32 +199,37 @@ class AddModelController extends Controller
                 try{
                    DB::table($currentTable)->insert($dataToSaved);
                 }catch(\Exception $e){
-                    dd($e);
+                    return redirect('/add')->with([
+                        'success' => $request->input('add_model'),
+                        'process' => 'model already exist',]);
                 }
                 $currentTable = $columnName[0];
-                dump('New table: '.$currentTable);
+                // dump('New table: '.$currentTable);
             }
           // dd('stop');
 
 
+            try{
 
+                AddModel::create([
+                    'model' => $request->input('add_model'),
+                    'before' => $request->input('before_details'),
+                    'after' => $request->input('after_details'),
+                    'finish' => $request->input('finish_category'),
+                    'process_flow' => $request->input('selected_processes3'),
+                ]);
 
-            AddModel::create([
-                'model' => $request->input('add_model'),
-                'before' => $request->input('before_details'),
-                'after' => $request->input('after_details'),
-                'finish' => $request->input('finish_category'),
-                'process_flow' => $request->input('selected_processes3'),
-            ]);
+            }catch (\Exception $e) {
+                return redirect('/add')->with([
+                    'success' => $request->input('add_model'),
+                    'process' => 'model already exist',]);
+            }
 
 
             return redirect('/add')->with(['success'=> $request->input('add_model'),
                                         'process'=>'Model' ,]);
             } catch (\Exception $e) {
                 dd($e);
-                return redirect('/add')->with([
-                    'success' => $request->input('model_name2'),
-                    'process' => 'model already exist',]);
             }
         }
 }

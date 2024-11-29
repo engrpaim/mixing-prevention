@@ -3,11 +3,12 @@
         <label for="{{ $column }}">{{ $label }}</label>
     </div>
     <div class="flex flex-row">
-        <select name="{{ $column }}" id="{{ $column }}" placeholder="hello"  class="p-3 ml-2 rounded-lg shadow-lg max-h-fit min-w-fit outline outline-1 outline-gray-300 hover:bg-blue-100 hover:outline-blue-500 hover:outline-2" required>
+        <select name="{{ $column }}" id="{{ $column }}" class="p-3 ml-2 rounded-lg shadow-lg max-h-fit min-w-fit outline outline-1 outline-gray-300 hover:bg-blue-100 hover:outline-blue-500 hover:outline-2" required>
             @if(count($array ) <= 0){
                 <option  value=""   disabled selected>No data found</option>
             }
             @else
+                <option  value=""   disabled selected></option>
                 @foreach ($array as $tableColumn)
                     <option value="{{ $tableColumn->$column }}">{{ $tableColumn->$column }}</option>
                 @endforeach

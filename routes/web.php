@@ -5,10 +5,12 @@ use App\Http\Controllers\AddModelController;
 use App\Http\Controllers\ProcessListController;
 use App\Http\Controllers\BeforeMaterialController;
 use App\Http\Controllers\AfterMaterialController;
+use App\Http\Controllers\CheckMixingController;
 use App\Http\Controllers\finishController;
 use App\Http\Controllers\UpdateTablesController;
 use App\Models\ProcessModel;
 use App\Models\specifications;
+use App\Models\AddModel;
 
 
 //views
@@ -20,6 +22,8 @@ Route::redirect('/','/mixing-prevention');
 Route::view('/flow','flow');
 //request routes
 Route::get('/add', [AddModelController::class, 'selectOptionProcess']);
+Route::get('/check', [CheckMixingController::class, 'ModelDetails']);
+
 Route::get('/sections',function(){
     return view('sections');
 });
@@ -93,11 +97,13 @@ Route::get('{type}/{action}/{id}', function($type,$action , $id) {
 });
 
 Route::post('finish-data',[finishController::class,'finishAdd']);
+Route::post('model-check-data',[CheckMixingController::class,'FindModel']);
 Route::post('add-specs-data',[AddModelController::class,'add']);
 Route::post('specs-model-data',[AddModelController::class,'tables']);
 Route::post('add-process-data',[ProcessListController::class,'process_add']);
 Route::post('before-material-data',[BeforeMaterialController::class,'beforeMaterial']);
 Route::post('after-material-data',[AfterMaterialController::class,'afterMaterial']);
+Route::post('mixing-check-data', [CheckMixingController::class, 'checkMaterials']);
 
 $updateRoutes = [
     'update-process-data-form' => ProcessListController::class,

@@ -5,3 +5,8 @@
         </button>
     </div>
 </div>
+<script type="text/javascript">
+    function hideElement() {
+        document.getElementById("data_mixing").style.display = "none";
+    }
+</script>

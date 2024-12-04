@@ -13,9 +13,6 @@
     <div class="flex flex-col items-center justify-center mx-0 text-base min-w-fit">
         @include('components.all-nav')
         @include('components.all-tables')
-
-
-
     </div>
 
 </div>

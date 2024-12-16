@@ -23,7 +23,16 @@ class CheckMixingController extends Controller
 
     public function checkMaterials(Request $request)
     {
-        dd($request->all());
+        $isArrayResultPerModelMixing=[];
+        $neededDataArraytoSetModel = ['model','before','after','finish'];
+        $identifiedParameters = ['length','width','thickness','radius'];
+        $computedArray = $request->input('computedArray_cm');
+        foreach($request->all() as $passedDataKey => $passedDataValue ){
+            if(str_contains($passedDataKey,"_range")){
+                $displayRangeValues[$passedDataKey] = $passedDataValue;
+            }
+        }
+        //dump(  $request->all());
         $readFlow = $request->input('readFlow_cm');
         $selectedModel = htmlspecialchars($request->input('model_cm'));
         $modelDetails = $this->Models;
@@ -45,7 +54,7 @@ class CheckMixingController extends Controller
         $queryIdentifier = 0;
         $countAndOr = 0;
         $mixingPerDimension = [];
-        //dump($request->all());
+        ////dump($request->all());
 
         $valuePerData = [
             'length_val' => 'L',
@@ -68,7 +77,11 @@ class CheckMixingController extends Controller
             'a_max' => '+',
         ];
 
+
+
         $notCurrentModel = " AND model NOT LIKE '".$selectedModel."' ";
+        $isEqualQuery = '';
+        $processCount = 0;
         if(isset($extractTableToCheck) && !empty($extractTableToCheck)){
             foreach($extractTableToCheck as $singleKey => $singleValue){
 
@@ -83,8 +96,7 @@ class CheckMixingController extends Controller
                         $queryIdentifier++;//count of values that are > greate than 0
                     }
                 }
-                // dump($queryIdentifier);
-                // dump($singleValue);
+
                 //dynamically create a query for comparison in SQL data in tables for dimension
                 if($comPareTableSpecs != '' && $comPareTableSpecs ==  $singleKey){
                     foreach($singleValue as $keyColumn => $valueColumn){
@@ -92,27 +104,53 @@ class CheckMixingController extends Controller
                         $countAndOr++; //compare to remove the OR in Compare
                         $frequencyQueryPerData++;
                         $parameterColumn = explode('_',$keyColumn);
+
                         if($frequencyQueryPerData == 1){
                             $currentColumnChecking = $parameterColumn[0];
                         }
                         //Build query
                         if($currentColumnChecking == $parameterColumn[0] ){
+                            $valueWhere = explode("_",$keyColumn);
+
                             switch (true) {
                                 case (str_contains($keyColumn,'min')):
                                     $min = (float)$valueColumn;
+
+                                    $rangeMin = (float)$request->input($parameterColumn[0]."_range");
+                                    $computeMinRange =  $min - $rangeMin;
+
                                     if($min != 0){
-                                        $queryData = " ".$currentColumnChecking."_val >= ".$min." AND";
+                                        $queryData = " (".$currentColumnChecking."_val >= ".$computeMinRange." AND";
                                         $specsPerTablequery .= $queryData;
+                                        if($isEqualQuery == ''){
+                                            $isEqualQuery = "CASE WHEN ".$parameterColumn[0]."_val BETWEEN ".$computeMinRange." ";
+                                        }else{
+                                            $isEqualQuery .= "CASE WHEN ".$parameterColumn[0]."_val BETWEEN ".$computeMinRange." ";
+                                        }
+
+
                                     }
+
+
+
                                     break;
                                 case (str_contains($keyColumn,'max' )):
                                     $max = (float)$valueColumn;
+                                    $rangeMax = (float)$request->input($parameterColumn[0]."_range");
+                                    $computeMaxRange =  $max + $rangeMax;
+
                                     if($max != 0){
-                                        //dump($queryIdentifier."----".$countAndOr);
+
                                         if($queryIdentifier == $countAndOr){
-                                            $queryData = " ".$currentColumnChecking."_val <= ".$max."  $notCurrentModel";
+
+                                            $queryData = " ".$currentColumnChecking."_val <= ".$computeMaxRange."  $notCurrentModel)";
+                                            $isEqualQuery .="AND ".$computeMaxRange." THEN 1 ELSE 0 END AS ".$parameterColumn[0]." ";
+
                                         }else{
-                                            $queryData = " ".$currentColumnChecking."_val <= ".$max."  $notCurrentModel OR ";
+
+                                            $queryData = " ".$currentColumnChecking."_val <= ".$computeMaxRange."  $notCurrentModel ) OR ";
+                                            $isEqualQuery .="AND ".$computeMaxRange." THEN 1 ELSE 0 END AS ".$parameterColumn[0].",";
+
                                         }
                                         $specsPerTablequery .= $queryData;
                                     }
@@ -127,46 +165,96 @@ class CheckMixingController extends Controller
                         if($frequencyQueryPerData == 3){
                             $currentColumnChecking ='';
                             $frequencyQueryPerData = 0;
+
                         }
 
 
                     }
                 }
 
-
                 try{
-                    $compareMixingTableData = DB::table($singleKey)
-                                            ->whereRaw($specsPerTablequery)
+
+                    $isEqualAllDimension = DB::table($singleKey)
+                                            ->selectRaw('model, '.$isEqualQuery)
+                                            ->whereNotLike('model', $selectedModel)
+                                            ->havingRaw('length= 1 AND width = 1 AND thickness = 1')
                                             ->get();
-                    $mixingPerDimension[$singleKey] = $compareMixingTableData;
+
+
+
+                    foreach($isEqualAllDimension as $allKey){
+                      $isSameAllDimension[$allKey->model][$processCount."_allsame"] = $processCount;
+                    }
+
                 }catch(\Exception $e){
-                    dump($e);
+                    //dump($e);
                     continue;
                 }
 
 
+                try{
 
-                // dump($compareMixingTableData);
-                // dump('COMBINED:  '.$specsPerTablequery);
-                // dump('TABLE: '.$singleKey);
+
+                    $compareMixingTableData = DB::table($singleKey)
+                                            ->whereRaw($specsPerTablequery)
+                                            ->get();
+                    $mixingPerDimension[$singleKey] = $compareMixingTableData;
+                    //ongoing update
+                    $ruleModel ='';
+                    $rulesIdentifier = 0;
+                    $currentCounter = 0;
+                    foreach($compareMixingTableData as $ruleDatalist){
+
+                        foreach($ruleDatalist as $ruleKey  => $ruleValue){
+                            switch($ruleKey ){
+                                case(str_contains($ruleKey,"_val" )):
+                                    if($ruleValue > 0){
+
+                                        $specsDimensionSide  = explode("_",$ruleKey)[0];
+
+                                        if(in_array($specsDimensionSide,$identifiedParameters)){
+                                            $ruleChecker = $extractTableToCheck[$singleKey][$specsDimensionSide."_base"] - $ruleValue;
+                                            $isArrayResultPerModelMixing [$ruleModel][$processCount."_".$specsDimensionSide."_compareTarget"]= $extractTableToCheck[$singleKey][$specsDimensionSide."_base"]." - ". $ruleValue." = |".$ruleChecker."|";
+                                            $isNeedToHighlighted[$ruleModel][$processCount."_".$specsDimensionSide] = $ruleChecker;
+                                            //dump($singleKey."->".$specsDimensionSide."->".$extractTableToCheck[$singleKey][$specsDimensionSide."_base"]." - ". $ruleValue." = ".  $ruleChecker );
+                                        }
+
+                                    }
+                                    break;
+
+                                case($ruleKey == "model" ):
+                                    $ruleModel = $ruleValue;
+                                    //dump($ruleValue);
+                                    break;
+
+                            }
+                        }
+
+
+                    }
+
+
+
+
+                }catch(\Exception $e){
+                    dd($e);
+
+                    continue;
+                }
+
                 $queryIdentifier = 0;
                 $countAndOr = 0;
                 $queryData ='';
                 $specsPerTablequery ='';
+                $isEqualQuery='';
 
 
-                //$dimensionTableCheckMixing = DB::table();
-
-
+                $processCount++;
             }
 
         }
 
-        //dump($mixingPerDimension);
-        //dd($countAndOr);
         $identifierTableDimensionMixing = explode(";",$readFlow);
-        // dump($identifierTableDimensionMixing);
-        // dump($mixingPerDimension);
         $base = '';
         $max  = '';
         $minNotSame = '';
@@ -175,22 +263,22 @@ class CheckMixingController extends Controller
         $isCombinedSpecs = '';
         $isModelMixing = '';
         $isTotalCount = 0;
-        $isArrayResultPerModelMixing =[];
+
         $columnIdenTifier = 0;
+        $debugCount= 0;
         foreach($mixingPerDimension as $keMixingKey ){
 
-            //dump($keMixingKey);
             foreach($keMixingKey as $invKey => $invValue){
 
                 if( $isTotalCount == 0){
                     foreach($invValue as $counterKey => $counterValue){
 
                         if(array_key_exists($counterKey,$valuePerData) && $counterValue  != 0 && $counterValue  != 0.0){
-                            //dump($counterKey );
+
                             $isTotalCount++;
                         }
                     }
-                   // dump($isTotalCount);
+
                 }
 
                 foreach($invValue as $dataKey => $dataValue){
@@ -199,45 +287,68 @@ class CheckMixingController extends Controller
                         $isModelMixing = $dataValue;
                     }elseif(str_contains($dataKey,"model") && $isModelMixing != $dataValue){
                         $isModelMixing = $dataValue;
-                        //dump( $dataValue);
+
 
                     }
 
-                    if($dataValue != 0){
+                    if($dataValue != 0  ){
                         if(array_key_exists($dataKey,$valuePerData)){
                             switch($dataKey){
 
                                 case(str_contains($dataKey,"_val")):
-                                    //dump($dataKey ." ---- ". $dataValue);
+
                                     $base =  $dataValue.$valuePerData[$dataKey];
                                     $currentDimensionProcess = $base;
                                     break;
                                 case(str_contains($dataKey,"_min")):
-                                    $min  =  $dataValue;
-                                    $minNotSame = $valuePerData[$dataKey].$min;
+
+
+                                    if($dataValue != 0){
+
+                                        $min  =  $dataValue;
+                                        $minNotSame = $valuePerData[$dataKey].$min;
+
+                                    }
+
+
                                     break;
                                 case(str_contains($dataKey,"_max")):
+
                                     $isColumnHaveValue++;
                                     $max =  $dataValue;
-                                    if( $min == $max){
-                                        $currentDimensionProcess .= "±" .$max;
-                                    }else{
-                                        $currentDimensionProcess .= "±" .$max."/".$minNotSame;
-                                        $minNotSame= '';
-                                    }
-                                    //dump($isColumnHaveValue);
+
+
                                     if($isCombinedSpecs == ''){
-                                        $isCombinedSpecs = $currentDimensionProcess;
+
+                                        if( $min == $max){
+                                            $isCombinedSpecs = $currentDimensionProcess." ± ".$max." x ";
+                                        }else{
+                                            $isCombinedSpecs = $currentDimensionProcess." ± ".$max."/".$minNotSame." x ";
+                                        }
+
                                     }elseif( $isColumnHaveValue <= 3){
-                                        $isCombinedSpecs .= " x ".$currentDimensionProcess;
+
+                                        if( $min == $max && $isColumnHaveValue != 3){
+                                            $isCombinedSpecs .= $currentDimensionProcess ." ± ".$max ." x ";
+                                        }elseif($min != $max && $isColumnHaveValue != 3){
+                                            $isCombinedSpecs .= $currentDimensionProcess."± ".$max."/".$minNotSame." x ";
+                                        }
+
                                         if($isColumnHaveValue == 3){
-                                            // dump($isCombinedSpecs );
-                                            // dump( $isModelMixing);
-                                            // dump('Identifier:'.$columnIdenTifier);
-                                            // dump();
+
+                                            if( $min == $max){
+                                                $isCombinedSpecs .= $currentDimensionProcess ." ± ".$max;
+                                            }else{
+                                                $isCombinedSpecs .= $currentDimensionProcess."± ".$max."/".$minNotSame;
+                                            }
+
+
                                             $isArrayResultPerModelMixing[$isModelMixing][$columnIdenTifier."_dimension_process"] = $isCombinedSpecs;
+
                                             $isColumnHaveValue = 0;
                                             $isCombinedSpecs = '';
+                                            $max = 0;
+                                            $min = 0;
 
                                         }
                                     }
@@ -248,58 +359,140 @@ class CheckMixingController extends Controller
 
                     }
 
+                    if($debugCount == 2){
 
+                    }
                 }
-
+                $debugCount++;
             }
             $columnIdenTifier++;
         }
 
-        //dd('hello');
-        //Already working priority dimension to optimize querying
-        //add 'OPIFormadetails' && 'checkedProperties' in compact
         //SET THE MODEL TO BE DISPLAYED
         $setModelMixing='';
-        foreach($isArrayResultPerModelMixing as $materialsMixingKey => $materialsMixingValue ){
+        if(!empty($isArrayResultPerModelMixing)){
+            foreach($isArrayResultPerModelMixing as $materialsMixingKey => $materialsMixingValue ){
 
-            try{
-                $checkedProperties = DB::table('add_models')
-                    ->where('model', 'LIKE',$materialsMixingKey )
-                    ->get();
+                try{
+                    $checkedProperties = DB::table('add_models')
+                        ->where('model', 'LIKE',$materialsMixingKey )
+                        ->get();
 
-                if ($checkedProperties->isEmpty()) {
+                    if ($checkedProperties->isEmpty()) {
 
-                    continue;
-                }
-                $neededDataArraytoSetModel = ['model','before','after','finish'];
-                foreach($checkedProperties as $keySet => $keyValue){
-                    // dump($keyValue);
-                    foreach( $keyValue as $getActualKey => $getActualValue){
-                        if(in_array($getActualKey,$neededDataArraytoSetModel)){
-                            if(in_array($getActualKey,$neededDataArraytoSetModel) && $getActualKey != "model" && $setModelMixing != ''){
-                                $isArrayResultPerModelMixing[$setModelMixing][$getActualKey] = $getActualValue;
-                            }else{
-                                $setModelMixing = $getActualValue;
-                            }
-                        }
+                        continue;
                     }
 
+                    foreach($checkedProperties as $keySet => $keyValue){
+
+                        foreach( $keyValue as $getActualKey => $getActualValue){
+                            if(in_array($getActualKey,$neededDataArraytoSetModel)){
+                                if(in_array($getActualKey,$neededDataArraytoSetModel) && $getActualKey != "model" && $setModelMixing != ''){
+                                    $isArrayResultPerModelMixing[$setModelMixing][$getActualKey] = $getActualValue;
+                                }else{
+                                    $setModelMixing = $getActualValue;
+                                }
+                            }
+                        }
+
+                    }
+
+                }catch(\Exception $e){
+                    //dump( $e);
                 }
 
-            }catch(\Exception $e){
-                dump( $e);
+
+
             }
 
 
 
+
+        //dump($isNeedToHighlighted);
+        $HiglightedArray = [];
+        $RmHiglightedArray = [];
+        $countTheSame = 0;
+        $countSameHighlighted = 0;
+        $ruleBool = false;
+        $counterTrue = 0;
+        $colorIndicator = [];
+        $countTruePerProcess = [];
+        $RMTruePerProcess = [];
+
+        foreach($isNeedToHighlighted as $isDataHighlightedKey => $isDataHighlightedValue){
+
+
+            foreach($isDataHighlightedValue as $isDataToSetKey => $isDataToSetValue  ){
+
+
+                if(isset($identifierTableDimensionMixing[$counterTrue])  && $identifierTableDimensionMixing[$counterTrue] == "RAW MATERIAL"){
+
+                    if(count($RmHiglightedArray) <= 1){
+
+                        array_push( $RmHiglightedArray,abs($isDataToSetValue));
+                    }elseif(count($RmHiglightedArray) == 2){
+
+                        array_push( $RmHiglightedArray,abs($isDataToSetValue));
+                        $currentLocationProcess = explode("_",$isDataToSetKey )[0];
+
+                        $resultRm = array_filter($RmHiglightedArray, function($value) {
+                            if(abs($value) >= 0 &&  abs($value) < 1.9){
+                                return true;
+                            }
+                        });
+                        if( count($resultRm) == 3){
+                            $RMTruePerProcess[$isDataHighlightedKey][$currentLocationProcess]= count($resultRm);
+                        }
+
+                        $RmHiglightedArray=[];
+
+                    }
+                }
+
+                if(count($HiglightedArray) <= 1){
+                    array_push( $HiglightedArray,$isDataToSetValue);
+                }elseif(count($HiglightedArray) == 2){
+                    array_push( $HiglightedArray,$isDataToSetValue);
+
+                    $result = array_filter($HiglightedArray, function($value) {
+                        if(abs($value) >= 0 &&  abs($value) < 1.99){
+
+                            return true;
+                        }
+                    });
+
+                    $currentLocationProcess = explode("_",$isDataToSetKey )[0];
+                    if( count($result) > 1){
+                        $countTruePerProcess[$isDataHighlightedKey][$currentLocationProcess]= count($result);
+                    }
+
+
+
+                    $counterTrue++;
+                    $HiglightedArray=[];
+                }
+
+            }
+
+            $counterTrue = 0;
+
         }
 
-        //dump($isArrayResultPerModelMixing);
-       // dd('hello');
+    }
+
+
        if(isset($checkedProperties) && !empty($checkedProperties)){
-            return view('check',compact('isArrayResultPerModelMixing','checkedProperties','OPIFormadetails','modelDetails','selectedModel','readFlow','Before','After','Finish','dimensionReDisplay','mixingPerDimension'));
+            if(!empty($isSameAllDimension) && empty($countTruePerProcess) ){
+                return view('check',compact('isSameAllDimension','displayRangeValues','computedArray','isArrayResultPerModelMixing','checkedProperties','OPIFormadetails','modelDetails','selectedModel','readFlow','Before','After','Finish','dimensionReDisplay','mixingPerDimension'));
+            }elseif(!empty($isSameAllDimension) && !empty($countTruePerProcess)){
+                return view('check',compact('RMTruePerProcess','countTruePerProcess','isSameAllDimension','displayRangeValues','computedArray','isArrayResultPerModelMixing','checkedProperties','OPIFormadetails','modelDetails','selectedModel','readFlow','Before','After','Finish','dimensionReDisplay','mixingPerDimension'));
+            }else{
+                return view('check',compact('displayRangeValues','computedArray','isArrayResultPerModelMixing','checkedProperties','OPIFormadetails','modelDetails','selectedModel','readFlow','Before','After','Finish','dimensionReDisplay','mixingPerDimension'));
+
+            }
        }else{
-            return view('check',compact('isArrayResultPerModelMixing','OPIFormadetails','modelDetails','selectedModel','readFlow','Before','After','Finish','dimensionReDisplay','mixingPerDimension'));
+            $displayRangeValues =[];
+            return view('check',compact('displayRangeValues','isArrayResultPerModelMixing','OPIFormadetails','modelDetails','selectedModel','readFlow','Before','After','Finish','dimensionReDisplay','mixingPerDimension'));
 
        }
 
@@ -307,7 +500,7 @@ class CheckMixingController extends Controller
 
     public function FindModel(Request $request)
     {
-        //dump($request->all());
+        ////dump($request->all());
         $selectedModel = $request->input('model');
         $modelDetails = $this->Models;
         $process = AddModel::where('model', $request->input('model'))->get();

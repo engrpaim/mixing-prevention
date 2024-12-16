@@ -8,7 +8,13 @@
                 <option  value=""   disabled selected>No data found</option>
             }
             @else
-                <option  value=""   disabled selected></option>
+            @if($column == 'model')
+
+                <option  value=""  selected></option>
+            @else
+                <option  value="n/a"  selected>n/a</option>
+            @endif
+
                 @foreach ($array as $tableColumn)
                     <option value="{{ $tableColumn->$column }}">{{ $tableColumn->$column }}</option>
                 @endforeach

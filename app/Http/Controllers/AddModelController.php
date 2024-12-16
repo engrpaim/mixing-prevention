@@ -164,6 +164,7 @@ class AddModelController extends Controller
                             $specsValidation[$key] = "required|numeric";
                             $dataToSaved [$columnName[1]] = $request->input($key);
                         }catch(\Exception $e){
+                            //dd($e);
                             return redirect('/add')->with([
                                 'success' => $request->input('add_model'),
                                 'process' => 'model already exist in '.$currentTable,]);
@@ -199,6 +200,7 @@ class AddModelController extends Controller
                 try{
                    DB::table($currentTable)->insert($dataToSaved);
                 }catch(\Exception $e){
+                    //dd($e);
                     return redirect('/add')->with([
                         'success' => $request->input('add_model'),
                         'process' => 'model already exist',]);

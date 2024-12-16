@@ -261,28 +261,23 @@
                         </div>
 
                         {{-- Display range needed per specs --}}
-                        @if (isset($rangeInputArray) && !empty($rangeInputArray) )
-                            <div class="flex flex-col justify-center w-64 p-4 m-3 bg-violet-200 rounded-2xl outline outline-2 outline-violet-500">
-
-                                    <h1 class="p-2 font-bold text-center">RANGE</h1>
-
-
-                                    @foreach ($rangeInputArray as $createInputRange )
-                                        <div class="flex flex-row items-center justify-between w-56 p-1">
-                                            <label class="text-left" for="{{ $createInputRange }}_range">{{ strtoupper($createInputRange) }}</label>
-                                            <input type="number" id="{{ $createInputRange }}_range" name="{{ $createInputRange }}_range" class="w-32 p-1 text-center rounded-lg outline outline-1 outline-slate-300 hover:outline-blue-700 hover:outline-2 hover:bg-blue-50 focus:bg-blue-50 "/>
-                                        </div>
-                                    @endforeach
-
-
-                            </div>
-                        @endif
+                        <x-range-selector :display="$rangeInputArray"/>
                     </div>
 
 
 
 
-                    <x-submit-button type="submit" onclick="hideElement()" style=""  id="data_mixing" name="data_mixing">Check mixing</x-submit-button>
+                    <x-submit-button type="submit" onclick="hideElement()" style="none;"  id="data_mixing" name="data_mixing">Check mixing</x-submit-button>
+                    <script>
+                        function hideElement() {
+                          var button = document.getElementById('data_mixing');
+                          button.style.display = 'block';
+                        }
+                        window.onload = function() {
+
+                            hideElement();
+                        };
+                      </script>
 
 
                 </div>
@@ -325,15 +320,9 @@
 
         {{-- ----------------------------------------DISPLAY MIXING RESULT---------------------------------------------------------- --}}
 
-        @if(isset($isArrayResultPerModelMixing))
+        @if(isset($isArrayResultPerModelMixing) && !empty($isArrayResultPerModelMixing))
 
-            @if($isArrayResultPerModelMixing)
-                <script type="text/javascript">
-                    window.onload = function() {
-                        document.getElementById("data_mixing").style.display = "none";
-                    };
-                </script>
-            @endif
+
 
             <div class="flex flex-col items-center justify-center w-screen p-5 bg-white shadow-md rounded-xl outline outline-1 outline-slate-300">
                 <div class="flex flex-row w-full p-2 mb-5 bg-blue-100 rounded-2xl outline outline-1 outline-blue-500">
@@ -342,8 +331,40 @@
                     </svg>
                     <h1 class="text-xl font-bold text-center">MIXING DETAILS</h1>
                 </div>
-                <div class="w-fit">
 
+                <div class="w-fit">
+                    <divs class="flex flex-row p-3 px-10 bg-yellow-200 outline outline-1 outline-yellow-500">
+                        <div class="flex flex-row mx-2 bg-red-50 outline outline-1 outline-yellow-500">
+                            <h1 class="px-2 mt-5 text-2xl font-bold">{{ $selectedModel }}</h1>
+                        </div>
+
+
+                        @if (!empty($displayRangeValues) && ($displayRangeValues['length_range'] != null || $displayRangeValues['width_range'] || $displayRangeValues['thickness_range'] || $displayRangeValues['radius_range']))
+                        <div class="flex flex-col p-3 px-10 bg-yellow-50 outline outline-1 outline-yellow-500">
+                            <div>
+                                <h3 class="font-bold text-center"><strong>RANGE&nbsp;FILTER</h3>
+                            </div>
+                            <div class="flex flex-row ">
+                                @foreach ( $displayRangeValues as $rangesSetKey => $rangesSetValue)
+                                    <div class="flex flex-row">
+                                            @php
+                                                $parameterSetValue = explode("_",$rangesSetKey);
+                                            @endphp
+                                            @if($rangesSetValue > 0)
+                                            <div class="flex flex-row PX-2">
+                                                <h3 class="font-normal"><strong>{{ strtoupper($parameterSetValue[0]) }}:</strong>&nbsp;{{ $rangesSetValue }}</h3>
+                                            </div>
+                                            @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+
+
+                        @endif
+
+                    </divs>
                     {{-- Result table --}}
                     <table>
                         @php
@@ -361,20 +382,44 @@
                                 <th rowspan="2" class="px-2 py-2 text-base text-center border border-slate-300" >FINISH</th>
                             </tr>
                             <tr>
-                                <th rowspan="2" class="{{ $tableSpecification }}" >AFTER&nbsp;MATERIAL</th>
                                 <th rowspan="2" class="{{ $tableSpecification }}" >BEFORE&nbsp;MATERIAL</th>
+                                <th rowspan="2" class="{{ $tableSpecification }}" >AFTER&nbsp;MATERIAL</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="font-normal">
                            {{--@dump($isArrayResultPerModelMixing)--}}
-                           @if(empty($isArrayResultPerModelMixing) )
-                                    <th colspan="{{ count($currentDimensionFlow)+4 }}" class="{{ $tableSpecification }} " >No data found</th>
-                             @endif
+                            @if(!empty($isSameAllDimension ))
+                                @foreach($isSameAllDimension as $sameKey => $sameValue)
+                                    @foreach($sameValue as $mergeToDisplayKey => $mergeToDisplayValue)
+                                        @php
+                                            $isArrayResultPerModelMixing[$sameKey][$mergeToDisplayKey."_display"]=$mergeToDisplayValue;
+                                        @endphp
+                                    @endforeach
+                                @endforeach
+                            @else
+
+                            @endif
+
+
                            @foreach ( $isArrayResultPerModelMixing as $resultKey => $resultValue)
                                 <tr>
 
                                     <td class="{{ $tableSpecification }} " >{{ $resultKey }} </td>
 
+                                        @if(isset($resultValue['before']))
+                                            @php
+                                                $beforeSameBgColor = ($resultValue['before'] == $Before) ? 'bg-red-200' : '';
+                                            @endphp
+                                        <td class="{{ $tableSpecification }} {{ $beforeSameBgColor }}" >
+                                            {{ $resultValue['before'] }}
+                                        @else
+                                            <td class="{{ $tableSpecification }}" >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+                                            <path d="M10.5 15L13.5 12M13.5 15L10.5 12" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+                                            <path d="M22 11.7979C22 9.16554 22 7.84935 21.2305 6.99383C21.1598 6.91514 21.0849 6.84024 21.0062 6.76946C20.1506 6 18.8345 6 16.2021 6H15.8284C14.6747 6 14.0979 6 13.5604 5.84678C13.2651 5.7626 12.9804 5.64471 12.7121 5.49543C12.2237 5.22367 11.8158 4.81578 11 4L10.4497 3.44975C10.1763 3.17633 10.0396 3.03961 9.89594 2.92051C9.27652 2.40704 8.51665 2.09229 7.71557 2.01738C7.52976 2 7.33642 2 6.94975 2C6.06722 2 5.62595 2 5.25839 2.06935C3.64031 2.37464 2.37464 3.64031 2.06935 5.25839C2 5.62595 2 6.06722 2 6.94975M21.9913 16C21.9554 18.4796 21.7715 19.8853 20.8284 20.8284C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.8284C2 19.6569 2 17.7712 2 14V11" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+                                            </svg>
+                                        @endif
+                                        </td>
 
 
                                         @if(isset($resultValue['after']))
@@ -395,26 +440,129 @@
 
 
 
-                                        @if(isset($resultValue['before']))
-                                            @php
-                                                $beforeSameBgColor = ($resultValue['before'] == $Before) ? 'bg-red-200' : '';
-                                            @endphp
-                                            <td class="{{ $tableSpecification }} {{ $beforeSameBgColor }}" >
-                                                {{ $resultValue['before'] }}
-                                        @else
-                                            <td class="{{ $tableSpecification }}" >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                                            <path d="M10.5 15L13.5 12M13.5 15L10.5 12" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
-                                            <path d="M22 11.7979C22 9.16554 22 7.84935 21.2305 6.99383C21.1598 6.91514 21.0849 6.84024 21.0062 6.76946C20.1506 6 18.8345 6 16.2021 6H15.8284C14.6747 6 14.0979 6 13.5604 5.84678C13.2651 5.7626 12.9804 5.64471 12.7121 5.49543C12.2237 5.22367 11.8158 4.81578 11 4L10.4497 3.44975C10.1763 3.17633 10.0396 3.03961 9.89594 2.92051C9.27652 2.40704 8.51665 2.09229 7.71557 2.01738C7.52976 2 7.33642 2 6.94975 2C6.06722 2 5.62595 2 5.25839 2.06935C3.64031 2.37464 2.37464 3.64031 2.06935 5.25839C2 5.62595 2 6.06722 2 6.94975M21.9913 16C21.9554 18.4796 21.7715 19.8853 20.8284 20.8284C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.8284C2 19.6569 2 17.7712 2 14V11" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
-                                            </svg>
-                                        @endif
 
-                                            </td>
+
 
                                     @for ($z=0;$z < count($currentDimensionFlow)-1;$z++)
-                                            <td class="{{ $tableSpecification  }}" >
+
+
+                                            @php
+                                                if(isset($resultValue[$z.'_allsame_display']) ){
+                                                    $svgRange = "<svg xmlns='http://www.w3.org/2000/svg' height='20px' viewBox='0 -960 960 960' width='20px' fill='#fa1d07'><path d='M160-400v-80h640v80H160Zm0-120v-80h640v80H160ZM440-80v-128l-64 64-56-56 160-160 160 160-56 56-64-62v126h-80Zm40-560L320-800l56-56 64 64v-128h80v128l64-64 56 56-160 160Z'/></svg>";
+                                                }else{
+                                                    $svgRange = '';
+                                                }
+                                            @endphp
+                                            @php
+                                                $trueCountBg = '';
+                                            @endphp
+
+                                            @if(isset($countTruePerProcess[$resultKey][$z])&& $currentDimensionFlow[$z] != "RAW MATERIAL")
+
+                                                @if ($countTruePerProcess[$resultKey][$z] == 2)
+                                                    @php
+                                                        $trueCountBg = 'bg-violet-200';
+                                                    @endphp
+                                                @elseif($countTruePerProcess[$resultKey][$z] == 3)
+                                                    @php
+                                                        $trueCountBg = 'bg-yellow-200';
+                                                    @endphp
+                                                @endif
+                                            @elseif(isset($countTruePerProcess[$resultKey][$z]) && $currentDimensionFlow[$z] == "RAW MATERIAL" && !empty($RMTruePerProcess[$resultKey][$z]))
+                                                @if ($RMTruePerProcess[$resultKey][$z] == 3 )
+                                                    @php
+                                                        $trueCountBg = 'bg-yellow-400';
+                                                    @endphp
+                                                @endif
+
+                                            @endif
+                                            <td class="{{ $tableSpecification  }} {{ $trueCountBg }}" >
                                             @if (isset($resultValue[$z.'_dimension_process']) && !empty($resultValue[$z.'_dimension_process']))
-                                                {{ $resultValue[$z.'_dimension_process']  }}
+
+                                                <div class="flex">
+                                                    <button onclick="showComputation('{{ $z }}{{ $resultKey }}')" id="{{ $z }}_data_comp"> {{ $resultValue[$z.'_dimension_process']  }}</button>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                                    @if($svgRange != '')
+                                                        <div class="p-0.5 outline outline-1 outline-red-500">
+                                                            {!! $svgRange !!}
+                                                        </div>
+                                                    @endif
+
+                                                </div>
+
+
+
+
+
+                                               <div id="{{ $z }}{{ $resultKey }}_dimension_process">
+                                                <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                                                    <div class="flex flex-col justify-center px-6 pt-4 pb-6 rounded-lg outline outline-1 outline-slate-200 bg-slate-200 w-96">
+                                                        <div class="flex items-end justify-end w-full ">
+                                                            <button onclick="hideComputation('{{ $z }}{{ $resultKey }}')" id="{{ $z }}_hide" class="p-1 px-2 font-bold ">X</button>
+                                                        </div>
+                                                        <div>
+                                                            <h1 class="p-2 font-bold">MODEL:&nbsp;{{ $resultKey }}</h1>
+                                                        </div>
+
+                                                        <div class="flex flex-col items-center justify-center">
+                                                            <div class="flex flex-row items-center justify-center ">
+                                                                <div>
+                                                                    <h3 class="text-sm italic font-semibold">{{ $currentDimensionFlow[$z] }}&nbsp;COMPUTATION</h3>
+                                                                </div>
+                                                            </div>
+                                                                @php
+                                                                    $computationSpecs =['length','width','thickness','radius'];
+                                                                    //$resultValue
+                                                                @endphp
+
+                                                                @foreach (  $computationSpecs as $checkIfComputed)
+                                                                    @php
+                                                                        $forCheck = $z."_";
+                                                                        $specsComp =$checkIfComputed."_compareTarget";
+                                                                        $valueCompRule = $forCheck.$specsComp;
+                                                                    @endphp
+                                                                    @if(array_key_exists($valueCompRule ,$resultValue))
+                                                                    <div class="flex flex-row justify-between p-2 my-2 text-xs bg-blue-200 w-60">
+                                                                        <div class="flex w-10 font-bold">
+                                                                            <h1>{{ strtoupper($checkIfComputed)}}</h1>
+                                                                        </div>
+                                                                        <div class="flex items-end">
+                                                                            <h1>{{ $resultValue[$valueCompRule] }}</h1>
+                                                                        </div>
+                                                                    </div>
+                                                                    @endif
+                                                                @endforeach
+
+                                                        </div>
+                                                        <script type="text/javascript" src="{{ asset('js/add.js') }}"></script>
+                                                    </div>
+                                                </div>
+                                               </div>
+
+                                               <script>
+                                                window.onload = function() {
+                                                   var elements = document.querySelectorAll('[id*="_dimension_process"]');
+                                                   elements.forEach(function(element) {
+                                                       element.style.display = "none";
+                                                   });
+                                               };
+
+                                               function showComputation(z) {
+                                                   var element = document.getElementById(z + '_dimension_process');
+                                                   if (element) {
+                                                       element.style.display = "block";
+                                                   }
+                                               }
+
+                                               function hideComputation(z) {
+                                                   var element = document.getElementById(z + '_dimension_process');
+                                                   if (element) {
+                                                       element.style.display = "none";
+                                                   }
+                                               }
+
+                                          </script>
+
                                             @else
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
                                                 <path d="M10.5 15L13.5 12M13.5 15L10.5 12" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
@@ -441,9 +589,12 @@
                 </div>
             </div>
         @endif
+            @if (isset($isArrayResultPerModelMixing) && empty($isArrayResultPerModelMixing))
+                <h2 class="px-20 py-5 italic font-bold text-gray-800 bg-red-300 rounded-lg outline outline-2 outline-red-500">No mixing found</h2>
+            @endif
         @endif
     </div>
 
 </body>
 </html>
-{{--@dump(get_defined_vars()) --}}
+{{--@dump(get_defined_vars())--}}

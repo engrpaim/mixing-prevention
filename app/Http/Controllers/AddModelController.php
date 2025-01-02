@@ -9,6 +9,7 @@ use App\Models\finishModels;
 use App\Models\specifications;
 use App\Models\AfterMaterialModel;
 use App\Models\BeforeMaterialModel;
+use App\Models\TypeModel;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -19,6 +20,8 @@ class AddModelController extends Controller
     protected $specs;
     protected $materialAfter;
     protected $materialBefore;
+    //    $allType = TypeModel::orderBy('created_at', 'desc')->Paginate(10,['*'], 'type-page');
+    protected $type;
 
     public function __construct()
     {
@@ -28,6 +31,7 @@ class AddModelController extends Controller
         $this->specs = specifications::orderBy('updated_at', 'desc')->get();
         $this->materialAfter = AfterMaterialModel::orderBy('updated_at', 'desc')->get();
         $this->materialBefore =BeforeMaterialModel::orderBy('updated_at','desc')->get();
+        $this->type = TypeModel::orderBy('updated_at', 'desc')->get();
     }
 
     public function selectOptionProcess() {
@@ -37,9 +41,10 @@ class AddModelController extends Controller
         $allFinish = $this->finishes;
         $allMaterial = $this->materialAfter;
         $allBefore = $this->materialBefore;
+        $allType = $this->type;
 
 
-        return view('add',compact('allModel','allFinish','allMaterial','allBefore') );
+        return view('add',compact('allModel','allFinish','allMaterial','allBefore','allType') );
     }
 
     public function tables(Request $request){
@@ -60,6 +65,7 @@ class AddModelController extends Controller
         $finish = $request->input("finish_selected");
         $before = $request->input("before_selected");
         $after = $request->input("after_selected");
+        $type = $request->input("type_selected");
         $allModel = $this->Models;
         $allProcess = $request->input('selected_processes2');
         $processArray = explode(';', $allProcess);
@@ -71,13 +77,13 @@ class AddModelController extends Controller
 
 
 
-        return redirect('/add')->with (compact('processedData','allModel' , 'modelName','finish','processIncluded','after','before','allProcess'));
+        return redirect('/add')->with (compact('processedData','allModel' , 'modelName','finish','processIncluded','after','before','allProcess','type'));
     }
 
     public function add(Request $request)
     {
 
-     //dd($request->all());
+
 
         try{
             $totalProcessChecker = [];
@@ -108,7 +114,9 @@ class AddModelController extends Controller
                     'add_model' => 'required|string|max:255|unique:add_models,model',
                     'finish_category' => 'required|string|max:255',
                     'after_details' => 'required|string|max:255',
+                    'type_details' => 'required|string|max:255',
                     'before_details' => 'required|string|max:255',],
+
                 [
                     'add_model.unique' => 'Model is already added',
                 ]
@@ -164,7 +172,7 @@ class AddModelController extends Controller
                             $specsValidation[$key] = "required|numeric";
                             $dataToSaved [$columnName[1]] = $request->input($key);
                         }catch(\Exception $e){
-                            //dd($e);
+                            dd($e);
                             return redirect('/add')->with([
                                 'success' => $request->input('add_model'),
                                 'process' => 'model already exist in '.$currentTable,]);
@@ -200,7 +208,7 @@ class AddModelController extends Controller
                 try{
                    DB::table($currentTable)->insert($dataToSaved);
                 }catch(\Exception $e){
-                    //dd($e);
+                    dd($e);
                     return redirect('/add')->with([
                         'success' => $request->input('add_model'),
                         'process' => 'model already exist',]);
@@ -217,6 +225,7 @@ class AddModelController extends Controller
                     'model' => $request->input('add_model'),
                     'before' => $request->input('before_details'),
                     'after' => $request->input('after_details'),
+                    'type' => $request->input('type_details'),
                     'finish' => $request->input('finish_category'),
                     'process_flow' => $request->input('selected_processes3'),
                 ]);
@@ -228,8 +237,10 @@ class AddModelController extends Controller
             }
 
 
-            return redirect('/add')->with(['success'=> $request->input('add_model'),
-                                        'process'=>'Model' ,]);
+            return redirect('/add')->with([
+                                           'success'=> $request->input('add_model'),
+                                           'process'=>'Model',
+                                          ]);
             } catch (\Exception $e) {
                 dd($e);
             }

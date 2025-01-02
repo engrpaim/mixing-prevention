@@ -403,8 +403,18 @@
 
                            @foreach ( $isArrayResultPerModelMixing as $resultKey => $resultValue)
                                 <tr>
-
-                                    <td class="{{ $tableSpecification }} " >{{ $resultKey }} </td>
+                                    @php
+                                        $type = '';
+                                        if($resultValue['type']){
+                                            $type  = $resultValue['type'];
+                                        }else{
+                                            $type =  "Unkown";
+                                        }
+                                    @endphp
+                                    <td class="{{ $tableSpecification }} " >{{ $resultKey }}
+                                        <button class="p-1 mx-2 text-xs font-bold text-gray-700 bg-gray-200 rounded-lg outline-gray-400 outline outline-2">
+                                            {{ $type }}
+                                        </button></td>
 
                                         @if(isset($resultValue['before']))
                                             @php
@@ -594,7 +604,6 @@
             @endif
         @endif
     </div>
-
 </body>
 </html>
-{{--@dump(get_defined_vars())--}}
+{{--@dump(get_defined_vars()) --}}

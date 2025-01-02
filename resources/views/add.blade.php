@@ -50,6 +50,11 @@
                                     'column' => 'finish',
                                     'array' => $allFinish
                                 ],
+                                [
+                                    'label' => 'Type:',
+                                    'column' => 'type',
+                                    'array' => $allType
+                                ],
                             ];
                             @endphp
                             @foreach ($dropDownData as $dropdown)
@@ -100,8 +105,13 @@
                             'type' => 'hidden',
                             'name' => 'after_selected'
                         ],
+                        [
+                            'type' => 'hidden',
+                            'name' => 'type_selected'
+                        ],
                     ];
                 @endphp
+
                 @foreach ( $inputForadd as $inputData )
                     <input type="{{ $inputData['type'] }}" name="{{ $inputData['name'] }}" id="{{ $inputData['name'] }}">
                 @endforeach
@@ -164,11 +174,16 @@
                                 'session' => 'before',
                                 'id' => 'before_details',
                             ],
+                            [
+                                'title' => 'Type:',
+                                'session' => 'type',
+                                'id' => 'type_details',
+                            ],
                         ];
                     @endphp
 
                     @foreach ( $selectedDetails  as $targetValues )
-                        <div class="flex flex-col h-10 p-2 m-10 shadow-lg min-w-80 max-w-fit rounded-xl outline outline-1 outline-slate-200">
+                        <div class="flex flex-col h-10 p-2 m-10 shadow-lg min-w-fit max-w-fit rounded-xl outline outline-1 outline-slate-200">
                             <div  class="flex flex-row items-center justify-center">
                                 <span class="font-bold">{{ $targetValues['title'] }}&nbsp;&nbsp;</span>
                                 <span >{{ session($targetValues['session']) }}</span>
@@ -234,5 +249,5 @@
 
 
 
-
-{{--@dump(session()->all())--}}
+{{--
+@dump(session()->all()) --}}

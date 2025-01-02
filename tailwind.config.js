@@ -17,8 +17,10 @@ const safelist = [
         `bg-${color}-400`,
         `bg-${color}-600`,
         `bg-${color}-200`,
+        `bg-${color}-100`,
         `hover:bg-${color}-600`,
         `text-${color}`,
+        `text-${color}-700`,
         `hover:text-${color}-50`,
         'flex-col',
         'flex-row',
@@ -45,6 +47,8 @@ export default {
             width: {
 
                 'screen': '110rem',
+                'screen2': '56rem',
+
               },
 
               spacing: {

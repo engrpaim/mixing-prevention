@@ -6,6 +6,7 @@ use App\Models\AfterMaterialModel;
 use App\Models\BeforeMaterialModel;
 use App\Models\ProcessModel;
 use App\Models\finishModels;
+use App\Models\TypeModel;
 use Illuminate\Http\Request;
 
 class UpdateTablesController extends Controller
@@ -17,7 +18,8 @@ class UpdateTablesController extends Controller
         $allBeforeMaterial = BeforeMaterialModel::orderBy('updated_at', 'desc')->paginate(7, ['*'], 'before-material-page');
         $allProcess = ProcessModel::orderBy('updated_at', 'desc')->paginate(7,['*'],'process-page');
         $allFinish = finishModels::orderBy('updated_at', 'desc')->paginate(7,['*'],'process-page');
-        return view('sections', compact('allAfterMaterial', 'allBeforeMaterial','allProcess','allFinish'));
+        $allType = TypeModel::orderBy('created_at', 'desc')->Paginate(10,['*'], 'type-page');
+        return view('sections', compact('allAfterMaterial', 'allBeforeMaterial','allProcess','allFinish','allType'));
     }
 }
 

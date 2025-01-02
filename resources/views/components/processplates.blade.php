@@ -59,8 +59,8 @@
                             @endphp
                             <td class="{{  $border  }}">{{ $dimensions[$i] }}&nbsp;&nbsp;</td>
                             <td class="{{  $border  }}">VALUE&nbsp;&nbsp;<input class="w-20 p-2 text-center rounded-md outline outline-1 outline-blue-200 hover:outline-blue-500 hover:bg-blue-200 " id="{{ $modified_process }}+{{ $inputName }}_val" class="{{ $input }}" type="number" step="0.001" required/></td>
-                            <td class="{{  $border  }}">MIN&nbsp;&nbsp;<input class="w-20 p-2 text-center rounded-md outline outline-1 outline-blue-200 hover:outline-blue-500 hover:bg-blue-200 " id="{{ $modified_process }}+{{ $inputName }}_min" class="{{ $input }}" type="number" step="0.001" required/></td>
-                            <td class="{{  $border  }}">MAX&nbsp;&nbsp;<input class="w-20 p-2 text-center rounded-md outline outline-1 outline-blue-200 hover:outline-blue-500 hover:bg-blue-200 " id="{{ $modified_process }}+{{ $inputName }}_max" class="{{ $input }}" type="number" step="0.001" required/></td>
+                            <td class="{{  $border  }}">MIN&nbsp;&nbsp;<input class="w-20 p-2 text-center rounded-md outline outline-1 outline-blue-200 hover:outline-blue-500 hover:bg-blue-200 " id="{{ $modified_process }}+{{ $inputName }}_min" class="{{ $input }}" type="number" step="0.001" max="1000" required/></td>
+                            <td class="{{  $border  }}">MAX&nbsp;&nbsp;<input class="w-20 p-2 text-center rounded-md outline outline-1 outline-blue-200 hover:outline-blue-500 hover:bg-blue-200 " id="{{ $modified_process }}+{{ $inputName }}_max" class="{{ $input }}" type="number" step="0.001" max="1000"  required/></td>
                         </tr>
                     @endfor
                 </tbody>

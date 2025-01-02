@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('add_models', function (Blueprint $table) {
-            $table->id()->autoIncrement()->primary();
-            $table->string('model')->unique('model_name');
-            $table->string('before');
-            $table->string('after');
-            $table->string('finish');
-            $table->string('type');
-            $table->string('process_flow');
+        Schema::create('type_models', function (Blueprint $table) {
+            $table->Id()->autoIncrement()->uniqid()->primary();
+            $table->string('type')->unique('type');
+            $table->string('ip_address')->default('UNKNOWN');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('add_models');
+        Schema::dropIfExists('type_models');
     }
 };

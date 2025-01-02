@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class specifications extends Model
 {
-    protected $fillable = ['specifications'];
+    protected $fillable = ['specifications','processes'];
 }

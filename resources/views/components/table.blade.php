@@ -109,7 +109,7 @@
 
 
     </div>
-    {{-- 3) UPDATE FORM HANDLDER--}}
+    {{-- 3) UPDATE FORM HANDLDER //@conditions route--}}
     @php
         $sessionDetect = '';
 
@@ -122,6 +122,8 @@
             $sessionDetect = 'after_material_edit';
         }elseif (session()->has('finish_material_edit')) {
             $sessionDetect = 'finish_material_edit';
+        }elseif (session()->has('type_material_edit')) {
+            $sessionDetect = 'type_material_edit';
         }else {
             $sessionDetect = 'none';
         }
@@ -163,7 +165,7 @@
 
     @endif
 
-    {{-- 4) DELETE FORM HANLDER --}}
+    {{-- 4) DELETE FORM HANLDER //@conditions route--}}
     @php
     $sessionDelete = '';
 
@@ -175,6 +177,8 @@
         $sessionDelete = 'after_material_delete';
     }elseif (session()->has('finish_material_delete')) {
         $sessionDelete = 'finish_material_delete';
+    }elseif (session()->has('type_material_delete')) {
+        $sessionDelete = 'type_material_delete';
     }else {
         $sessionDelete = 'none';
     }

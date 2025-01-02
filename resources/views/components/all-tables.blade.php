@@ -67,7 +67,21 @@
             'compare' => 'Finish',
             'compareErr' => 'finish already exist',
             'buttonOnclick' => ''
-        ]
+        ],
+        [
+            'formName' => 'type_form',
+            'action' => 'type-data',
+            'show' => 'TYPE:',
+            'placeholder' => 'add type here',
+            'inputId' => 'type_details',
+            'inputName' => 'type_details',
+            'btnName' => 'btnType',
+            'btnLabel' => 'type',
+            'compare' => 'Type',
+            'compareErr' => 'type already exist',
+            'buttonOnclick' => ''
+        ],
+
     ];
     @endphp
 
@@ -128,6 +142,13 @@
                         'column' => 'finish',
                         'compare' => 'Finish',
                     ],
+                    [
+                        'title' => 'TYPE',
+                        'array' => $allType,
+                        'column' => 'type',
+                        'compare' => 'type',
+                    ],
+
 
                 ];
             @endphp

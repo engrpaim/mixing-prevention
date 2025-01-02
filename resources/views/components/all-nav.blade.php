@@ -1,5 +1,5 @@
 <div class="flex items-center justify-end w-full h-24 bg-gray-100 max-w-screen outline outline-1 outline-gray-300 sm:px-64" >
-    <x-nav title="Model details" route="add" isLast="" tooltip="Insert\Update new model"
+    <x-nav title="Model details" route="add" isLast="" tooltip="Insert new model"
     svg='<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" class="mx-1 mt-0.5">
             <path d="M516-384h72v-132h132v-72H588v-132h-72v132H384v72h132v132ZM312-240q-29.7 0-50.85-21.15Q240-282.3 240-312v-480q0-29.7 21.15-50.85Q282.3-864 312-864h480q29.7 0 50.85 21.15Q864-821.7 864-792v480q0 29.7-21.15 50.85Q821.7-240 792-240H312Zm0-72h480v-480H312v480ZM168-96q-29.7 0-50.85-21.15Q96-138.3 96-168v-552h72v552h552v72H168Zm144-696v480-480Z" fill="currentColor"/>
           </svg>'
@@ -12,6 +12,10 @@
             <path d="m395-285 339-339-50-51-289 288-119-118-50 50 169 170Zm1 102L124-455l152-152 119 118 289-288 153 153-441 441Z" fill="currentColor"/>
          </svg>'
     color="yellow"/>
+
+    <x-nav title="View list" route="list" isLast="" tooltip="View model"
+    svg='<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M360-240h440v-107H360v107ZM160-613h120v-107H160v107Zm0 187h120v-107H160v107Zm0 186h120v-107H160v107Zm200-186h440v-107H360v107Zm0-187h440v-107H360v107ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Z" fill="currentColor"/></svg>'
+    color="red"/>
     <x-home-button/>
 </div>
 

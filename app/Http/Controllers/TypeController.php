@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\AfterMaterialModel;
+use App\Models\TypeModel;
 use Illuminate\Http\Request;
 
-class AfterMaterialController extends Controller
+class TypeController extends Controller
 {
     protected $clientIP;
 
@@ -23,13 +23,13 @@ class AfterMaterialController extends Controller
 
         $delete = $request->input('deleteVlaue');
 
-        $dataTodelete = AfterMaterialModel::where('after_material', $delete)->first();
+        $dataTodelete = TypeModel::where('type', $delete)->first();
         if($dataTodelete){
             $dataTodelete->delete();
             return redirect('/sections')->with([
-                'exist' => 'Material ('.$request->input('deleteVlaue').')',
+                'exist' => 'Type'.$request->input('deleteVlaue'),
                 'error' => 'sucessfully deleted.',
-                'update' => 'After',
+                'update' => 'Type',
             ]);
         }
 
@@ -47,48 +47,49 @@ class AfterMaterialController extends Controller
             $currentValue = $request->input('currentValue');
             $updateInput = $request->input('updateInput');
 
-            $dataToUpdate = AfterMaterialModel::where('after_material', $currentValue)->first();
+            $dataToUpdate = TypeModel::where('type', $currentValue)->first();
             if ($dataToUpdate) {
-                $dataToUpdate->after_material =  htmlspecialchars($updateInput, ENT_QUOTES, 'UTF-8');
+                $dataToUpdate->type =  htmlspecialchars($updateInput, ENT_QUOTES, 'UTF-8');
                 $dataToUpdate->ip_address = htmlspecialchars($this->clientIP );
                 $dataToUpdate->save();
 
                 return redirect('/sections')->with([
                     'new' => $request->input('updateInput'),
                     'current' => $request->input('currentValue'),
-                    'update' => 'After',
+                    'update' => 'Type',
                 ]);
             }
         }catch(\Exception $e){
             return redirect('/sections')->with([
                 'exist' => $request->input('updateInput'),
-                'update' => 'After',
+                'update' => 'Type',
             ]);
         }
     }
 
-    public function afterMaterialAllData(Request $request){
-        $allAfterMaterial = AfterMaterialModel::orderBy('created_at', 'desc')->Paginate(10,['*'], 'after-material-page');
-        return view('sections',compact('allAfterMaterial'));
+    public function typeAllData(Request $request){
+        $allType = TypeModel::orderBy('created_at', 'desc')->Paginate(10,['*'], 'type-page');
+        return view('sections',compact('allType'));
     }
-    public function afterMaterial(Request $request){
+
+    public function typeMagnet(Request $request){
+        //dd($request->all());
         try{
             $request->validate(
-                ['after_material'=>['required','string','max:255','unique:after_material_models,after_material',],],
-                ['after_material.unique' => 'After material already exist.'
+                ['type_details'=>['required','string','max:255','unique:type_models,type',],],
+                ['type_details.unique' => 'Type already exist.'
             ]);
 
-            AfterMaterialModel::create([
-                'after_material'=>$request->input('after_material'),
+            TypeModel::create([
+                'type'=>$request->input('type_details'),
                 'ip_address' => htmlspecialchars($this->clientIP),
             ]);
 
-            return redirect('/sections')->with(['success'=>$request->input('after_material'),
-                                            'process'=>'After Material']);
+            return redirect('/sections')->with(['success'=>$request->input('type_details'),
+                                            'process'=>'type Material']);
         }catch(\Exception $e){
-            return redirect('/sections')->with(['success'=>$request->input('after_material'),
-            'process'=>'after(material) already exist']);
+            return redirect('/sections')->with(['success'=>$request->input('type_details'),
+            'process'=>'type already exist']);
         }
     }
-
 }

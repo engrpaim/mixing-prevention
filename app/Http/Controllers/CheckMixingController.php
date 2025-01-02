@@ -24,7 +24,7 @@ class CheckMixingController extends Controller
     public function checkMaterials(Request $request)
     {
         $isArrayResultPerModelMixing=[];
-        $neededDataArraytoSetModel = ['model','before','after','finish'];
+        $neededDataArraytoSetModel = ['model','before','after','finish','type'];
         $identifiedParameters = ['length','width','thickness','radius'];
         $computedArray = $request->input('computedArray_cm');
         foreach($request->all() as $passedDataKey => $passedDataValue ){
@@ -177,7 +177,7 @@ class CheckMixingController extends Controller
                     $isEqualAllDimension = DB::table($singleKey)
                                             ->selectRaw('model, '.$isEqualQuery)
                                             ->whereNotLike('model', $selectedModel)
-                                            ->havingRaw('length= 1 AND width = 1 AND thickness = 1')
+                                            ->havingRaw('length = 1 AND width = 1 AND thickness = 1')
                                             ->get();
 
 
@@ -199,7 +199,7 @@ class CheckMixingController extends Controller
                                             ->whereRaw($specsPerTablequery)
                                             ->get();
                     $mixingPerDimension[$singleKey] = $compareMixingTableData;
-                    //ongoing update
+                    //COMPUTATION FOR THE MODAL OF JUDGEMENT PER RULE BETWEEN 0 TO 1 DIFFERENCE
                     $ruleModel ='';
                     $rulesIdentifier = 0;
                     $currentCounter = 0;
@@ -368,6 +368,7 @@ class CheckMixingController extends Controller
             $columnIdenTifier++;
         }
 
+
         //SET THE MODEL TO BE DISPLAYED
         $setModelMixing='';
         if(!empty($isArrayResultPerModelMixing)){
@@ -404,11 +405,7 @@ class CheckMixingController extends Controller
 
 
             }
-
-
-
-
-        //dump($isNeedToHighlighted);
+        //RULE COLOR IDENTIFIER
         $HiglightedArray = [];
         $RmHiglightedArray = [];
         $countTheSame = 0;
@@ -424,7 +421,7 @@ class CheckMixingController extends Controller
 
             foreach($isDataHighlightedValue as $isDataToSetKey => $isDataToSetValue  ){
 
-
+                //RAW MATERIAL COLOR IDENTIFIER
                 if(isset($identifierTableDimensionMixing[$counterTrue])  && $identifierTableDimensionMixing[$counterTrue] == "RAW MATERIAL"){
 
                     if(count($RmHiglightedArray) <= 1){
@@ -436,7 +433,7 @@ class CheckMixingController extends Controller
                         $currentLocationProcess = explode("_",$isDataToSetKey )[0];
 
                         $resultRm = array_filter($RmHiglightedArray, function($value) {
-                            if(abs($value) >= 0 &&  abs($value) < 1.9){
+                            if(abs($value) >= 0 &&  abs($value) < 1.99){
                                 return true;
                             }
                         });
@@ -448,7 +445,7 @@ class CheckMixingController extends Controller
 
                     }
                 }
-
+                //if other process dimension
                 if(count($HiglightedArray) <= 1){
                     array_push( $HiglightedArray,$isDataToSetValue);
                 }elseif(count($HiglightedArray) == 2){
@@ -462,6 +459,7 @@ class CheckMixingController extends Controller
                     });
 
                     $currentLocationProcess = explode("_",$isDataToSetKey )[0];
+                    //IGNORE BELOW ONE BASE ON RULE ONLY 2  AND 3 HAVE COLOR
                     if( count($result) > 1){
                         $countTruePerProcess[$isDataHighlightedKey][$currentLocationProcess]= count($result);
                     }

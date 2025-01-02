@@ -9,8 +9,10 @@ const selectCurrentValue = document.getElementById("process");
 const selectfinish = document.getElementById("finish");
 const selectBefore = document.getElementById("before_material");
 const selectAfter = document.getElementById("after_material");
+const selectType = document.getElementById("type");
 const selectedValueDisplay = document.getElementById("finish_selected");
 const selectedValueBefore = document.getElementById("before_selected");
+const selectedValueType = document.getElementById("type_selected");
 const selectedValueAfter = document.getElementById("after_selected");
 const select = document.getElementById("process");
 const modelName = document.getElementById("model_name2");
@@ -99,6 +101,21 @@ selectBefore.addEventListener("change",() =>{
     selectedValueBefore.value = beforeValue;
     console.log(selectedValueBefore);
 });
+
+
+selectType.addEventListener("change",() =>{
+    console.log(aferValue.length);
+    if(aferValue.length == 0 ){
+
+        aferValue.push(selectType.value);
+    }else{
+        aferValue =[];
+        aferValue.push(selectType.value);
+    }
+    selectedValueType.value = aferValue;
+    console.log(selectedValueType);
+});
+
 //Create span in process flow
 
 function renderSpans() {

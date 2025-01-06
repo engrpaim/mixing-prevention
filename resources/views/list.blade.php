@@ -317,6 +317,7 @@
                 console.log(table, model);
             }
         </script>
+    <x-footer/>
 
     </body>
 </html>

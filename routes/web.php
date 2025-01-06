@@ -23,10 +23,12 @@ Route::view('/check','check');
 Route::view('/list','list');
 Route::redirect('/','/mixing-prevention');
 Route::view('/flow','flow');
+
+
 //request routes
-Route::get('/add', [AddModelController::class, 'selectOptionProcess']);
-Route::get('/check', [CheckMixingController::class, 'ModelDetails']);
-Route::get('list',[ViewList::class,'CheckBoxProcess']);
+
+
+
 
 Route::get('/sections',function(){
     return view('sections');
@@ -103,14 +105,11 @@ Route::get('{type}/{action}/{id}', function($type,$action , $id) {
 //type-data
 Route::post('type-data',[TypeController::class,'typeMagnet']);
 Route::post('finish-data',[finishController::class,'finishAdd']);
-Route::post('model-check-data',[CheckMixingController::class,'FindModel']);
-Route::post('add-specs-data',[AddModelController::class,'add']);
-Route::post('specs-model-data',[AddModelController::class,'tables']);
 Route::post('add-process-data',[ProcessListController::class,'process_add']);
 Route::post('before-material-data',[BeforeMaterialController::class,'beforeMaterial']);
 Route::post('after-material-data',[AfterMaterialController::class,'afterMaterial']);
-Route::post('mixing-check-data', [CheckMixingController::class, 'checkMaterials']);
 Route::post('range-data',[ViewList::class,'FinModelRange']);
+
 $updateRoutes = [
     'update-process-data-form' => ProcessListController::class,
     'update-before-data-form' => BeforeMaterialController::class,
@@ -137,9 +136,67 @@ foreach ($deleteRoutes as $name => $controller) {
 }
 
 
+//ADD ROUTING
+Route::controller(AddModelController::class)->group(function(){
+
+    //get
+    Route::get('/add','selectOptionProcess');
+
+    //post
+    Route::post('add-specs-data','add');
+    Route::post('specs-model-data','tables');
+
+});
+
+
+//VIEWLIST ROUTING
+Route::controller(Viewlist::class)->group(function(){
+
+    //get
+    Route::get('/live_search/action','CheckBoxProcess')->name('ViewList.CheckBoxProcess');
+    Route::get('/viewlist/details/{model}/{talbe}','showDetails');
+    Route::get('list','CheckBoxProcess');
+
+    //post
+    Route::post('edit-viewlist-data','updateModel');
+
+});
+
+//CHECKMIXING ROUTING
+
+Route::controller(CheckMixingController::class)->group(function(){
+
+    //get
+    Route::get('/check','ModelDetails');
+
+    //post
+    Route::post('model-check-data','FindModel');
+    Route::post('mixing-check-data','checkMaterials');
+
+});
+
+
+
+
+
+
+
+
+
+
+
 
 
 //viewlist
-Route::get('/live_search/action', [ViewList::class, 'CheckBoxProcess'])->name('ViewList.CheckBoxProcess');
-Route::get('/viewlist/details/{model}/{talbe}',[ViewList::class, 'showDetails']);
-Route::post('edit-viewlist-data',[ViewList::class, 'updateModel']);
+//to bedeleted once tested
+// Route::get('/live_search/action', [ViewList::class, 'CheckBoxProcess'])->name('ViewList.CheckBoxProcess');
+// Route::get('/viewlist/details/{model}/{talbe}',[ViewList::class, 'showDetails']);
+// Route::post('edit-viewlist-data',[ViewList::class, 'updateModel']);
+// Route::post('add-specs-data',[AddModelController::class,'add']);
+// Route::post('specs-model-data',[AddModelController::class,'tables']);
+// Route::get('/add', [AddModelController::class, 'selectOptionProcess']);
+
+// Route::get('/check', [CheckMixingController::class, 'ModelDetails']);
+// Route::post('model-check-data',[CheckMixingController::class,'FindModel']);
+// Route::post('mixing-check-data', [CheckMixingController::class, 'checkMaterials']);
+//Route::get('list',[ViewList::class,'CheckBoxProcess']);

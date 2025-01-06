@@ -104,6 +104,7 @@ class AddModelController extends Controller
                 'model' => $request->input('add_model'),
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
+                'ip_address' => request()->ip()
 
             ];
 
@@ -167,7 +168,7 @@ class AddModelController extends Controller
                             'model' => $request->input('add_model'),
                             'created_at' => Carbon::now(),
                             'updated_at' => Carbon::now(),
-
+                            'ip_address' => request()->ip()
                             ];
                             $specsValidation[$key] = "required|numeric";
                             $dataToSaved [$columnName[1]] = $request->input($key);
@@ -228,6 +229,7 @@ class AddModelController extends Controller
                     'type' => $request->input('type_details'),
                     'finish' => $request->input('finish_category'),
                     'process_flow' => $request->input('selected_processes3'),
+                    'ip_address' => request()->ip()
                 ]);
 
             }catch (\Exception $e) {

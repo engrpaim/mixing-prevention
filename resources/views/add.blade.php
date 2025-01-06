@@ -12,7 +12,7 @@
     @include('components.all-nav')
 
 
-    <div class="flex flex-col self-center w-screen m-auto my-10 text-base rounded-lg shadow-xl mt-14 h-fit shadow-gray-300 min-w-fit max-w-fit">
+    <div class="flex flex-col self-center w-screen m-auto my-20 mb-32 text-base rounded-lg shadow-xl mt-14 h-fit shadow-gray-300 min-w-fit max-w-fit">
         <div   div class="flex justify-center w-full py-4 m-0 bg-blue-200 min-w-fit">
             <h1 class="font-bold">ADD: MODEL DETAILS</h1>
         </div>
@@ -241,7 +241,9 @@
 
 
 
-
+    @if (!isset($newSpecsTable))
+        <x-footer/>
+    @endif
 
 </body>
 </html>

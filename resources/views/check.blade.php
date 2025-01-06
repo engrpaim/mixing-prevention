@@ -408,10 +408,10 @@
                                         if($resultValue['type']){
                                             $type  = $resultValue['type'];
                                         }else{
-                                            $type =  "Unkown";
+                                            $type =  "UNKNOWN";
                                         }
                                     @endphp
-                                    <td class="{{ $tableSpecification }} " >{{ $resultKey }}
+                                    <td class="{{ $tableSpecification }} font-bold" >{{ $resultKey }}
                                         <button class="p-1 mx-2 text-xs font-bold text-gray-700 bg-gray-200 rounded-lg outline-gray-400 outline outline-2">
                                             {{ $type }}
                                         </button></td>
@@ -604,6 +604,8 @@
             @endif
         @endif
     </div>
+
+
 </body>
 </html>
 {{--@dump(get_defined_vars()) --}}

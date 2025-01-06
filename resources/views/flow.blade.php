@@ -25,5 +25,8 @@
             </div>
         </div>
     </div>
+    <footer>
+        <p class="font-sans text-xl">This is the footer content.</p>
+    </footer>
 </body>
 </html>

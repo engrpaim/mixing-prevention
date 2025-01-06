@@ -68,7 +68,7 @@ class TypeController extends Controller
     }
 
     public function typeAllData(Request $request){
-        $allType = TypeModel::orderBy('created_at', 'desc')->Paginate(10,['*'], 'type-page');
+        $allType = TypeModel::orderBy('created_at', 'desc')->Paginate(7,['*'], 'type-page');
         return view('sections',compact('allType'));
     }
 

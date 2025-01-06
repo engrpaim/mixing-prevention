@@ -9,5 +9,5 @@ use Illuminate\Database\Eloquent\Model;
 class AddModel extends Model
 {
     use HasFactory;
-    protected $fillable = ['model','before','after','finish','process_flow','type'];
+    protected $fillable = ['model','before','after','finish','process_flow','type','ip_address'];
 }

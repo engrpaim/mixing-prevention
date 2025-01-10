@@ -179,15 +179,6 @@ Route::controller(CheckMixingController::class)->group(function(){
 
 
 
-
-
-
-
-
-
-
-
-//viewlist
 //to bedeleted once tested
 // Route::get('/live_search/action', [ViewList::class, 'CheckBoxProcess'])->name('ViewList.CheckBoxProcess');
 // Route::get('/viewlist/details/{model}/{talbe}',[ViewList::class, 'showDetails']);

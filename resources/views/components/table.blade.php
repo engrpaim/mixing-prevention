@@ -9,9 +9,9 @@
                 <th>{{ $title }}</th>
 
                 @php
-                $parts = explode('-', $title)[0];
-                $update = 'update-'.strtolower($parts).'-data-form';
-                $delete = 'delete-'.strtolower($parts).'-data-form';
+                    $parts = explode('-', $title)[0];
+                    $update = 'update-'.strtolower($parts).'-data-form';
+                    $delete = 'delete-'.strtolower($parts).'-data-form';
                 @endphp
 
 
@@ -216,7 +216,7 @@
 
     {{-- 5) MESSAGE HANDLER --}}
     @if(session('update') == $compare)
-        <x-updatehandler update="{{ session('update') }}" compare={{ $compare }}/>
+        <x-update-handler update="{{ session('update') }}" compare={{ $compare }}/>
     @endif
 
 </div>

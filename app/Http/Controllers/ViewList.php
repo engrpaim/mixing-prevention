@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AfterMaterialModel;
+use App\Models\BeforeMaterialModel;
 use App\Models\specifications;
 use App\Models\AddModel;
 use Illuminate\Http\Request;
@@ -11,14 +13,16 @@ class ViewList extends Controller
 {
     protected $isGetProcesses;
     protected $isGetAllModel;
-
+    protected $isGetAfterMaterial;
+    protected $isGetBeforeMaterial;
 
     public function __construct()
     {
         $this->isGetProcesses = specifications::orderBy('specification','asc')->get();
         //$allBeforeMaterial = specifications::orderBy('updated_at', 'desc')->paginate(7, ['*'], 'wiew-list-page');
         $this->isGetAllModel = AddModel::orderBy('model','asc')->paginate(10, ['*'], 'wiew-list-page');
-
+        $this->isGetBeforeMaterial = BeforeMaterialModel::orderBy('before_material','asc')->get();
+        $this->isGetAfterMaterial = AfterMaterialModel::orderBy('after_material','asc')->get();
     }
 
 
@@ -28,6 +32,10 @@ class ViewList extends Controller
             $remove_special = str_replace('_', '%', $remove_special);
             return strtolower($remove_special);
         }
+
+
+        $displayInSelectafterMaterial = $this->isGetAfterMaterial;
+        $displayInSelectbeforeMaterial = $this->isGetBeforeMaterial;
         $output = '';
         $outputModel = '';
         $outputFlow = '';
@@ -95,15 +103,35 @@ class ViewList extends Controller
         }else{
 
 
-            return view('list',compact('isDisplayCheckBox','isDisplayAllmodell'));
+            return view('list',compact('isDisplayCheckBox','isDisplayAllmodell','displayInSelectafterMaterial','displayInSelectbeforeMaterial','displayInSelectafterMaterial','displayInSelectbeforeMaterial'));
         }
 
     }
 
     public function FinModelRange(Request $request){
 
-        $isDisplayCheckBox =  $this->isGetProcesses;
+        $before_mats = $request->input('before_mats');
+        $after_mats = $request->input('after_mats');
+        $search_mats = ['before' => $before_mats , 'after' => $after_mats  ];
+        $AllCommonMaterials=[];
+        if( !empty($search_mats)){
+            foreach($search_mats  as $toSearchKey => $toSearchValue){
+                if($toSearchValue != ''){
+                    $isSameMaterial = DB::table('add_models')
+                                            ->where($toSearchKey,"=", $toSearchValue)
+                                            ->select('model')
+                                            ->get();
 
+                    foreach($isSameMaterial as $commonData){
+                        $AllCommonMaterials  [$toSearchKey][$commonData->model]= $toSearchValue;
+                    }
+                }
+            }
+        }
+
+        $isDisplayCheckBox =  $this->isGetProcesses;
+        $displayInSelectafterMaterial = $this->isGetAfterMaterial;
+        $displayInSelectbeforeMaterial = $this->isGetBeforeMaterial;
         $isHaveTargetValue =[];
         $specs = ['length','width','outer_radius','thickness','inner_radius','a'];
         $AllData= $request->all();
@@ -280,16 +308,17 @@ class ViewList extends Controller
         }catch(\Exception $e){
             continue;
         }
-            //dump($allSpecsValue );
+
 
         }
+       // dump($AllCommonMaterials );
        if(!empty($allDimensionFlow)){
 
-            return view('list',compact('isDisplayCheckBox','allWithinSpecsModels','buttonModels','allDimensionFlow','allDimensionsValue'));
+            return view('list',compact('isDisplayCheckBox','AllCommonMaterials','allWithinSpecsModels','buttonModels','allDimensionFlow','allDimensionsValue','displayInSelectafterMaterial','displayInSelectbeforeMaterial'));
 
        }else{
 
-            return view('list',compact('isDisplayCheckBox','allWithinSpecsModels','buttonModels'));
+            return view('list',compact('isDisplayCheckBox','allWithinSpecsModels','buttonModels','displayInSelectafterMaterial','displayInSelectbeforeMaterial','AllCommonMaterials'));
 
        }
 

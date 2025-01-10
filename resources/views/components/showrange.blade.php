@@ -3,6 +3,33 @@
 @endphp
 
 <div class="flex flex-row items-center justify-center px-8 py-2 rounded-lg bg-violet-200 outline outline-2 outline-violet-600" >
+
+    <div class="flex flex-col items-center justify-between w-42 ">
+        <div class="text-2xl font-bold text-violet-900">
+            <h1>MATERIAL</h1>
+        </div>
+        <div class="flex flex-row items-center my-2">
+            <h1 class="mx-2 font-semibold text-violet-900">AFTER</h1>
+            <select id="after_mats"  name="after_mats"  class="p-2 mx-1 my-5 text-sm rounded-lg text-violet-900 focus:outline-violet-600 focus:bg-blue-50" required>
+                <option  value=" " disabled selected></option>
+                @foreach ( $after as $after_mats)
+                    <option  value="{{ $after_mats->after_material }}">{{ $after_mats->after_material }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="flex flex-row items-center">
+            <h1 class="mx-2 font-semibold text-violet-900">BEFORE</h1>
+
+            <select id="before_mats" name="before_mats"  class="p-2 mx-1 my-5 text-sm rounded-lg text-violet-900 focus:outline-violet-600 focus:bg-blue-50" >
+                <option  value=" " disabled selected></option>
+                @foreach ( $before as $before_mats)
+                    <option  value="{{ $before_mats->before_material }}">{{ $before_mats->before_material }}</option>
+                @endforeach
+            </select>
+        </div>
+
+    </div>
     <div class="flex flex-col items-center justify-between w-full">
         <div class="text-2xl font-bold text-violet-900">
             <h1>RANGE</h1>

@@ -17,8 +17,9 @@ class UpdateTablesController extends Controller
         $allAfterMaterial = AfterMaterialModel::orderBy('updated_at', 'desc')->paginate(7, ['*'], 'after-material-page');
         $allBeforeMaterial = BeforeMaterialModel::orderBy('updated_at', 'desc')->paginate(7, ['*'], 'before-material-page');
         $allProcess = ProcessModel::orderBy('updated_at', 'desc')->paginate(7,['*'],'process-page');
-        $allFinish = finishModels::orderBy('updated_at', 'desc')->paginate(7,['*'],'process-page');
-        $allType = TypeModel::orderBy('created_at', 'desc')->Paginate(10,['*'], 'type-page');
+        $allFinish = finishModels::orderBy('updated_at', 'desc')->paginate(7,['*'],'finish-page');
+        $allType = TypeModel::orderBy('created_at', 'desc')->Paginate(7,['*'], 'type-page');
+
         return view('sections', compact('allAfterMaterial', 'allBeforeMaterial','allProcess','allFinish','allType'));
     }
 }

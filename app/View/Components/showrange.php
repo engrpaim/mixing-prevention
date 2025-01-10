@@ -12,10 +12,15 @@ class showrange extends Component
      * Create a new component instance.
      */
     public $array;
-    public function __construct($array)
+    public $before;
+    public $after;
+
+    public function __construct($array,$after,$before)
     {
         //
         $this->array = $array;
+        $this->after = $after;
+        $this->before = $before;
     }
 
     /**

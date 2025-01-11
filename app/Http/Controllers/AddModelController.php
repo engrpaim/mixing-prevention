@@ -178,8 +178,8 @@ class AddModelController extends Controller
                                 'success' => $request->input('add_model'),
                                 'process' => 'model already exist in '.$currentTable,]);
                         }
-                        $currentTable = $columnName[0];
-                        //dump('New table: '.$currentTable);
+                        $currentTable = strtolower($columnName[0]);
+
 
                     }else{
 
@@ -233,9 +233,7 @@ class AddModelController extends Controller
                 ]);
 
             }catch (\Exception $e) {
-                return redirect('/add')->with([
-                    'success' => $request->input('add_model'),
-                    'process' => 'model already exist',]);
+               dd($e);
             }
 
 

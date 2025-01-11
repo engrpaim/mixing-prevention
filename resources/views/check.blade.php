@@ -405,7 +405,7 @@
                                 <tr>
                                     @php
                                         $type = '';
-                                        if($resultValue['type']){
+                                        if(isset($resultValue['type']) && $resultValue['type']){
                                             $type  = $resultValue['type'];
                                         }else{
                                             $type =  "UNKNOWN";

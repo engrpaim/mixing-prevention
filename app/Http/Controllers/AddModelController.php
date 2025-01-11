@@ -96,7 +96,7 @@ class AddModelController extends Controller
             $currentTable  = '';
             $processCurrentCount  = 0;
 
-            $specsValidation = [];
+
             $dataToSaved = [];
             //Dynamic adding off the specs per table
             $dataToSaved = [
@@ -124,101 +124,78 @@ class AddModelController extends Controller
             ];
 
             $allRequest = $request->all();
-            //count the number of specs min max
-            foreach($allRequest as $key => $value){
-                $tableSpecs = explode('+',$key);
-                if(str_contains($tableSpecs[0], '%')){
-
-                    if($specsCompareCount == '' ){
-                        $perProcessCounter += 1;
-                        $specsCompareCount = $tableSpecs[0];
-                    }elseif($specsCompareCount != $tableSpecs[0]){
-                        array_push($totalProcessChecker,$tableSpecs[0]);
-                        $totalNumberPerSpecs [$tableSpecs[0]] = $perProcessCounter;
-                        //dump( $totalNumberPerSpecs);
-                        $perProcessCounter = 1;
-                        $specsCompareCount = $tableSpecs[0];
-                    }else{
-                        $perProcessCounter += 1;
-                    }
-                }
-
-
-            }
-
+            $allSpecs = [];
+            $allProcesses = [];
+            $uniqueSpecs = [];
+            $uniqueProcesses = [];
             //Dynamic data of specifications
             foreach($allRequest as $key => $value){
                 if(str_contains($key, '%')){
 
                     $columnName = explode('+',$key);
+                    $process_table =  strtolower($columnName[0]);
+                    $specs_dimension = explode("_" , $columnName[1])[0];
+
+                    array_push($allSpecs , $process_table);
+                    array_push($allProcesses , $specs_dimension);
+
+                    $uniqueSpecs = array_values(array_unique($allSpecs));
+                    $uniqueProcesses = array_values(array_unique($allProcesses));
 
 
-                  if($currentTable != $columnName[0] && $currentTable != ''){
-                        //if new process save to unmigrated database
-                        //dump($totalNumberPerSpecs[$columnName[0]]);
-                        $countDimensionProcesses += 1;
-                        $rulesValidation[0] = array_merge($rulesValidation[0],$specsValidation);
-                        $request->validate($rulesValidation);
-
-                        try{
-                           DB::table($currentTable)->insert($dataToSaved);
-                           $dataToSaved= [];
-                           $dataToSaved = [
-
-                            'model' => $request->input('add_model'),
-                            'created_at' => Carbon::now(),
-                            'updated_at' => Carbon::now(),
-                            'ip_address' => request()->ip()
-                            ];
-                            $specsValidation[$key] = "required|numeric";
-                            $dataToSaved [$columnName[1]] = $request->input($key);
-                        }catch(\Exception $e){
-                            dd($e);
-                            return redirect('/add')->with([
-                                'success' => $request->input('add_model'),
-                                'process' => 'model already exist in '.$currentTable,]);
-                        }
-                        $currentTable = $columnName[0];
-                        //dump('New table: '.$currentTable);
-
-                    }else{
-
-                        if( $currentTable == ''){
-                            //dump("max: ".$maxDimension);
-                            $countDimensionProcesses += 1;
-                            $currentTable = $columnName[0];
-                        }
-                        $processCurrentCount += 1;
-                        $specsValidation[$key] = "required|numeric";
-                        $dataToSaved [$columnName[1]] = $request->input($key);
-                        //echo $key."----->".$columnName[1]."---value--->".$value."<br/>";
-
-                    }
                 }
             }
-            //Add the last process
-            if($maxDimension == $countDimensionProcesses){
-                // dump('Process count dimension: '. $countDimensionProcesses);
-                // dump('max: ' . $maxDimension);
-                // dump($dataToSaved);
-                // dump($perProcessCounter , $processCurrentCount);
 
-                $rulesValidation[0] = array_merge($rulesValidation[0],$specsValidation);
+            foreach($uniqueSpecs as $tableProcess){
+
+                $specsValidation = [];
+                $isDataSaved = [];
+
+                foreach($uniqueProcesses as $checkDimension){
+                    $isExistDimension = strtoupper($tableProcess)."+".$checkDimension."_val";
+
+                    if(array_key_exists($isExistDimension, $allRequest )){
+                        dump($isExistDimension);
+
+                        $saveMinimum = strtoupper($tableProcess)."+".$checkDimension."_min";
+                        $saveMaximum = strtoupper($tableProcess)."+".$checkDimension."_max";
+
+                        $isDataSaved[$checkDimension.'_val'] =  $request->input($isExistDimension);
+                        $isDataSaved[$checkDimension.'_min'] =  $request->input($saveMinimum);
+                        $isDataSaved[$checkDimension.'_max'] =  $request->input($saveMaximum);
+                        $specsValidation[$checkDimension.'_val'] = "required|numeric";
+                        $specsValidation[$checkDimension.'_min'] = "required|numeric";
+                        $specsValidation[$checkDimension.'_max'] = "required|numeric";
+
+
+                        $isDataSaved= array_merge($dataToSaved,$isDataSaved);
+                        dump($isDataSaved);
+                        $rulesValidation[0]  = array_merge($rulesValidation[0], $specsValidation);
+                        dump( $rulesValidation[0] );
+
+                    }
+
+
+
+                }
+
+                dump('check');
+
                 $request->validate($rulesValidation);
-
                 try{
-                   DB::table(strtolower($currentTable))->insert($dataToSaved);
+                    DB::table(strtolower($tableProcess))->insert($isDataSaved);
                 }catch(\Exception $e){
-                    dd($e);
                     return redirect('/add')->with([
                         'success' => $request->input('add_model'),
                         'process' => 'model already exist',]);
                 }
-                $currentTable = $columnName[0];
-                // dump('New table: '.$currentTable);
-            }
-          // dd('stop');
 
+
+
+            }
+
+            // dd('stop');
+            // dd('hello');
 
             try{
 

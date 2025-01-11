@@ -174,7 +174,7 @@ class CheckMixingController extends Controller
 
                 try{
 
-                    $isEqualAllDimension = DB::table($singleKey)
+                    $isEqualAllDimension = DB::table(strtolower($singleKey))
                                             ->selectRaw('model, '.$isEqualQuery)
                                             ->whereNotLike('model', $selectedModel)
                                             ->havingRaw('length = 1 AND width = 1 AND thickness = 1')
@@ -195,7 +195,7 @@ class CheckMixingController extends Controller
                 try{
 
 
-                    $compareMixingTableData = DB::table($singleKey)
+                    $compareMixingTableData = DB::table(strtolower($singleKey))
                                             ->whereRaw($specsPerTablequery)
                                             ->get();
                     $mixingPerDimension[$singleKey] = $compareMixingTableData;
@@ -544,7 +544,7 @@ class CheckMixingController extends Controller
 
             if (Schema::hasTable($modified_process)) {
                 //Get specifications per table
-                $specification = DB::table($modified_process)
+                $specification = DB::table(strtolower($modified_process))
                                    ->where('model', $request->input('model'))
                                    ->first();
                                    $specificationArray[$modified_process] = $specification;

@@ -169,9 +169,9 @@ class AddModelController extends Controller
 
 
                         $isDataSaved= array_merge($dataToSaved,$isDataSaved);
-                        dump($isDataSaved);
+                        // dump($isDataSaved);
                         $rulesValidation[0]  = array_merge($rulesValidation[0], $specsValidation);
-                        dump( $rulesValidation[0] );
+                        // dump( $rulesValidation[0] );
 
                     }
 
@@ -179,7 +179,7 @@ class AddModelController extends Controller
 
                 }
 
-                dump('check');
+                // dump('check');
 
                 $request->validate($rulesValidation);
                 try{

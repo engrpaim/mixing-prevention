@@ -178,8 +178,8 @@ class AddModelController extends Controller
                                 'success' => $request->input('add_model'),
                                 'process' => 'model already exist in '.$currentTable,]);
                         }
-                        $currentTable = strtolower($columnName[0]);
-
+                        $currentTable = $columnName[0];
+                        //dump('New table: '.$currentTable);
 
                     }else{
 
@@ -207,7 +207,7 @@ class AddModelController extends Controller
                 $request->validate($rulesValidation);
 
                 try{
-                   DB::table($currentTable)->insert($dataToSaved);
+                   DB::table(strtolower($currentTable))->insert($dataToSaved);
                 }catch(\Exception $e){
                     dd($e);
                     return redirect('/add')->with([
@@ -233,7 +233,7 @@ class AddModelController extends Controller
                 ]);
 
             }catch (\Exception $e) {
-               dd($e);
+                dd($e);
             }
 
 

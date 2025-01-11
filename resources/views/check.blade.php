@@ -607,5 +607,4 @@
 
 
 </body>
-</html>
-{{--@dump(get_defined_vars()) --}}
+</html>@dump(get_defined_vars())

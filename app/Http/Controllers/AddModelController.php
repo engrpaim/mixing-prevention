@@ -83,7 +83,7 @@ class AddModelController extends Controller
     public function add(Request $request)
     {
 
-
+        dump($request->all());
 
         try{
             $totalProcessChecker = [];

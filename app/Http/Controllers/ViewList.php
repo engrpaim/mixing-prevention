@@ -194,7 +194,7 @@ class ViewList extends Controller
                             $queryAllSpecs .= $valueSearch."_val >= " .$computedMin." AND ".$valueSearch."_val <= ".$computedMax;
                             try{
                                 //dump($queryAllSpecs);
-                                $isWithinSpecs = DB::table($remove_special)
+                                $isWithinSpecs = DB::table(strtolower($remove_special))
                                 ->whereRaw($queryAllSpecs)
                                 ->get();
 
@@ -293,7 +293,7 @@ class ViewList extends Controller
                         $remove_special2 = preg_replace('/[^\w\s]/', '%', $specificDataPorcess);
                         $remove_special2 = str_replace('_', '%', $remove_special);
                         //dump("|||||->>>>>>>>>> ".$remove_special2);
-                        $data = DB::table($remove_special)
+                        $data = DB::table(strtolower($remove_special))
                                 ->where('model', $isGetProcesses->model)
                                 ->get();
                                 //dump($data[0]);

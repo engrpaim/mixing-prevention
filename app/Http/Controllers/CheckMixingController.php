@@ -187,7 +187,7 @@ class CheckMixingController extends Controller
                     }
 
                 }catch(\Exception $e){
-                    //dump($e);
+                    dump($e);
                     continue;
                 }
 
@@ -237,7 +237,7 @@ class CheckMixingController extends Controller
 
 
                 }catch(\Exception $e){
-                    //dd($e);
+                    dump($e);
 
                     continue;
                 }
@@ -378,7 +378,7 @@ class CheckMixingController extends Controller
                     $checkedProperties = DB::table('add_models')
                         ->where('model', 'LIKE',$materialsMixingKey )
                         ->get();
-
+                    dump($checkedProperties);
                     if ($checkedProperties->isEmpty()) {
 
                         continue;

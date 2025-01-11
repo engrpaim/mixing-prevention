@@ -187,8 +187,8 @@ class CheckMixingController extends Controller
                     }
 
                 }catch(\Exception $e){
-                    //dump($e);
-                    continue;
+                    dump($e);
+                    //continue;
                 }
 
 
@@ -239,7 +239,7 @@ class CheckMixingController extends Controller
                 }catch(\Exception $e){
                     dd($e);
 
-                    continue;
+                    //continue;
                 }
 
                 $queryIdentifier = 0;
@@ -399,7 +399,7 @@ class CheckMixingController extends Controller
                     }
 
                 }catch(\Exception $e){
-                    //dump( $e);
+                    dump( $e);
                 }
 
 

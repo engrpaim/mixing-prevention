@@ -339,7 +339,7 @@
                         </div>
 
 
-                        @if (!empty($displayRangeValues) && ($displayRangeValues['length_range'] != null || $displayRangeValues['width_range'] || $displayRangeValues['thickness_range'] || $displayRangeValues['radius_range']))
+                        @if (isset($displayRangeValues['length_range']) && !empty($displayRangeValues) && ($displayRangeValues['length_range'] != null || $displayRangeValues['width_range'] || $displayRangeValues['thickness_range'] || $displayRangeValues['radius_range']))
                         <div class="flex flex-col p-3 px-10 bg-yellow-50 outline outline-1 outline-yellow-500">
                             <div>
                                 <h3 class="font-bold text-center"><strong>RANGE&nbsp;FILTER</h3>
@@ -521,7 +521,7 @@
                                                                 </div>
                                                             </div>
                                                                 @php
-                                                                    $computationSpecs =['length','width','thickness','radius'];
+                                                                    $computationSpecs =['length','width','thickness','or','ir','a'];//specsadd
                                                                     //$resultValue
                                                                 @endphp
 
@@ -551,24 +551,30 @@
 
                                                <script>
                                                 window.onload = function() {
+
                                                    var elements = document.querySelectorAll('[id*="_dimension_process"]');
                                                    elements.forEach(function(element) {
                                                        element.style.display = "none";
                                                    });
+
                                                };
 
                                                function showComputation(z) {
+
                                                    var element = document.getElementById(z + '_dimension_process');
                                                    if (element) {
                                                        element.style.display = "block";
                                                    }
+
                                                }
 
                                                function hideComputation(z) {
+
                                                    var element = document.getElementById(z + '_dimension_process');
                                                    if (element) {
                                                        element.style.display = "none";
                                                    }
+
                                                }
 
                                           </script>
@@ -607,4 +613,6 @@
 
 
 </body>
-</html>@dump(get_defined_vars())
+</html>
+
+@dump(get_defined_vars())

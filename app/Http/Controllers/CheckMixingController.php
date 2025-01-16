@@ -308,10 +308,10 @@ class CheckMixingController extends Controller
                             }
 
                             if( $singleKey == 'RAW%MATERIAL'){
-                                if( $absoluteDifferenceTarget > 0 && $absoluteDifferenceTarget < 3 ){
+                                if( $absoluteDifferenceTarget >= 0 && $absoluteDifferenceTarget <= 3 ){
                                     $RmCount++;
                                     $RMTruePerProcess [$specsModel][$currentFlowCount ] = $RmCount ;
-                                }elseif($absoluteDifferenceTarget > 0 && $absoluteDifferenceTarget < 1 ){
+                                }elseif($absoluteDifferenceTarget >= 0 && $absoluteDifferenceTarget <= 1 ){
                                     $RmCount++;
                                     $RMTruePerProcess [$specsModel][$currentFlowCount ] = $RmCount ;
                                 }

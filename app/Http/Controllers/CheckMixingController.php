@@ -36,8 +36,8 @@ class CheckMixingController extends Controller
             }
 
         }
-        dump($displayRangeValues);
-        dump(  $request->all());
+        // dump($displayRangeValues);
+        // dump(  $request->all());
         $readFlow = $request->input('readFlow_cm');
         $selectedModel = htmlspecialchars($request->input('model_cm'));
         $modelDetails = $this->Models;
@@ -45,7 +45,7 @@ class CheckMixingController extends Controller
         $After  = $request->input('after_cm');
         $Finish = $request->input('finish_cm');
         $OPIFormadetails = $request->input('OPIFormadetails_cm');
-
+        $RMTruePerProcess = [];
         $extractTableToCheck = $request->input('dimensionProcessesArray_cm');
         $dimensionReDisplay['dimensionProcessesArray']= $extractTableToCheck;
         $queryData ='';
@@ -91,7 +91,7 @@ class CheckMixingController extends Controller
         if(isset($extractTableToCheck) && !empty($extractTableToCheck)){
             $currentFlowCount = 0;
             foreach($extractTableToCheck as $singleKey => $singleValue){
-                dump($singleKey , $singleValue);
+                // dump($singleKey , $singleValue);
 
                 $queryData = '';
                 $checkMixing = '';
@@ -103,7 +103,7 @@ class CheckMixingController extends Controller
                         array_push($allSpecsInCurrentProcess ,$keyPerProcess );
                         $perVal = explode("_",$keyPerProcess)[0] . "_val";
                         array_push($allSpecsInval,$perVal);
-                        dump($allSpecsInval);
+                        // dump($allSpecsInval);
                     }
                 }
 
@@ -143,9 +143,10 @@ class CheckMixingController extends Controller
                     }
 
                 }
-
-                dump($checkMixing);
-                dump($queryData);
+                //  $queryData .= ' WHERE `model` NOT LIKE `'.$selectedModel.'`';
+                //  $checkMixing .= 'AND NOT LIKE `'.$selectedModel.'`';
+                // dump($checkMixing);
+                // dump($queryData);
                 // dump($allSpecsInCurrentProcess);
                 // dump('setting the value');
 
@@ -177,14 +178,18 @@ class CheckMixingController extends Controller
 
                     $isEqualAllDimension = DB::table(strtolower($singleKey))
                                             ->selectRaw('model, '.$queryData)
-                                            ->whereNotLike('model',$selectedModel)
                                             ->havingRaw($matchHaving)
                                             ->get();
 
                     foreach($isEqualAllDimension as $allKey){
-                        $isSameAllDimension[$allKey->model][$currentFlowCount."_allsame"] = $currentFlowCount;
+                        // dump($selectedModel , $allKey->model);
+
+                            // dump('not like model');
+
+                            $isSameAllDimension[$allKey->model][$currentFlowCount."_allsame"] = $currentFlowCount;
+
                     }
-                    dump('HI');
+
 
                 }catch(\Exception $e){
 
@@ -197,9 +202,8 @@ class CheckMixingController extends Controller
 
                     $allMixingDimension = DB::table(strtolower($singleKey))
                                                 ->whereRaw($checkMixing)
-                                                ->whereNotLike('model', $selectedModel)
                                                 ->get();
-                    dump($allMixingDimension);
+
 
                 }catch(\Exception $e){
                       dump($e);
@@ -211,130 +215,141 @@ class CheckMixingController extends Controller
                     $LegenCompile = '';
                     $currentModel = '';
                     $countPerValue = 0;
+                    $RmCount = 0;
                     //@getdata
 
-                    foreach($allSpecsInval as $specsMinMax){
+                    foreach($allSpecsInval as $specsMinMax)
+                    {
 
                         //model
                         $specsModel =  $dataPerModel->model;
 
+                            if($specsModel !=  $currentModel){
+                                //@get_model_details
+                                $currentModel = $specsModel;
+                                // dump($currentModel );
 
-                        if($specsModel !=  $currentModel){
-                            //@get_model_details
-                            $currentModel = $specsModel;
-                            dump($currentModel );
+                                try{
 
-                            try{
-
-                                $getData = DB::select(' SELECT `before`, `after`, `type`,`finish` FROM `add_models` WHERE `model` = ? ',[$currentModel]);
+                                    $getData = DB::select('SELECT `before`, `after`, `type`, `finish` FROM `add_models` WHERE `model` NOT LIKE ?', [$currentModel]);
 
 
-                                dump($getData);
 
-                            }catch(\Exception $e){
-                                  dump($e);
-                                continue;
+                                    // dump($getData);
+
+                                }catch(\Exception $e){
+                                    dump($e);
+                                    continue;
+                                }
+
+                                if($getData){
+
+                                    $isArrayResultPerModelMixing[$specsModel]['before'] =  $getData[0]->before;
+                                    $isArrayResultPerModelMixing[$specsModel]['after'] =  $getData[0]->after;
+                                    $isArrayResultPerModelMixing[$specsModel]['type'] =  $getData[0]->type;
+                                    $isArrayResultPerModelMixing[$specsModel]['finish'] =  $getData[0]->finish;
+
+                                }
                             }
 
-                            if($getData){
 
-                                $isArrayResultPerModelMixing[$specsModel]['before'] =  $getData[0]->before;
-                                $isArrayResultPerModelMixing[$specsModel]['after'] =  $getData[0]->after;
-                                $isArrayResultPerModelMixing[$specsModel]['type'] =  $getData[0]->type;
-                                $isArrayResultPerModelMixing[$specsModel]['finish'] =  $getData[0]->finish;
+                            //@compute_dimension
+
+                            //data per model  values
+                            $specsGet = explode("_",$specsMinMax)[0];
+                            $specsLegend = strtoupper($specsGet[0]);
+                            $specsGetMin =  $specsGet. "_min";
+                            $specsGetMax =  $specsGet. "_max";
+
+                            //compute
+                            $isToSubtractTarget = (float)$singleValue[$specsGet."_base"];
+                            $valueTarget = $dataPerModel->$specsMinMax;
+                            $absoluteDifferenceTarget = round(abs($isToSubtractTarget - $valueTarget ),3);
+                            $isArrayResultPerModelMixing [$specsModel][$currentFlowCount."_".$specsGet."_compareTarget" ] = $valueTarget ." - ".$isToSubtractTarget." = " .$absoluteDifferenceTarget;
+                            $isNeedToHighlighted[$specsModel][$currentFlowCount."_".$specsGet] = $absoluteDifferenceTarget;
+
+                            //@convertTodisplay
+                            $legendMin = $dataPerModel->$specsGetMin;
+                            $legendMax = $dataPerModel->$specsGetMax;
+
+                            //specialcases OR and IR specs
+                            if($specsLegend == 'I'){
+
+                                $specsLegend = "IR";
+
+                            }elseif($specsLegend == 'O'){
+
+                                $specsLegend = "OR";
 
                             }
-                        }
 
+                            if($legendMin == $legendMax && $LegenCompile == ''){
 
-                        //@compute_dimension
+                                $LegenCompile = $valueTarget . $specsLegend." ± ". $legendMax;
 
-                        //data per model  values
-                        $specsGet = explode("_",$specsMinMax)[0];
-                        $specsLegend = strtoupper($specsGet[0]);
-                        $specsGetMin =  $specsGet. "_min";
-                        $specsGetMax =  $specsGet. "_max";
+                            }elseif($legendMin != $legendMax && $LegenCompile == ''){
 
-                        //compute
-                        $isToSubtractTarget = (float)$singleValue[$specsGet."_base"];
-                        $valueTarget = $dataPerModel->$specsMinMax;
-                        $absoluteDifferenceTarget = round(abs($isToSubtractTarget - $valueTarget ),3);
-                        dump('subtract',$isToSubtractTarget,$valueTarget);
-                        if($absoluteDifferenceTarget >= 0  && $absoluteDifferenceTarget <= 1.99 ){
+                                $LegenCompile = $valueTarget . $specsLegend." ± ". $legendMax."/-".$legendMin;
 
-                            dump(  'is zero');
-                            $countPerValue++;
-                            $countTruePerProcess [$specsModel][$currentFlowCount ] = $countPerValue ;
-                            dump($countTruePerProcess );
+                            }elseif($legendMin == $legendMax && $LegenCompile != ''){
 
-                        }
-                        $isArrayResultPerModelMixing [$specsModel][$currentFlowCount."_".$specsGet."_compareTarget" ] = $valueTarget ." - ".$isToSubtractTarget." = " .$absoluteDifferenceTarget;
-                        //$isNeedToHighlighted[$ruleModel][$processCount."_".$specsDimensionSide] = $ruleChecker;
-                        $isNeedToHighlighted[$specsModel][$currentFlowCount."_".$specsGet] = $absoluteDifferenceTarget;
-                        //@convertTodisplay
-                        $legendMin = $dataPerModel->$specsGetMin;
-                        $legendMax = $dataPerModel->$specsGetMax;
+                                $LegenCompile .=  " x " .$valueTarget . $specsLegend." ± ". $legendMax;
 
-                        //specialcases OR and IR specs
-                        if($specsLegend == 'I'){
+                            }elseif($legendMin != $legendMax && $LegenCompile != ''){
 
-                            $specsLegend = "IR";
+                                $LegenCompile .= " x ".$valueTarget . $specsLegend." ± ". $legendMax."/-".$legendMin;
 
-                        }elseif($specsLegend == 'O'){
+                            }
 
-                            $specsLegend = "OR";
+                            //color rule
+                            if($absoluteDifferenceTarget >= 0  && $absoluteDifferenceTarget <= 1.99 && $singleKey != 'raw%material'){
+                                $countPerValue++;
+                                $countTruePerProcess [$specsModel][$currentFlowCount ] = $countPerValue ;
+                            }
 
-                        }
+                            if( $singleKey == 'RAW%MATERIAL'){
+                                if( $absoluteDifferenceTarget > 0 && $absoluteDifferenceTarget < 3 ){
+                                    $RmCount++;
+                                    $RMTruePerProcess [$specsModel][$currentFlowCount ] = $RmCount ;
+                                }elseif($absoluteDifferenceTarget > 0 && $absoluteDifferenceTarget < 1 ){
+                                    $RmCount++;
+                                    $RMTruePerProcess [$specsModel][$currentFlowCount ] = $RmCount ;
+                                }
 
-                        if($legendMin == $legendMax && $LegenCompile == ''){
-
-                            $LegenCompile = $valueTarget . $specsLegend." ± ". $legendMax;
-
-                        }elseif($legendMin != $legendMax && $LegenCompile == ''){
-
-                            $LegenCompile = $valueTarget . $specsLegend." ± ". $legendMax."/-".$legendMin;
-
-                        }elseif($legendMin == $legendMax && $LegenCompile != ''){
-
-                            $LegenCompile .=  " x " .$valueTarget . $specsLegend." ± ". $legendMax;
-
-                        }elseif($legendMin != $legendMax && $LegenCompile != ''){
-
-                            $LegenCompile .= " x ".$valueTarget . $specsLegend." ± ". $legendMax."/-".$legendMin;
-
-                        }
-
-
+                            }
 
                     }
 
                     // dump($LegenCompile);
                     $isArrayResultPerModelMixing[$specsModel][$currentFlowCount."_dimension_process"] = $LegenCompile;
-                    dump($isArrayResultPerModelMixing);
+
 
                 }
-                dump( 'model -->',$specsModel);
+
                 $currentFlowCount++;
-                dump("flow ++: ",$currentFlowCount);
+
             }
 
         }
 
-        // dd();
+        unset($isArrayResultPerModelMixing[$selectedModel]);
+        unset($isSameAllDimension[$selectedModel]);
+
+            // dump( $RMTruePerProcess);
 
 
        if($isArrayResultPerModelMixing){
 
             if(!empty($isSameAllDimension) && empty($countTruePerProcess) ){
-                dump('helllooo');
+
                 return view('check',compact('isSameAllDimension','displayRangeValues','computedArray','isArrayResultPerModelMixing','OPIFormadetails','modelDetails','selectedModel','readFlow','Before','After','Finish','dimensionReDisplay','mixingPerDimension'));
 
-            }elseif(!empty($isSameAllDimension) && !empty($countTruePerProcess)){
-                dump('helllooo2');
-                return view('check',compact('countTruePerProcess','isSameAllDimension','displayRangeValues','computedArray','isArrayResultPerModelMixing','OPIFormadetails','modelDetails','selectedModel','readFlow','Before','After','Finish','dimensionReDisplay','mixingPerDimension'));
+            }elseif(!empty($isSameAllDimension) && !empty($countTruePerProcess) ){
+
+                return view('check',compact('RMTruePerProcess','countTruePerProcess','isSameAllDimension','displayRangeValues','computedArray','isArrayResultPerModelMixing','OPIFormadetails','modelDetails','selectedModel','readFlow','Before','After','Finish','dimensionReDisplay','mixingPerDimension'));
 
             }else{
-                dump('helllooo3');
+
                 return view('check',compact('displayRangeValues','computedArray','isArrayResultPerModelMixing','OPIFormadetails','modelDetails','selectedModel','readFlow','Before','After','Finish','dimensionReDisplay','mixingPerDimension'));
 
             }

@@ -368,7 +368,7 @@ class CheckMixingController extends Controller
 
     public function FindModel(Request $request)
     {
-        dump($request->all());
+        //dump($request->all());
         $selectedModel = $request->input('model');
         $modelDetails = $this->Models;
         $process = AddModel::where('model', $request->input('model'))->get();
@@ -411,7 +411,7 @@ class CheckMixingController extends Controller
             //convert name table naming replace all special character with '%'
             $remove_special= preg_replace('/[^\w\s]/', '%', $process_flow[$x]);
             $modified_process = str_replace(' ', '%', $remove_special);
-            dump("one: alreadylowered".$modified_process );
+           // dump("one: alreadylowered".$modified_process );
             if (Schema::hasTable(strtolower($modified_process))) {
                 //Get specifications per table
                 $specification = DB::table(strtolower($modified_process))

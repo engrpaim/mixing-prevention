@@ -231,7 +231,7 @@ class CheckMixingController extends Controller
 
                                 try{
 
-                                    $getData = DB::select('SELECT `before`, `after`, `type`, `finish` FROM `add_models` WHERE `model` NOT LIKE ?', [$currentModel]);
+                                    $getData = DB::select('SELECT `before`, `after`, `type`, `finish` FROM `add_models` WHERE `model` = ?', [$currentModel]);
 
 
 
@@ -311,7 +311,7 @@ class CheckMixingController extends Controller
                                 if( $absoluteDifferenceTarget >= 0 && $absoluteDifferenceTarget <= 3 ){
                                     $RmCount++;
                                     $RMTruePerProcess [$specsModel][$currentFlowCount ] = $RmCount ;
-                                }elseif($absoluteDifferenceTarget >= 0 && $absoluteDifferenceTarget <= 1 ){
+                                }elseif($absoluteDifferenceTarget >= 0 && $absoluteDifferenceTarget <= 2){
                                     $RmCount++;
                                     $RMTruePerProcess [$specsModel][$currentFlowCount ] = $RmCount ;
                                 }

@@ -146,8 +146,8 @@ class CheckMixingController extends Controller
                 }
                 //  $queryData .= ' WHERE `model` NOT LIKE `'.$selectedModel.'`';
                 //  $checkMixing .= 'AND NOT LIKE `'.$selectedModel.'`';
-               dump($checkMixing);
-                dump($queryData);
+                // dump($checkMixing);
+                // dump($queryData);
                 // dump($allSpecsInCurrentProcess);
                 // dump('setting the value');
 
@@ -155,7 +155,6 @@ class CheckMixingController extends Controller
 
 
                 if(count($allSpecsInval) == 3){
-                    dump($allSpecsInval);
                     if($singleKey == 'C%TYPE%%R%'){
 
                         $matchHaving = '`ir` = 1 AND `or` = 1 AND `a` = 1';
@@ -179,7 +178,7 @@ class CheckMixingController extends Controller
 
                     }
                 }elseif(count($allSpecsInval) == 2){
-                    dump($allSpecsInval);
+
                     $dynamicAll = '';
                     $dynamicPerValue = '';
                     foreach($allSpecsInval as $dynamic){
@@ -367,7 +366,7 @@ class CheckMixingController extends Controller
         }
 
 
-            dump( $RMTruePerProcess);
+            // dump( $RMTruePerProcess);
 
 
        if($isArrayResultPerModelMixing){

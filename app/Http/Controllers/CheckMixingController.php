@@ -40,6 +40,7 @@ class CheckMixingController extends Controller
         // dump($displayRangeValues);
         // dump(  $request->all());
         $readFlow = $request->input('readFlow_cm');
+        dump($readFlow );
         $selectedModel = htmlspecialchars($request->input('model_cm'));
         $modelDetails = $this->Models;
         $Before = $request->input('before_cm');
@@ -48,7 +49,9 @@ class CheckMixingController extends Controller
         $OPIFormadetails = $request->input('OPIFormadetails_cm');
         $RMTruePerProcess = [];
         $extractTableToCheck = $request->input('dimensionProcessesArray_cm');
+        dump( $extractTableToCheck);
         $dimensionReDisplay['dimensionProcessesArray']= $extractTableToCheck;
+        dump( $dimensionReDisplay);
         $queryData ='';
         $base ='';
         $min ='';

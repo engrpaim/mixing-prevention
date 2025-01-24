@@ -152,8 +152,8 @@ class CheckMixingController extends Controller
                 // dump('setting the value');
 
 
-
-
+                dump($allSpecsInval);
+                dump(count($allSpecsInval));
                 if(count($allSpecsInval) == 3){
                     if($singleKey == 'C%TYPE%%R%'){
 

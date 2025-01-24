@@ -206,7 +206,7 @@ class CheckMixingController extends Controller
                                             ->selectRaw('model, '.$queryData)
                                             ->havingRaw($matchHaving)
                                             ->get();
-
+                    dump($isEqualAllDimension );
                     foreach($isEqualAllDimension as $allKey){
                         // dump($selectedModel , $allKey->model);
 
@@ -230,7 +230,7 @@ class CheckMixingController extends Controller
                                                 ->whereRaw($checkMixing)
                                                 ->get();
 
-
+                                                dump($allMixingDimension );
                 }catch(\Exception $e){
                       dd($e);
                     continue;

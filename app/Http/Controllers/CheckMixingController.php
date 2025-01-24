@@ -191,11 +191,11 @@ class CheckMixingController extends Controller
 
                     }
                     $matchHaving = $dynamicAll;
-                    // dump( $dynamicAll );
+
 
                 }
 
-
+                  dump( $matchHaving);
 
 
 
@@ -219,7 +219,7 @@ class CheckMixingController extends Controller
 
                 }catch(\Exception $e){
 
-                    dump($e);
+                    dd($e);
                     continue;
 
                 }
@@ -232,7 +232,7 @@ class CheckMixingController extends Controller
 
 
                 }catch(\Exception $e){
-                      dump($e);
+                      dd($e);
                     continue;
                 }
 

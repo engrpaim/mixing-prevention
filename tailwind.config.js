@@ -49,6 +49,7 @@ export default {
                 'screen': '110rem',
                 'screen2': '56rem',
                 'screen3': '95rem',
+                'screen4': '200rem',
 
               },
 

@@ -36,6 +36,7 @@ class CheckMixingController extends Controller
             }
 
         }
+
         // dump($displayRangeValues);
         // dump(  $request->all());
         $readFlow = $request->input('readFlow_cm');
@@ -150,29 +151,54 @@ class CheckMixingController extends Controller
                 // dump($allSpecsInCurrentProcess);
                 // dump('setting the value');
 
-                //get all if true
-                if($singleKey == 'C%TYPE%%R%'){
 
-                    $matchHaving = '`ir` = 1 AND `or` = 1 AND `a` = 1';
 
-                }elseif($singleKey == 'RAW%MATERIAL'){
 
-                    if(in_array("or_val",$allSpecsInval)){
+                if(count($allSpecsInval) == 3){
+                    if($singleKey == 'C%TYPE%%R%'){
 
-                        $matchHaving = 'length = 1 AND width = 1 AND thickness = 1 or ir = 1 AND `or` = 1 ';
+                        $matchHaving = '`ir` = 1 AND `or` = 1 AND `a` = 1';
+
+                    }elseif($singleKey == 'RAW%MATERIAL'){
+
+                        if(in_array("or_val",$allSpecsInval)){
+
+                            $matchHaving = 'length = 1 AND width = 1 AND thickness = 1 or ir = 1 AND `or` = 1 ';
+
+                        }else{
+
+                            $matchHaving = 'length = 1 AND width = 1 AND thickness = 1  ';
+
+                        }
+
 
                     }else{
 
-                        $matchHaving = 'length = 1 AND width = 1 AND thickness = 1  ';
+                        $matchHaving = 'length = 1 AND width = 1 AND thickness = 1';
 
                     }
+                }elseif(count($allSpecsInval) == 2){
 
+                    $dynamicAll = '';
+                    $dynamicPerValue = '';
+                    foreach($allSpecsInval as $dynamic){
+                        $dynamicPerValue = explode('_',$dynamic)[0]. " = 1 ";
+                        if($dynamicAll == ''){
+                            $dynamicAll .= $dynamicPerValue;
+                        }else{
+                            $dynamicAll .= "AND ".$dynamicPerValue;
+                        }
 
-                }else{
-
-                    $matchHaving = 'length = 1 AND width = 1 AND thickness = 1';
+                    }
+                    $matchHaving = $dynamicAll;
+                    // dump( $dynamicAll );
 
                 }
+
+
+
+
+
 
                 try{
 
@@ -254,7 +280,6 @@ class CheckMixingController extends Controller
 
 
                             //@compute_dimension
-
                             //data per model  values
                             $specsGet = explode("_",$specsMinMax)[0];
                             $specsLegend = strtoupper($specsGet[0]);
@@ -297,7 +322,7 @@ class CheckMixingController extends Controller
 
                             }elseif($legendMin != $legendMax && $LegenCompile != ''){
 
-                                $LegenCompile .= " x ".$valueTarget . $specsLegend." ± ". $legendMax."/-".$legendMin;
+                                $LegenCompile .= " x ".$valueTarget . $specsLegend." ± ".$legendMax."/-".$legendMin;
 
                             }
 
@@ -333,7 +358,11 @@ class CheckMixingController extends Controller
         }
 
         unset($isArrayResultPerModelMixing[$selectedModel]);
-        unset($isSameAllDimension[$selectedModel]);
+
+        if(isset($isSameAllDimension[$selectedModel])){
+            unset($isSameAllDimension[$selectedModel]);
+        }
+
 
             // dump( $RMTruePerProcess);
 

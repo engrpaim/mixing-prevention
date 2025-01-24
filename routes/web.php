@@ -12,8 +12,8 @@ use App\Http\Controllers\UpdateTablesController;
 use App\Http\Controllers\ViewList;
 use App\Models\ProcessModel;
 use App\Models\specifications;
-
-
+use App\Http\Controllers\AdminManagement;
+use Illuminate\Support\Facades\DB;
 
 //views
 
@@ -23,6 +23,7 @@ Route::view('/check','check');
 Route::view('/list','list');
 Route::redirect('/','/mixing-prevention');
 Route::view('/flow','flow');
+Route::get('/admin',[AdminManagement::class,'table']);
 
 
 //request routes
@@ -135,6 +136,7 @@ foreach ($deleteRoutes as $name => $controller) {
     Route::post($name, [$controller, 'delete'])->name($name);
 }
 
+Route::post('admin-user',[AdminManagement::class,'addAdmin']);
 
 //ADD ROUTING
 Route::controller(AddModelController::class)->group(function(){
@@ -163,7 +165,6 @@ Route::controller(Viewlist::class)->group(function(){
 });
 
 //CHECKMIXING ROUTING
-
 Route::controller(CheckMixingController::class)->group(function(){
 
     //get
@@ -174,7 +175,6 @@ Route::controller(CheckMixingController::class)->group(function(){
     Route::post('mixing-check-data','checkMaterials');
 
 });
-
 
 
 

@@ -146,8 +146,8 @@ class CheckMixingController extends Controller
                 }
                 //  $queryData .= ' WHERE `model` NOT LIKE `'.$selectedModel.'`';
                 //  $checkMixing .= 'AND NOT LIKE `'.$selectedModel.'`';
-                // dump($checkMixing);
-                // dump($queryData);
+               dump($checkMixing);
+                dump($queryData);
                 // dump($allSpecsInCurrentProcess);
                 // dump('setting the value');
 

@@ -155,6 +155,7 @@ class CheckMixingController extends Controller
 
 
                 if(count($allSpecsInval) == 3){
+                    dump($allSpecsInval);
                     if($singleKey == 'C%TYPE%%R%'){
 
                         $matchHaving = '`ir` = 1 AND `or` = 1 AND `a` = 1';
@@ -178,7 +179,7 @@ class CheckMixingController extends Controller
 
                     }
                 }elseif(count($allSpecsInval) == 2){
-
+                    dump($allSpecsInval);
                     $dynamicAll = '';
                     $dynamicPerValue = '';
                     foreach($allSpecsInval as $dynamic){

@@ -235,7 +235,7 @@ class CheckMixingController extends Controller
                       dd($e);
                     continue;
                 }
-
+                dump(isset($allMixingDimension));
                 foreach($allMixingDimension as $dataPerModel){
                     //$computeDifference = abs( floatval($singleValue[$specs."_base"]));
                     $LegenCompile = '';

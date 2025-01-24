@@ -107,7 +107,7 @@ class CheckMixingController extends Controller
                         array_push($allSpecsInCurrentProcess ,$keyPerProcess );
                         $perVal = explode("_",$keyPerProcess)[0] . "_val";
                         array_push($allSpecsInval,$perVal);
-                        // dump($allSpecsInval);
+                        dump($currentFlowCount ,$allSpecsInval);
                     }
                 }
 

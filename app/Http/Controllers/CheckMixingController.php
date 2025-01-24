@@ -357,8 +357,10 @@ class CheckMixingController extends Controller
 
         }
 
-        unset($isArrayResultPerModelMixing[$selectedModel]);
 
+        if(isset($isArrayResultPerModelMixing[$selectedModel])){
+            unset($isArrayResultPerModelMixing[$selectedModel]);
+        }
         if(isset($isSameAllDimension[$selectedModel])){
             unset($isSameAllDimension[$selectedModel]);
         }

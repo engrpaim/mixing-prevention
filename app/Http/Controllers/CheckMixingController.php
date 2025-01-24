@@ -367,7 +367,7 @@ class CheckMixingController extends Controller
         }
 
 
-            // dump( $RMTruePerProcess);
+            dump( $RMTruePerProcess);
 
 
        if($isArrayResultPerModelMixing){

@@ -37,10 +37,10 @@ class CheckMixingController extends Controller
 
         }
 
-        // dump($displayRangeValues);
-        // dump(  $request->all());
+        // //dump($displayRangeValues);
+        // //dump(  $request->all());
         $readFlow = $request->input('readFlow_cm');
-        dump($readFlow );
+        // //dump($readFlow );
         $selectedModel = htmlspecialchars($request->input('model_cm'));
         $modelDetails = $this->Models;
         $Before = $request->input('before_cm');
@@ -49,9 +49,9 @@ class CheckMixingController extends Controller
         $OPIFormadetails = $request->input('OPIFormadetails_cm');
         $RMTruePerProcess = [];
         $extractTableToCheck = $request->input('dimensionProcessesArray_cm');
-        dump( $extractTableToCheck);
+        // //dump( $extractTableToCheck);
         $dimensionReDisplay['dimensionProcessesArray']= $extractTableToCheck;
-        dump( $dimensionReDisplay);
+        //dump( $dimensionReDisplay);
         $queryData ='';
         $base ='';
         $min ='';
@@ -63,7 +63,7 @@ class CheckMixingController extends Controller
         $queryIdentifier = 0;
         $countAndOr = 0;
         $mixingPerDimension = [];
-        ////dump($request->all());
+        //////dump($request->all());
 
         $valuePerData = [
             'length_val' => 'L',
@@ -95,7 +95,7 @@ class CheckMixingController extends Controller
         if(isset($extractTableToCheck) && !empty($extractTableToCheck)){
             $currentFlowCount = 0;
             foreach($extractTableToCheck as $singleKey => $singleValue){
-                // dump($singleKey , $singleValue);
+                // //dump($singleKey , $singleValue);
 
                 $queryData = '';
                 $checkMixing = '';
@@ -107,7 +107,7 @@ class CheckMixingController extends Controller
                         array_push($allSpecsInCurrentProcess ,$keyPerProcess );
                         $perVal = explode("_",$keyPerProcess)[0] . "_val";
                         array_push($allSpecsInval,$perVal);
-                        dump($currentFlowCount ,$allSpecsInval);
+                        //dump($currentFlowCount ,$allSpecsInval);
                     }
                 }
 
@@ -149,14 +149,14 @@ class CheckMixingController extends Controller
                 }
                 //  $queryData .= ' WHERE `model` NOT LIKE `'.$selectedModel.'`';
                 //  $checkMixing .= 'AND NOT LIKE `'.$selectedModel.'`';
-                // dump($checkMixing);
-                // dump($queryData);
-                // dump($allSpecsInCurrentProcess);
-                // dump('setting the value');
+                // //dump($checkMixing);
+                // //dump($queryData);
+                // //dump($allSpecsInCurrentProcess);
+                // //dump('setting the value');
 
 
-                dump($allSpecsInval);
-                dump(count($allSpecsInval));
+                //dump($allSpecsInval);
+                //dump(count($allSpecsInval));
                 if(count($allSpecsInval) == 3){
                     if($singleKey == 'C%TYPE%%R%'){
 
@@ -198,7 +198,7 @@ class CheckMixingController extends Controller
 
                 }
 
-                  dump( $matchHaving);
+                  //dump( $matchHaving);
 
 
 
@@ -209,11 +209,11 @@ class CheckMixingController extends Controller
                                             ->selectRaw('model, '.$queryData)
                                             ->havingRaw($matchHaving)
                                             ->get();
-                    dump($isEqualAllDimension );
+                    //dump($isEqualAllDimension );
                     foreach($isEqualAllDimension as $allKey){
-                        // dump($selectedModel , $allKey->model);
+                        // //dump($selectedModel , $allKey->model);
 
-                            // dump('not like model');
+                            // //dump('not like model');
 
                             $isSameAllDimension[$allKey->model][$currentFlowCount."_allsame"] = $currentFlowCount;
 
@@ -233,12 +233,12 @@ class CheckMixingController extends Controller
                                                 ->whereRaw($checkMixing)
                                                 ->get();
 
-                                                dump($allMixingDimension );
+                                                //dump($allMixingDimension );
                 }catch(\Exception $e){
                       dd($e);
                     continue;
                 }
-                dump(isset($allMixingDimension));
+                //dump(isset($allMixingDimension));
                 foreach($allMixingDimension as $dataPerModel){
                     //$computeDifference = abs( floatval($singleValue[$specs."_base"]));
                     $LegenCompile = '';
@@ -256,7 +256,7 @@ class CheckMixingController extends Controller
                             if($specsModel !=  $currentModel){
                                 //@get_model_details
                                 $currentModel = $specsModel;
-                                // dump($currentModel );
+                                // //dump($currentModel );
 
                                 try{
 
@@ -264,10 +264,10 @@ class CheckMixingController extends Controller
 
 
 
-                                    // dump($getData);
+                                    // //dump($getData);
 
                                 }catch(\Exception $e){
-                                    dump($e);
+                                    //dump($e);
                                     continue;
                                 }
 
@@ -348,7 +348,7 @@ class CheckMixingController extends Controller
 
                     }
 
-                    // dump($LegenCompile);
+                    // //dump($LegenCompile);
                     $isArrayResultPerModelMixing[$specsModel][$currentFlowCount."_dimension_process"] = $LegenCompile;
 
 
@@ -369,7 +369,7 @@ class CheckMixingController extends Controller
         }
 
 
-            // dump( $RMTruePerProcess);
+            // //dump( $RMTruePerProcess);
 
 
        if($isArrayResultPerModelMixing){
@@ -402,7 +402,7 @@ class CheckMixingController extends Controller
 
     public function FindModel(Request $request)
     {
-        //dump($request->all());
+        ////dump($request->all());
         $selectedModel = $request->input('model');
         $modelDetails = $this->Models;
         $process = AddModel::where('model', $request->input('model'))->get();
@@ -445,7 +445,7 @@ class CheckMixingController extends Controller
             //convert name table naming replace all special character with '%'
             $remove_special= preg_replace('/[^\w\s]/', '%', $process_flow[$x]);
             $modified_process = str_replace(' ', '%', $remove_special);
-           // dump("one: alreadylowered".$modified_process );
+           // //dump("one: alreadylowered".$modified_process );
             if (Schema::hasTable(strtolower($modified_process))) {
                 //Get specifications per table
                 $specification = DB::table(strtolower($modified_process))
@@ -455,7 +455,7 @@ class CheckMixingController extends Controller
                 $currentSpecCompute ='';
                 $specGroupValues= '';
 
-
+                // //dump( $specification);
                 //Compute min/max value based on specification per table
                 foreach($specification as $computeKey => $computeVal){
 

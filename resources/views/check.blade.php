@@ -71,80 +71,84 @@
                         @endphp
                         @if(isset($specificationArray)  )
 
-                            @foreach ($specificationArray as $key => $value)
-                                @php
-                                    $AllDetails = '';
-                                    //dump($specificationArray[$key]);
-                                    $counterForSpecs = 0;
-                                    $counterCurrentLimit = 0;
-                                @endphp
-                            @if (isset($specificationArray[$key]) && !empty($specificationArray[$key]))
-                            @foreach ($specificationArray[$key] as $keyCounters => $valueCounters )
-                            @if(str_contains($keyCounters,"_val") || str_contains($keyCounters,"_max") || str_contains($keyCounters,"_min"))
-                                    @php
-                                    $counterForSpecs++;
-                                    //dump($counterForSpecs);
-                                    @endphp
-                            @endif
-                        @endforeach
-                        @foreach($specificationArray[$key] as $dataKey => $dataValue)
-                            {{--@dump($dataKey." --- ".$dataValue) --}}
-                            {{--@dump($dataValue) --}}
-                            @if(array_key_exists($dataKey,$valuePerData) && $dataValue > 0 && $counterForSpecs && $counterCurrentLimit <= $counterForSpecs )
-                                @php
-                                    $counterCurrentLimit++;
+                            @foreach($specificationArray as $keySpecs => $valueSpecs)
 
-                                @endphp
 
-                                @if (str_contains($dataKey,"_val"))
-                                    @php
-                                        $baseLabel = explode("_",$dataKey);
-                                        $baseLabel = $baseLabel[0];
-                                        $actualSpecValue = $dataValue;
-                                        $valueDataLabeled = $dataValue.$valuePerData[$dataKey];
-                                        $dimensionProcessesArray[$key][$baseLabel.'_base']= $actualSpecValue;
-                                    @endphp
-                                @else
-                                    @if(str_contains($dataKey,"_min"))
+                                @php
+                                    $AllDetails='';
+                                @endphp
+                                @foreach ( $valueSpecs as $findKey => $findValue )
+                                    @if(str_contains($findKey,"_val") && $findValue > 0)
                                         @php
-                                            $minTol = $dataValue;
+                                            $isGetSpecs = explode("_",$findKey)[0];
+
+                                          //dump( $isGetSpecs );
+
+                                            $target= $findKey;
+                                            $min_val = $isGetSpecs ."_min";
+                                            $max_val = $isGetSpecs ."_max";
+                                            //display
+
+                                            $legend = strtoupper($isGetSpecs);
+
+                                            if( $legend == "OR" or $legend == "IR"  ){
+                                            $legend = $legend;
+                                            }else{
+                                            $legend = $legend[0];
+                                            }
+
+
+                                            //display
+                                            $targetValue = $valueSpecs->$target;
+                                            $targetMin = $valueSpecs->$min_val;
+                                            $targetMax = $valueSpecs->$max_val;
+
+                                          // dump($targetValue,$targetMin, $targetMax);
+
+                                            //compute
+                                            $computedMin = $targetValue -  $targetMin;
+                                            $computedMax = $targetValue + $targetMax;
+
+                                            $dimensionProcessesArray[$keySpecs][ $isGetSpecs."_base"] =  $targetValue;
+                                            $dimensionProcessesArray[$keySpecs][ $isGetSpecs."_min"] =   $computedMin;
+                                            $dimensionProcessesArray[$keySpecs][ $isGetSpecs."_max"] =   $computedMax;
+
                                         @endphp
-                                    @else
-                                        @php
-                                            $maxTol = $dataValue;
-                                        @endphp
-                                        @if ( $minTol ==  $minTol)
+
+                                        @if($targetMin == $targetMax)
+
                                             @php
-                                                $actualMinValue = $actualSpecValue - $dataValue;
-                                                $dimensionProcessesArray[$key][$baseLabel.'_min']= $actualMinValue;
-                                                $actualMaxValue = $actualSpecValue + $dataValue;
-                                                $dimensionProcessesArray[$key][$baseLabel.'_max']= $actualMaxValue;
-                                                $specsFinalDetails = $valueDataLabeled."±".$dataValue;
+                                                $currentVal = $targetValue.$legend." ± ".$targetMax;
+                                                //dump($currentVal);
                                             @endphp
-                                                @if ($AllDetails != '')
-                                                    @php
-                                                        $AllDetails = $AllDetails." x ".$specsFinalDetails;
-                                                    @endphp
-                                                @else
-                                                    @php
-                                                        $AllDetails = $AllDetails.$specsFinalDetails;
-                                                    @endphp
-                                                @endif
+                                        @else
+
+                                            @php
+                                                $currentVal = $targetValue.$legend." ± ".$targetMax."/-".$targetMin;
+                                                //dump($currentVal);
+                                            @endphp
                                         @endif
+
+                                        @if($AllDetails == '')
+                                            @php
+                                                $AllDetails .= $currentVal;
+                                            @endphp
+                                        @else
+                                            @php
+                                                $AllDetails .= " X " .$currentVal;
+                                            @endphp
+                                        @endif
+
+                                        @php
+                                            $OPIFormadetails[$keySpecs] = $AllDetails;
+                                        @endphp
+
                                     @endif
-                                @endif
-                            @endif
-                        @endforeach
-
-                            @endif
-                                @php
-                                    //dump($dimensionProcessesArray);
-
-                                    $OPIFormadetails[$key] = $AllDetails;
-
-                                @endphp
+                                @endforeach
 
                             @endforeach
+
+
                         @endif
                         {{--@dump($dimensionProcessesArray)--}}
 

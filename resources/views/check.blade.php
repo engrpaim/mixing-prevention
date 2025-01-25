@@ -70,10 +70,7 @@
 
                         @endphp
                         @if(isset($specificationArray)  )
-
                             @foreach($specificationArray as $keySpecs => $valueSpecs)
-
-
                                 @php
                                     $AllDetails='';
                                 @endphp
@@ -81,30 +78,22 @@
                                     @if(str_contains($findKey,"_val") && $findValue > 0)
                                         @php
                                             $isGetSpecs = explode("_",$findKey)[0];
-
-                                          //dump( $isGetSpecs );
-
                                             $target= $findKey;
                                             $min_val = $isGetSpecs ."_min";
                                             $max_val = $isGetSpecs ."_max";
                                             //display
 
                                             $legend = strtoupper($isGetSpecs);
-
                                             if( $legend == "OR" or $legend == "IR"  ){
-                                            $legend = $legend;
+                                                $legend = $legend;
                                             }else{
-                                            $legend = $legend[0];
+                                                $legend = $legend[0];
                                             }
-
 
                                             //display
                                             $targetValue = $valueSpecs->$target;
                                             $targetMin = $valueSpecs->$min_val;
                                             $targetMax = $valueSpecs->$max_val;
-
-                                          // dump($targetValue,$targetMin, $targetMax);
-
                                             //compute
                                             $computedMin = $targetValue -  $targetMin;
                                             $computedMax = $targetValue + $targetMax;
@@ -116,13 +105,11 @@
                                         @endphp
 
                                         @if($targetMin == $targetMax)
-
                                             @php
                                                 $currentVal = $targetValue.$legend." ± ".$targetMax;
                                                 //dump($currentVal);
                                             @endphp
                                         @else
-
                                             @php
                                                 $currentVal = $targetValue.$legend." ± ".$targetMax."/-".$targetMin;
                                                 //dump($currentVal);
@@ -145,10 +132,7 @@
 
                                     @endif
                                 @endforeach
-
                             @endforeach
-
-
                         @endif
                         {{--@dump($dimensionProcessesArray)--}}
 

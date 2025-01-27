@@ -333,18 +333,19 @@ class CheckMixingController extends Controller
                             if($absoluteDifferenceTarget >= 0  && $absoluteDifferenceTarget <= 1.99 && $singleKey != 'raw%material'){
 
                                 $countPerValue++;
-
-                                if(count($allSpecsInval) == ($countPerValue == 2) || ($countPerValue == 1)){
+                                //2 dimension color
+                                if(count($allSpecsInval) == 2 && ($countPerValue == 2) || count($allSpecsInval) == 2  && ($countPerValue == 1)){
                                     $countPerValue++;
                                 }
+
                                 $countTruePerProcess [$specsModel][$currentFlowCount ] = $countPerValue ;
                             }
 
                             if( $singleKey == 'RAW%MATERIAL'){
                                 if( $absoluteDifferenceTarget >= 0 && $absoluteDifferenceTarget <= 3 ){
                                     $RmCount++;
-
-                                    if(count($allSpecsInval) == ($RmCount == 2) || ($RmCount == 1)){
+                                    // 2dimension color
+                                    if(count($allSpecsInval)== 2 && ($RmCount == 2) || count($allSpecsInval) == 2 && ($RmCount == 1)){
                                         $RmCount++;
                                     }
 
@@ -358,7 +359,7 @@ class CheckMixingController extends Controller
 
                     }
 
-                    // //dump($LegenCompile);
+                    //dump($LegenCompile);
                     $isArrayResultPerModelMixing[$specsModel][$currentFlowCount."_dimension_process"] = $LegenCompile;
 
 

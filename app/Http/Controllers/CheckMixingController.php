@@ -110,7 +110,7 @@ class CheckMixingController extends Controller
                         //dump($currentFlowCount ,$allSpecsInval);
                     }
                 }
-
+                //dd($allSpecsInval);
                 //collect  all array key to query
                 $countallSpecsInCurrentProcess = count($allSpecsInCurrentProcess) ;
                 $currentCount = 0 ;
@@ -331,13 +331,23 @@ class CheckMixingController extends Controller
 
                             //color rule
                             if($absoluteDifferenceTarget >= 0  && $absoluteDifferenceTarget <= 1.99 && $singleKey != 'raw%material'){
+
                                 $countPerValue++;
+
+                                if(count($allSpecsInval) == ($countPerValue == 2) || ($countPerValue == 1)){
+                                    $countPerValue++;
+                                }
                                 $countTruePerProcess [$specsModel][$currentFlowCount ] = $countPerValue ;
                             }
 
                             if( $singleKey == 'RAW%MATERIAL'){
                                 if( $absoluteDifferenceTarget >= 0 && $absoluteDifferenceTarget <= 3 ){
                                     $RmCount++;
+
+                                    if(count($allSpecsInval) == ($RmCount == 2) || ($RmCount == 1)){
+                                        $RmCount++;
+                                    }
+
                                     $RMTruePerProcess [$specsModel][$currentFlowCount ] = $RmCount ;
                                 }elseif($absoluteDifferenceTarget >= 0 && $absoluteDifferenceTarget <= 2){
                                     $RmCount++;

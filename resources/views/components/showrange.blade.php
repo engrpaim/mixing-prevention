@@ -75,7 +75,10 @@
             </div>
         @endforeach
         <button type="submit" id="findBtn" name="findBtn" class="px-2 py-1 m-2 mt-20 text-sm font-bold text-yellow-800 bg-yellow-200 rounded-lg outline outline-2 outline-yellow-600 " value="find" >FIND</button>
+        @if ($view == 'ON' || $admin == 'ON')
         <button type="button" id="viewBtn" name="viewBtn" onclick="viewAll()" class="px-2 py-1 m-2 mt-5 text-sm font-bold text-green-800 bg-green-200 rounded-lg outline outline-2 outline-green-600 "value="view">VIEW ALL</button>
+
+        @endif
         <script>
             function viewAll(){
                 window.location.replace('/list');

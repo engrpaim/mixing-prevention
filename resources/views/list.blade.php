@@ -293,7 +293,7 @@
 
 
 
-            @elseif(isset($isDisplayAllmodell) && !empty($isDisplayAllmodell))
+            @elseif(isset($isDisplayAllmodell) && !empty($isDisplayAllmodell) && ($view == 'ON' || $admin == 'ON'))
                 <div class="flex flex-col items-center justify-center text-xs">
                     <div class="flex flex-col">
                         <div class="flex items-end justify-end">

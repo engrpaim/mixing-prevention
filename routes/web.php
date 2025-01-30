@@ -177,8 +177,10 @@ Route::controller(CheckMixingController::class)->group(function(){
 });
 
 
+Route::get('/admin/table', [AdminManagement::class, 'table'])->name('admin.table');
 
-
+Route::post('admin-update',[AdminManagement::class, 'update']);
+Route::get('/user-delete/{ip}',[AdminManagement::class, 'delete']);
 //to bedeleted once tested
 // Route::get('/live_search/action', [ViewList::class, 'CheckBoxProcess'])->name('ViewList.CheckBoxProcess');
 // Route::get('/viewlist/details/{model}/{talbe}',[ViewList::class, 'showDetails']);

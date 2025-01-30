@@ -13,45 +13,89 @@ class AdminManagement extends Controller
     public function __construct()
     {
         $this->isGetAllIp =  DB::select('SELECT * FROM admin_models');
-        $toBeAjax = $this->isGetAllIp;
-        $compiledAll = '';
-        foreach($toBeAjax as $dataPerAjax){
-            if(isset($dataPerAjax) && $dataPerAjax !== null){
-                $outputModel = '
-                <tr>
-                    <td class="px-4 py-2 text-left border border-blue-500">'.$dataPerAjax->name.'</td>
-                    <td class="px-4 py-2 text-left border border-blue-500">'.$dataPerAjax->ip.'</td>
-                    <td class="px-4 py-2 text-left border border-blue-500">
-                        <button>'.$dataPerAjax->model.'</button>
-                        <button>'.$dataPerAjax->view.'</button>
-                        <button>'.$dataPerAjax->manage.'</button>
-                    </td>
-                </tr>
-                ';
-            }
-            $compiledAll .= $outputModel;
 
-        }
-        dump($compiledAll);
     }
 
     public function table(){
-        $allIp =  $this->isGetAllIp;
-        dump( $allIp );
-        return view('admin');
+        $toBeAjax = $this->isGetAllIp;
+        return view('admin',['ipaddress' =>  $toBeAjax]);
+    }
+
+    public function delete($ip){
+        $deleted = DB::table('admin_models')->where('ip',$ip)->delete();
+        $toBeAjax  =  DB::select('SELECT * FROM admin_models');
+        return view('admin',['ipaddress' =>  $toBeAjax]);
+
+    }
+
+    public function update(Request $request){
+
+        $dataTosave = [];
+        $name = '';
+        foreach($request->all() as $dataKey => $dataValue){
+            if($dataKey != '_token' && !str_contains($dataKey ,"current") ){
+                $allcolumn = explode("_",$dataKey);
+                $column = explode("_",$dataKey)[0];
+
+                if($name == ''  ){
+
+                    for($i = 0 ; $i < count( $allcolumn);$i++){
+                        if($i > 0){
+                            $name .= " ". $allcolumn[$i];
+                        }
+                    }
+
+                }
+
+                $status = $dataValue;
+                $dataTosave [$column] = $status;
+
+            }
+        }
+        $ip =  $request->input('ip') != null ? $request->input('ip'):$request->input('current_ip');
+        $namenew =  $request->input('name') != null ? $request->input('name'):$request->input('current_name');
+
+        $model = isset($dataTosave ['model']) ? 'ON' : 'OFF';
+        $admin = isset($dataTosave ['admin']) ? 'ON' : 'OFF';
+        $view = isset($dataTosave ['view']) ? 'ON' : 'OFF';
+        $manage = isset($dataTosave ['manage']) ? 'ON' : 'OFF';
+        $toBeAjax = $this->isGetAllIp;
+        try{
+            $trimName=trim($name);
+            $isUpdated = DB::table('admin_models')
+                ->where('name',$trimName)
+                ->update([
+                    'model' =>   $model,
+                    'admin' =>   $admin,
+                    'view' =>   $view,
+                    'manage' =>   $manage,
+                    'name' => $namenew,
+                    'ip' => $ip,
+                ]);
+
+
+
+            $toBeAjax = DB::select('SELECT * FROM admin_models');
+
+            return view('admin',['ipaddress' =>  $toBeAjax]);
+
+        }catch(\Exception $e){
+            dump($e);
+        }
     }
 
     public function addAdmin(Request $request){
-        // dump($request->all());
 
-        $allIp =  $this->isGetAllIp;
-        dump( $allIp );
+
+
+
         $userIpAddress = $request->input('slot1').".".$request->input('slot2').".".$request->input('slot3').".".$request->input('slot4');
         $name = $request->input('name');
         $area = $request->input('area');
         $manage = $request->input('manage');
         $model = $request->input('model');
         $view = $request->input('view');
+        $admin = $request->input('admin');
 
         if(   $manage == null){
             $manage = 'off';
@@ -65,11 +109,13 @@ class AdminManagement extends Controller
             $view = 'off';
             //dd($view);
         }
+        if(   $admin == null){
+            $admin = 'off';
+            //dd($view);
+        }
 
         // dump($userIpAddress,$name,$area,$manage,$model,$view);
-        try{
 
-        }catch(\Exception $e){}
         $request->validate( [
                                 'userIpAddress' => [
                                     'string',
@@ -96,6 +142,10 @@ class AdminManagement extends Controller
                                 'view' => [
                                     'string',
                                     'max:255',
+                                ],
+                                'admin' => [
+                                    'string',
+                                    'max:255',
                                 ]
                             ]
                         );
@@ -107,28 +157,34 @@ class AdminManagement extends Controller
                 'area' => $area,
                 'manage' =>  $manage,
                 'model' => $model,
+                'admin' => $admin,
                 'view' => $view,
                 'addedBy' => request()->ip(),
                 'created_At' => now(),
                 'update_At' => now(),
             ]);
+            $toBeAjax = $this->isGetAllIp =  DB::select('SELECT * FROM admin_models');
             if($dataInsert){
-                return view('admin',['success' => $request->input('name') . " is added with I.P address " .$userIpAddress ]);
+                return view('admin',['success' => $request->input('name') . " is added with I.P address " .$userIpAddress
+                                        ,'ipaddress' =>  $toBeAjax]);
             }
         }catch(\Illuminate\Database\QueryException $e){
 
+            $toBeAjax = $this->isGetAllIp =  DB::select('SELECT * FROM admin_models');
             if(str_contains( $e->errorInfo[2],"'name'")){
 
-                return view('admin',['error' => "Name ".$name . " already exist" ]);
+                return view('admin',['error' => "Name ".$name . " already exist" ,'ipaddress' =>  $toBeAjax]);
 
             }else{
 
-                return view('admin',['error' => "I.P address ".$userIpAddress . " already exist" ]);
+                return view('admin',['error' => "I.P address ".$userIpAddress . " already exist" ,'ipaddress' =>  $toBeAjax ]);
 
             }
 
         }catch (\Exception $e) {
-            return view('admin', ['error' => 'An unexpected error occurred.']);
+
+            $toBeAjax = $this->isGetAllIp =  DB::select('SELECT * FROM admin_models');
+            return view('admin', ['error' => 'An unexpected error occurred.' ,'ipaddress' =>  $toBeAjax]);
         }
 
 

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('model')->default('off');
             $table->string('view')->default('off');
             $table->string('manage')->default('off');
+            $table->string('admin')->default('off');
             $table->string('addedBy');
             $table->timestamp('created_At')->useCurrent();
             $table->timestamp('update_At')->useCurrent();

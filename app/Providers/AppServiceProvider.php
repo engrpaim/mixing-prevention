@@ -23,10 +23,20 @@ class AppServiceProvider extends ServiceProvider
         $userIp = DB::table('admin_models')
         ->where('ip','=',request()->ip())
         ->first();
-        $model = $userIp->model ;
-        $view = $userIp->view ;
-        $manage = $userIp->manage ;
-        $admin = $userIp->admin ;
+        if($userIp){
+
+            $model = $userIp->model ;
+            $view = $userIp->view ;
+            $manage = $userIp->manage ;
+            $admin = $userIp->admin ;
+
+        }else{
+            $model = 'OFF' ;
+            $view = 'OFF'  ;
+            $manage = 'OFF'  ;
+            $admin = 'OFF'  ;
+        }
+
         // dump($model,$view,$manage,  $admin );
         View::share([
                         'clientIp' => request()->ip(),

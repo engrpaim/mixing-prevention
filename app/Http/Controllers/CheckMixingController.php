@@ -64,7 +64,7 @@ class CheckMixingController extends Controller
         $countAndOr = 0;
         $mixingPerDimension = [];
         //////dump($request->all());
-
+        $columnsWithRanges = [];
         $valuePerData = [
             'length_val' => 'L',
             'length_min' => '-',
@@ -114,20 +114,29 @@ class CheckMixingController extends Controller
                 //collect  all array key to query
                 $countallSpecsInCurrentProcess = count($allSpecsInCurrentProcess) ;
                 $currentCount = 0 ;
-
+                //dd($allSpecsInCurrentProcess );
                 foreach($allSpecsInCurrentProcess as $CurrentTableSpecs){
 
                     $currentCount++;
                     $specs  = explode("_",$CurrentTableSpecs)[0];
 
+
                     if($specs == 'length'){
+
                         $range = $displayRangeValues['length_range'];
+
                     }elseif($specs == 'width'){
+
                         $range = $displayRangeValues['width_range'];
+
                     }elseif($specs == 'thickness'){
+
                         $range = $displayRangeValues['thickness_range'];
+
                     }else{
+
                         $range = $displayRangeValues['radius_range'];
+
                     }
 
                     $minimum = $singleValue[$specs."_min"] - $range;
@@ -149,8 +158,8 @@ class CheckMixingController extends Controller
                 }
                 //  $queryData .= ' WHERE `model` NOT LIKE `'.$selectedModel.'`';
                 //  $checkMixing .= 'AND NOT LIKE `'.$selectedModel.'`';
-                // //dump($checkMixing);
-                // //dump($queryData);
+                //dump($checkMixing);
+                //dump($queryData);
                 // //dump($allSpecsInCurrentProcess);
                 // //dump('setting the value');
 
@@ -158,6 +167,7 @@ class CheckMixingController extends Controller
                 //dump($allSpecsInval);
                 //dump(count($allSpecsInval));
                 if(count($allSpecsInval) == 3){
+
                     if($singleKey == 'C%TYPE%%R%'){
 
                         $matchHaving = '`ir` = 1 AND `or` = 1 AND `a` = 1';
@@ -180,6 +190,7 @@ class CheckMixingController extends Controller
                         $matchHaving = 'length = 1 AND width = 1 AND thickness = 1';
 
                     }
+
                 }elseif(count($allSpecsInval) == 2){
 
                     $dynamicAll = '';
@@ -246,7 +257,7 @@ class CheckMixingController extends Controller
                     $countPerValue = 0;
                     $RmCount = 0;
                     //@getdata
-
+                    //dump($dataPerModel);
                     foreach($allSpecsInval as $specsMinMax)
                     {
 
@@ -330,9 +341,9 @@ class CheckMixingController extends Controller
                             }
 
                             //color rule
-                            if($absoluteDifferenceTarget >= 0  && $absoluteDifferenceTarget <= 1.99 && $singleKey != 'raw%material'){
-
+                            if($absoluteDifferenceTarget >= 0  && $absoluteDifferenceTarget <= 1.99 ){
                                 $countPerValue++;
+
                                 //2 dimension color
                                 if(count($allSpecsInval) == 2 && ($countPerValue == 2) || count($allSpecsInval) == 2  && ($countPerValue == 1)){
                                     $countPerValue++;
@@ -345,7 +356,7 @@ class CheckMixingController extends Controller
                                 if( $absoluteDifferenceTarget >= 0 && $absoluteDifferenceTarget <= 3 ){
                                     $RmCount++;
                                     // 2dimension color
-                                    if(count($allSpecsInval)== 2 && ($RmCount == 2) || count($allSpecsInval) == 2 && ($RmCount == 1)){
+                                    if( $RmCount == 2 && count($allSpecsInCurrentProcess) == 2){
                                         $RmCount++;
                                     }
 
@@ -361,6 +372,8 @@ class CheckMixingController extends Controller
 
                     //dump($LegenCompile);
                     $isArrayResultPerModelMixing[$specsModel][$currentFlowCount."_dimension_process"] = $LegenCompile;
+                    $isArrayResultPerModelMixing[$specsModel]["RM"] = $RmCount;
+                    $isArrayResultPerModelMixing[$specsModel]["PerValue"] = $countPerValue;
 
 
                 }
@@ -370,7 +383,16 @@ class CheckMixingController extends Controller
             }
 
         }
-
+        dump(count($allSpecsInCurrentProcess));
+        dump($isArrayResultPerModelMixing);
+        foreach($isArrayResultPerModelMixing as $key => $removeNotmixing){
+            dump($key ,$removeNotmixing);
+            if($removeNotmixing["RM"] <= 1 && $removeNotmixing["PerValue"] <= 2 && count($allSpecsInCurrentProcess) == 2 ||  $removeNotmixing["PerValue"] <= 1 && count($allSpecsInCurrentProcess) == 3){
+                dump('two');
+                unset($isArrayResultPerModelMixing[$key]);
+            }
+        }
+        dump($isArrayResultPerModelMixing);
 
         if(isset($isArrayResultPerModelMixing[$selectedModel])){
             unset($isArrayResultPerModelMixing[$selectedModel]);

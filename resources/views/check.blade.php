@@ -467,7 +467,8 @@
                                                     @endphp
                                                 @endif
                                             @elseif(isset($countTruePerProcess[$resultKey][$z]) && $currentDimensionFlow[$z] == "RAW MATERIAL" && !empty($RMTruePerProcess[$resultKey][$z]))
-                                                @if ($RMTruePerProcess[$resultKey][$z] == 3 )
+
+                                                @if ($RMTruePerProcess[$resultKey][0] == 3 )
                                                     @php
                                                         $trueCountBg = 'bg-yellow-400';
                                                     @endphp
@@ -602,5 +603,5 @@
 
 </body>
 </html>
-{{--
-@dump(get_defined_vars()) --}}
+
+@dump(get_defined_vars())

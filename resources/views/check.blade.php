@@ -604,4 +604,5 @@
 </body>
 </html>
 
-@dump(get_defined_vars())
+{{--
+@dump(get_defined_vars()) --}}

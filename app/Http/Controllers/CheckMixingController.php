@@ -383,16 +383,15 @@ class CheckMixingController extends Controller
             }
 
         }
-        dump(count($allSpecsInCurrentProcess));
-        dump($isArrayResultPerModelMixing);
+
         foreach($isArrayResultPerModelMixing as $key => $removeNotmixing){
-            dump($key ,$removeNotmixing);
+
             if($removeNotmixing["RM"] <= 1 && $removeNotmixing["PerValue"] <= 2 && count($allSpecsInCurrentProcess) == 2 ||  $removeNotmixing["PerValue"] <= 1 && count($allSpecsInCurrentProcess) == 3){
-                dump('two');
+
                 unset($isArrayResultPerModelMixing[$key]);
             }
         }
-        dump($isArrayResultPerModelMixing);
+
 
         if(isset($isArrayResultPerModelMixing[$selectedModel])){
             unset($isArrayResultPerModelMixing[$selectedModel]);

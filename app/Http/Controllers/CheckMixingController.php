@@ -354,9 +354,11 @@ class CheckMixingController extends Controller
 
                             if( $singleKey == 'RAW%MATERIAL'){
                                 if( $absoluteDifferenceTarget >= 0 && $absoluteDifferenceTarget <= 3 ){
-                                    $RmCount++;
+
                                     // 2dimension color
                                     if( $RmCount == 2 && count($allSpecsInCurrentProcess) == 2){
+                                        $RmCount++;
+                                    }else{
                                         $RmCount++;
                                     }
 
@@ -383,10 +385,13 @@ class CheckMixingController extends Controller
             }
 
         }
-
+        //dump($isArrayResultPerModelMixing  ,$RMTruePerProcess);
         foreach($isArrayResultPerModelMixing as $key => $removeNotmixing){
+            if(isset($RMTruePerProcess[$key][0])){
+                //dump($RMTruePerProcess[$key][0]);
+            }
 
-            if($removeNotmixing["RM"] <= 1 && $removeNotmixing["PerValue"] <= 2 && count($allSpecsInCurrentProcess) == 2 ||  $removeNotmixing["PerValue"] <= 1 && count($allSpecsInCurrentProcess) == 3){
+            if($removeNotmixing["RM"] <= 1 && $removeNotmixing["PerValue"] <= 2 && count($allSpecsInCurrentProcess) == 2 && !isset($RMTruePerProcess[$key][0]) ||  $removeNotmixing["PerValue"] <= 1 && count($allSpecsInCurrentProcess) == 3 && !isset($RMTruePerProcess[$key][0])){
 
                 unset($isArrayResultPerModelMixing[$key]);
             }

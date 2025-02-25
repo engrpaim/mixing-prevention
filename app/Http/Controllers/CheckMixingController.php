@@ -376,7 +376,7 @@ class CheckMixingController extends Controller
                     $isArrayResultPerModelMixing[$specsModel][$currentFlowCount."_dimension_process"] = $LegenCompile;
 
                     if(isset($isArrayResultPerModelMixing[$specsModel]["RM"]) &&  $isArrayResultPerModelMixing[$specsModel]["RM"] > $RmCount){
-                        dump( $isArrayResultPerModelMixing[$specsModel]["RM"] , " > ",  $RmCount);
+                       // dump( $isArrayResultPerModelMixing[$specsModel]["RM"] , " > ",  $RmCount);
                         $isArrayResultPerModelMixing[$specsModel]["RM"] = $RmCount;
                     }else{
                         $isArrayResultPerModelMixing[$specsModel]["RM"] = $RmCount;

@@ -386,11 +386,11 @@ class CheckMixingController extends Controller
 
         }
         //dump($isArrayResultPerModelMixing  ,$RMTruePerProcess);
-        foreach($RMTruePerProcess as $key => $removeNotallTrue){
-            if($removeNotallTrue[0] != 3){
-                unset($RMTruePerProcess[$key]);
-            }
-        }
+        // foreach($RMTruePerProcess as $key => $removeNotallTrue){
+        //     if($removeNotallTrue[0] != 3){
+        //         unset($RMTruePerProcess[$key]);
+        //     }
+        // }
 
         foreach($isArrayResultPerModelMixing as $key => $removeNotmixing){
 

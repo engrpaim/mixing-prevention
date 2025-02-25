@@ -374,7 +374,13 @@ class CheckMixingController extends Controller
 
                     //dump($LegenCompile);
                     $isArrayResultPerModelMixing[$specsModel][$currentFlowCount."_dimension_process"] = $LegenCompile;
-                    $isArrayResultPerModelMixing[$specsModel]["RM"] = $RmCount;
+
+                    if(isset($isArrayResultPerModelMixing[$specsModel]["RM"]) &&  $isArrayResultPerModelMixing[$specsModel]["RM"] > $RmCount){
+                        dump( $isArrayResultPerModelMixing[$specsModel]["RM"] , " > ",  $RmCount);
+                        $isArrayResultPerModelMixing[$specsModel]["RM"] = $RmCount;
+                    }else{
+                        $isArrayResultPerModelMixing[$specsModel]["RM"] = $RmCount;
+                    }
                     $isArrayResultPerModelMixing[$specsModel]["PerValue"] = $countPerValue;
 
 
@@ -386,11 +392,12 @@ class CheckMixingController extends Controller
 
         }
         //dump($isArrayResultPerModelMixing  ,$RMTruePerProcess);
-        // foreach($RMTruePerProcess as $key => $removeNotallTrue){
-        //     if($removeNotallTrue[0] != 3){
-        //         unset($RMTruePerProcess[$key]);
-        //     }
-        // }
+        // dump( $isArrayResultPerModelMixing);
+        foreach($RMTruePerProcess as $key => $removeNotallTrue){
+            if($removeNotallTrue[0] != 3 && $isArrayResultPerModelMixing[$key]["PerValue"] <= 1 && count($allSpecsInCurrentProcess) == 3){
+                unset($RMTruePerProcess[$key]);
+            }
+        }
 
         foreach($isArrayResultPerModelMixing as $key => $removeNotmixing){
 
@@ -402,7 +409,7 @@ class CheckMixingController extends Controller
 
         }
 
-
+        // dump( $isArrayResultPerModelMixing);
         if(isset($isArrayResultPerModelMixing[$selectedModel])){
             unset($isArrayResultPerModelMixing[$selectedModel]);
         }

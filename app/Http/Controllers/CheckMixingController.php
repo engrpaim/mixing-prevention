@@ -391,7 +391,7 @@ class CheckMixingController extends Controller
                 //dump($RMTruePerProcess[$key][0]);
             }
 
-            if($removeNotmixing["RM"] <= 1 && $removeNotmixing["PerValue"] <= 2 && count($allSpecsInCurrentProcess) == 2 && !isset($RMTruePerProcess[$key][0]) ||  $removeNotmixing["PerValue"] <= 1 && count($allSpecsInCurrentProcess) == 3 && !isset($RMTruePerProcess[$key][0])){
+            if($removeNotmixing["RM"] <= 1 && $removeNotmixing["PerValue"] <= 2 && count($allSpecsInCurrentProcess) == 2 && !isset($RMTruePerProcess[$key][0]) ||  $removeNotmixing["PerValue"] <= 2 && count($allSpecsInCurrentProcess) == 3 && !isset($RMTruePerProcess[$key][0])){
 
                 unset($isArrayResultPerModelMixing[$key]);
             }

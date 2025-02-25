@@ -341,7 +341,7 @@ class CheckMixingController extends Controller
                             }
 
                             //color rule
-                            if($absoluteDifferenceTarget >= 0  && $absoluteDifferenceTarget <= 1.99 ){
+                            if($absoluteDifferenceTarget >= 0  && $absoluteDifferenceTarget <= 1.50 ){
                                 $countPerValue++;
 
                                 //2 dimension color
